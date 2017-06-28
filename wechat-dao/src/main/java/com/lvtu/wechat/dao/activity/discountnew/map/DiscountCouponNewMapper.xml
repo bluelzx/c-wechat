@@ -1,0 +1,255 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="DISCOUNT_NEW_COUPON" >
+	<select id="queryDiscountCouponNewList" resultType="DiscountCouponNew">
+		SELECT a.id, a.name, a.coupon_codes, a.coupon_money, a.coupon_condition, a.coupon_time,
+	           a.coupon_url, a.payment_amount, a.state, a.curr_order, a.create_time, a.next_order, 
+	           COUNT(b.id) total FROM discount_new_coupon  a 
+	       LEFT JOIN discount_new_get b  ON  a.id = b.discount_coupon_id 
+		   where 1 = 1
+			   <if test="id != null and id != ''">
+					AND a.id = #{id}
+				</if>
+				<if test="name != null and name != ''">
+					<![CDATA[AND a.name like CONCAT('%', #{name}, '%')]]> 
+				</if>
+			   <if test="startDate != null and startDate != ''">
+					<![CDATA[AND b.create_date >= #{startDate}]]>
+			   </if>
+			   <if test="endDate != null and endDate != ''">
+					<![CDATA[AND b.create_date <= #{endDate}]]>
+			   </if>
+		    GROUP BY a.id 
+		    ORDER BY a.state,a.next_order
+	</select> 
+
+	<select id="queryDiscountCouponNew" resultType="DiscountCouponNew">
+		SELECT a.id, a.name, a.coupon_codes, a.coupon_money, a.coupon_condition, a.coupon_time,
+	           a.coupon_url, a.payment_amount, a.state, a.curr_order, a.create_time, a.next_order
+		FROM discount_new_coupon a
+		where a.state in ('1','2')
+		<if test="id != null and id != ''">
+			AND a.id = #{id}
+		</if>
+		<if test="name != null and name != ''">
+			AND a.name = #{name}
+		</if>
+		<if test="couponCodes != null and couponCodes != ''">
+			AND a.coupon_codes = #{couponCodes}
+		</if>
+		<if test="paymentAmount != null and paymentAmount != ''">
+			AND a.payment_amount = #{paymentAmount}
+		</if>
+	</select>
+	
+	<select id="queryDiscountCouponByid" resultType="DiscountCouponNew">
+	     SELECT a.id, a.name, a.coupon_codes, a.coupon_money, a.coupon_condition, a.coupon_time,
+	           a.coupon_url, a.payment_amount, a.state, a.curr_order, a.create_time, a.next_order
+	     FROM discount_new_coupon a
+	     WHERE a.id = #{id}
+	</select>
+
+	
+	<insert id="insertDiscountGetNew"  parameterType="DiscountGetNew">
+				insert into discount_new_get
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				id,
+			</if>
+			<if test="openid != null">
+				openid,
+			</if>
+			<if test="lvmamaUserno != null">
+				lvmama_user_no,
+			</if>
+			<if test="discountCouponid != null">
+				discount_coupon_id,
+			</if>
+			<if test="discountCouponcode != null">
+				discount_coupon_code,
+			</if>
+			<if test="createDate != null">
+				create_date
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=VARCHAR},
+			</if>
+			<if test="openid != null">
+				#{openid,jdbcType=VARCHAR},
+			</if>
+			<if test="lvmamaUserno != null">
+				#{lvmamaUserno,jdbcType=VARCHAR},
+			</if>
+			<if test="discountCouponid != null">
+				#{discountCouponid,jdbcType=VARCHAR},
+			</if>
+			<if test="discountCouponcode != null">
+				#{discountCouponcode,jdbcType=VARCHAR},
+			</if>
+			<if test="createDate != null">
+				#{createDate,jdbcType=TIMESTAMP}
+			</if>
+		</trim>
+	</insert>
+	
+	<select id="queryDiscountNewCouponCodes" resultType="String">
+		SELECT id from discount_new_coupon
+	</select>
+	
+	<!-- 优惠券发放量+1 -->
+	<update id="updateDiscountNewPaymentAmount">
+		UPDATE discount_new_coupon SET payment_amount = IFNULL(payment_amount, 0) + 1
+		WHERE id = #{discountCouponid}
+	</update>
+	
+	<update id="deleteDiscountCouponNew">
+		UPDATE discount_new_coupon SET state = 3
+		where id = #{id}
+	</update>
+	
+	<update id="recoveryDiscountCouponNew">
+		UPDATE discount_new_coupon SET state = 1
+			where id = #{id}
+	</update>
+	
+	<update id="updatediscountCouponNew">
+		UPDATE discount_new_coupon
+		<set>
+			<if test="name">
+				name = #{name},
+			</if>
+			<if test="couponCodes">
+				coupon_codes = #{couponCodes},
+			</if>
+			<if test="couponMoney">
+				coupon_money = #{couponMoney},
+			</if>
+			<if test="couponCondition">
+				coupon_condition = #{couponCondition},
+			</if>
+			<if test="couponTime">
+				coupon_time = #{couponTime},
+			</if>
+			<if test="couponUrl">
+				coupon_url = #{couponUrl},
+			</if>
+		</set>
+		WHERE id = #{id}
+	</update>
+	
+	<insert id="saveDiscountCouponNew">
+		insert into discount_new_coupon(
+		          id,
+		          name,
+		          coupon_codes,
+		          coupon_money,
+		          coupon_condition,
+		          coupon_time,
+		          coupon_url,
+		          state,
+		          next_order,
+		          create_time
+		) VALUES (
+		         #{id}, 
+		         #{name},
+		         #{couponCodes},
+		         #{couponMoney},
+		         #{couponCondition},
+		         #{couponTime},
+		         #{couponUrl},
+		         #{state},
+		         #{nextOrder},
+		         #{createTime}
+		)
+	</insert>
+	
+	<update id="updateNextOrder">  
+		    update discount_new_coupon 
+	        set next_order = #{nextOrder}
+	        where id = #{id} 
+	</update>
+	
+	<update id="updateState">
+	   UPDATE discount_new_coupon
+		    SET state = CASE state 
+		        WHEN '1' THEN '2'
+		        WHEN '3' THEN '4'
+		    END
+		WHERE state IN ('1','3')
+    </update>
+	
+	<update id="updateCurrOrder">
+	  update discount_new_coupon 
+	        set curr_order = next_order
+	        where state in ('1','2')
+	</update>
+	
+	<select id="queryallDiscountCouponNew" resultType="DiscountCouponNew">
+		SELECT a.id, a.name, a.coupon_codes, a.coupon_money, a.coupon_condition, a.coupon_time,
+	           a.coupon_url, a.payment_amount, a.state, a.curr_order, a.create_time, a.next_order
+		FROM discount_new_coupon a
+		where a.state in (${state})
+		order by ${orderBy}
+	</select>
+	
+	<select id="queryDiscountGet"  resultType="DiscountGetNew">
+	  SELECT b.discount_coupon_code from discount_new_get b
+			where 1=1
+		<if test="openid != null and openid != ''">
+			AND b.openid = #{openid}
+		</if>
+		<if test="lvmamaUserno != null and lvmamaUserno != ''">
+			AND b.lvmama_user_no = #{lvmamaUserno}
+		</if>
+		<if test="discountCouponid != null and discountCouponid != ''">
+			AND b.discount_coupon_id = #{discountCouponid}
+		</if>
+		<if test="discountCouponcode != null and discountCouponcode != ''">
+			AND b.discount_coupon_code = #{discountCouponcode}
+		</if>
+		<if test="createDate != null and createDate != ''">
+			AND b.create_date = #{createDate}
+		</if>
+		group by b.discount_coupon_code
+	</select>
+	
+	
+	<select id="getAquireCoupons"  resultType="DiscountGetNew">
+		SELECT b.openid, b.lvmama_user_no, b.discount_coupon_id, b.discount_coupon_code, b.create_date from discount_new_get b
+			where 1=1
+		<if test="openid != null and openid != ''">
+			AND b.openid = #{openid}
+		</if>
+		<if test="lvmamaUserno != null and lvmamaUserno != ''">
+			AND b.lvmama_user_no = #{lvmamaUserno}
+		</if>
+		<if test="discountCouponid != null and discountCouponid != ''">
+			AND b.discount_coupon_id = #{discountCouponid}
+		</if>
+		<if test="discountCouponcode != null and discountCouponcode != ''">
+			AND b.discount_coupon_code = #{discountCouponcode}
+		</if>
+		<if test="createDate != null and createDate != ''">
+			AND b.create_date = #{createDate}
+		</if>
+		group by b.openid, b.lvmama_user_no, b.discount_coupon_id, b.discount_coupon_code
+	</select>
+	
+	
+	<select id="querycouponOneTwoList" resultType="DiscountCouponNew">
+	    SELECT a.id, a.name, a.coupon_codes, a.coupon_money, a.coupon_condition, a.coupon_time,
+	           a.coupon_url, a.payment_amount, a.state, a.curr_order, a.create_time, a.next_order
+		FROM discount_new_coupon a
+		where a.state in ('1','2')
+        order by a.next_order
+	</select>
+	
+	<select id="querycouponThreeFourList" resultType="DiscountCouponNew">
+	    SELECT a.id, a.name, a.coupon_codes, a.coupon_money, a.coupon_condition, a.coupon_time,
+	           a.coupon_url, a.payment_amount, a.state, a.curr_order, a.create_time, a.next_order
+		FROM discount_new_coupon a
+		where a.state in ('3','4')
+	</select>
+</mapper>

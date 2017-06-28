@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="T_WX_SIGNIN">
+	<resultMap id="BaseResultMap" type="SignInRecord">
+		<id column="id" property="id" jdbcType="VARCHAR" />
+		<result column="openid" property="openid" jdbcType="VARCHAR" />
+		<result column="sign_time" property="signTime" jdbcType="TIMESTAMP" />
+		<result column="added_flow" property="addedFlow" jdbcType="INTEGER" />
+		<result column="continuous_sign_count" property="continuousSignCount" jdbcType="INTEGER" />
+		<result column="additional_award" property="additionalAward" jdbcType="BIT" />
+		<result column="remark" property="remark" jdbcType="VARCHAR" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		id, openid, sign_time, added_flow, continuous_sign_count,
+		additional_award, remark
+	</sql>
+	<insert id="insertSelective" parameterType="SignInRecord">
+		insert into t_wx_sign
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				id,
+			</if>
+			<if test="openid != null">
+				openid,
+			</if>
+			<if test="signTime != null">
+				sign_time,
+			</if>
+			<if test="addedFlow != null">
+				added_flow,
+			</if>
+			<if test="continuousSignCount != null">
+				continuous_sign_count,
+			</if>
+			<if test="additionalAward != null">
+				additional_award,
+			</if>
+			<if test="remark != null">
+				remark,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=VARCHAR},
+			</if>
+			<if test="openid != null">
+				#{openid,jdbcType=VARCHAR},
+			</if>
+			<if test="signTime != null">
+				#{signTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="addedFlow != null">
+				#{addedFlow,jdbcType=INTEGER},
+			</if>
+			<if test="continuousSignCount != null">
+				#{continuousSignCount,jdbcType=INTEGER},
+			</if>
+			<if test="additionalAward != null">
+				#{additionalAward,jdbcType=BIT},
+			</if>
+			<if test="remark != null">
+				#{remark,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
+	<select id="selectByDate" resultMap="BaseResultMap" parameterType="java.util.Map">
+		select
+		<include refid="Base_Column_List" />
+		from t_wx_sign
+		where DATE_FORMAT(sign_time, '%Y-%m-%d') = #{date,jdbcType=VARCHAR} and openid = #{openid,jdbcType=VARCHAR}
+	</select>
+</mapper>

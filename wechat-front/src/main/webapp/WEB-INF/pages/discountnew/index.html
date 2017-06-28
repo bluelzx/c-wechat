@@ -1,0 +1,150 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>${discountActivity.name}</title>
+    <meta name="Keywords" content="驴妈妈无线,景区门票,旅游度假"/>
+    <meta name="Description" content="驴妈妈无线官网:支持手机快捷预订景区门票,自助游线路,全国酒店,豪华邮轮等各种旅游产品.(中国最领先的在线旅游预订服务商!)"/>
+    <meta content="initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width" name="viewport">
+    <meta id="share" share-linkurl="" name="share" share-title="" share-content="" share-imageurl="">
+    <meta http-equiv="pragma" content="no-cache">
+    <meta http-equiv="Cache-Control" content="max-age=7200" />
+    <meta http-equiv="expires" content="0">
+    <meta http-equiv="Cache-Control" content="no-transform " />
+    <meta http-equiv="Cache-Control" content="no-siteapp" />
+    <link rel="apple-touch-icon" href="//pics.lvjs.com.cn/img/mobile/touch/img/lvmama_v1_png.png"/>
+    <link rel="apple-touch-icon" sizes="72x72" href="//pics.lvjs.com.cn/img/mobile/touch/img/lvmama_v1_png.png"/>
+    <link rel="apple-touch-icon" sizes="114x114" href="//pics.lvjs.com.cn/img/mobile/touch/img/lvmama_v1_png.png"/>
+    <link rel="apple-touch-icon" sizes="144x144" href="//pics.lvjs.com.cn/img/mobile/touch/img/lvmama_v1_png.png"/>
+    <link rel="stylesheet" href="//pics.lvjs.com.cn/mobile/css/globalV1.min.css">  
+    <link rel="stylesheet" href="//pics.lvjs.com.cn/mobile/zt/WeChat/380coupons/css/style.css?v=20160921">
+    <script type="text/javascript" src="//pics.lvjs.com.cn/js/new_v/jquery-1.7.2.min.js"></script>
+</head>
+<body>
+    <div style="width:0; height:0; overflow: hidden; font-size: 0; position: fixed; left: 0;top: 0;">
+        <img src="" alt=""/>
+    </div>
+    <div id="container">
+        <div class="banner"><img src="${discountActivity.banner}" alt=""></div>
+        <#if DiscountCouponList?? && DiscountCouponList?size&gt;0>
+        <div class="coupons">
+         <#list DiscountCouponList as discountCoupon>
+            <ul class="list-group">
+                <li class="list-item">
+                    <div class="item-left-piture">
+                        <img src="//pics.lvjs.com.cn/mobile/zt/WeChat/380coupons/images/leftbg.png" onclick="window.location.href='${discountCoupon.couponUrl}'"alt="">
+                         <div class="item-classify">
+                            <label for="">${discountCoupon.name}</label>
+                        </div>
+                        <div class="item-price">
+                            <i>${discountCoupon.couponMoney}</i>元
+                        </div>
+                        <div class="item-label">
+                            <span>立减</span>
+                        </div>
+                        <div class="item-rule">
+                            <span>${discountCoupon.couponCondition}</span>
+                        </div>
+                        <div class="item-overtime">
+                                                                                    有效期：自领取日起${discountCoupon.couponTime}天
+                        </div>
+                    </div>
+                   <div class="item-right-picture">
+                       <img src="//pics.lvjs.com.cn/mobile/zt/WeChat/380coupons/images/right.png" alt="">
+                       <div class="item-right-btn">
+	                            <a>
+	                            	<#if discountCoupon.isAquire == "1"> 
+	                            		<img class='btn2-pic btn-pic disabled' src="//pics.lvjs.com.cn/mobile/zt/WeChat/380coupons/images/btn2.png" alt="">
+	                            	<#else>
+	                            		<img class='btn1-pic btn-pic' onclick="aquireCoupon('${discountCoupon_index}' , '${discountCoupon.id!}' ,'${discountCoupon.couponCodes!}')" src="//pics.lvjs.com.cn/mobile/zt/WeChat/380coupons/images/btn1.png" alt="">
+	                            	</#if>
+	                            </a> 
+                        </div>
+                   </div>
+                </li>
+            </ul>
+           </#list>
+        </div>
+        </#if>
+        <div class="coupon_footer"><img src="//pics.lvjs.com.cn/mobile/zt/WeChat/380coupons/images/endorsement.png" alt=""></div>
+        <div class="success_popup">
+            <div class="main">
+                <h3>恭喜您!</h3>
+                <p>优惠券领取成功！<br>请在驴妈妈旅游网服务号菜单"个人中心"里查看</p>
+                <button type="button" id="know">我知道了</button>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+        //rem自适应
+        (function (doc, win) {
+            var docEl = doc.documentElement,
+                resizeEvt = "orientationchange" in window ? "orientationchange" : "resize",
+                recalc = function () {
+                    var clientWidth = docEl.clientWidth;
+                    if(clientWidth>640)
+                        clientWidth = 640;
+                    if (!clientWidth) return;
+                    docEl.style.fontSize = 10 * (clientWidth / 320) + "px";
+                };
+            if (!doc.addEventListener) return;
+            win.addEventListener(resizeEvt, recalc, false);
+            doc.addEventListener("DOMContentLoaded", recalc, false);
+        })(document, window);
+
+    </script>
+
+	
+	<script type="text/javascript">
+	jQuery(function ($) {
+
+		$("#know").on('click',function(){
+				$(".success_popup").hide();
+			});
+	})	
+	
+	
+	var loading = false;
+	function aquireCoupon(index ,id ,couponCode) {
+		if(loading)
+    			return;
+			loading = true;//防止重复点击
+			
+			$.ajax({
+				url : '${adminPath}/380Discount/getCoupons',
+				type : "POST",
+				data : {
+					      id: id,
+					      couponCode:couponCode
+				},
+				success:function(data) {
+					if(data.code == 1) {
+						$(".success_popup .main h3").html("恭喜您!");
+						$(".success_popup .main p").html('优惠券领取成功！<br>请在驴妈妈旅游网服务号菜单"个人中心"里查看');
+						$(".success_popup").show();
+						$('.coupons .btn-pic:eq(' + index + ')').removeClass('btn1-pic');//移除立即领取的样式
+						$('.coupons .btn-pic:eq(' + index + ')').addClass('btn2-pic');//添加已领取的样式
+						$('.coupons .btn-pic:eq(' + index + ')').removeAttr('onclick');//点击领取后，移除onclick方法
+						$('.coupons .btn-pic:eq(' + index + ')').attr("src", "//pics.lvjs.com.cn/mobile/zt/WeChat/380coupons/images/btn2.png");
+					} else if(data.code == -1){
+						 $(".success_popup .main h3").html("领取失败");
+						$(".success_popup .main p").html("领取失败，请稍后再试!<br>如仍有问题，请联系客服。");
+						$(".success_popup").show(); 
+					}else {
+						 $(".success_popup .main h3").html("领取失败");
+							$(".success_popup .main p").html(data.msg);
+							$(".success_popup").show(); 
+						}
+					loading = false;
+				},
+				error:function(data) {
+				}
+			});
+		//}
+		
+	}
+	
+</script>
+	
+</body>
+</html>

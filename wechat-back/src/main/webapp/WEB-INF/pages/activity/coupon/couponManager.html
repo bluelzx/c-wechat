@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta charset="utf-8" />
+<title>给驴粉发券码 - 微信后台管理系统</title>
+<meta name="description" content="overview &amp; stats" />
+<meta name="viewport"
+	content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+<!-- bootstrap & fontawesome -->
+<#include "commonHead.html">
+<!-- ace settings handler -->
+<script src="${webroot}/assets/js/ace-extra.min.js"></script>
+<script src="${webroot}/assets/js/jquery.2.1.1.min.js"></script>
+<script src="${webroot}/assets/js/bootstrap.min.js"></script>
+<link rel="stylesheet" href="${webroot}/assets/css/bootstrap-datetimepicker.min.css" />
+</head>
+
+<body class="no-skin" style="background-color: #FFF;">
+	<div class="page-content">
+		<div class="page-header">
+			<h1>
+				活动管理 <small> <i class="ace-icon fa fa-angle-double-right"></i>
+					给驴粉发券码
+				</small>
+			</h1>
+		</div>
+		<div class="tabbable">
+			<ul class="nav nav-tabs" id="myTab">
+				<li class=""><a data-toggle="tab" href="#manage"
+					aria-expanded="false"> 活动管理 </a></li>
+
+				<li class=""><a data-toggle="tab" href="#statistics"
+					aria-expanded="true"> 活动统计 </a></li>
+			</ul>
+
+			<div class="tab-content">
+				<div id="manage" class="tab-pane fade">
+					<button type="button" onclick="skip('${adminPath}/activity/coupon/new')" class="btn btn-white btn-primary btn-round">添加活动</button>
+					<hr>
+					<div class="row">
+						<div class="col-xs-12">
+							<!-- PAGE CONTENT BEGINS -->
+							<div class="row">
+								<div class="col-xs-12">
+									<div class="widget-box"
+										style="margin-bottom: 0px; border-bottom: 0px;">
+										<div class="widget-body" style="background-color: #EFF3F8;">
+											<div class="widget-main">
+												<form class="form-inline" id="searchFormManage" method="post"
+													action="${adminPath}/activity/coupon">
+													<input type="hidden" name="tab" value="tabManage"/>
+													<div class="form-group">
+														<label for="exampleInputName2">活动名称：</label> <input
+															type="text" class="form-control" name="name"
+															value="${conditionManage.name!}" placeholder="用户名称">
+													</div>
+													<div class="form-group">
+														<label for="exampleInputName2">邀请码：</label> <input
+															type="text" class="form-control" name="inviteCode"
+															value="${conditionManage.inviteCode!}" placeholder="邀请码">
+													</div>
+													<div class="form-group">
+														<label for="exampleInputName2">开始时间：</label> <input
+															type="text" class="form-control beginDatetimepicker"
+															name="beginDate" value="${conditionManage.beginDate!}"
+															placeholder="活动开始时间">
+													</div>
+													<div class="form-group">
+														<label for="exampleInputName2">结束时间：</label> <input
+															type="text" class="form-control endDatetimepicker"
+															name="endDate" value="${conditionManage.endDate!}"
+															placeholder="活动结束时间">
+													</div>
+													<div class="form-group">
+														<label for="exampleInputName2">状态：</label> 
+													</div>
+													<div class="form-group">
+														<select
+															class="form-control" name="status" style="width:100%">
+																<#list statusList as status>
+																<option value=${status.value} <#if conditionManage.status == status.value>selected</#if>>${status.showName}</option>
+																</#list>
+														</select>
+													</div>
+													<div class="form-group">
+														<button id="tabManage" type="submit" class="btn btn-primary btn-round btn-sm">
+															<span class="ace-icon fa fa-search bigger-110"></span>
+															Search
+														</button>
+													</div>
+												</form>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="row">
+								<div class="col-xs-12">
+									<table id="simple-table"
+										class="table table-striped table-bordered table-hover"
+										style="margin-bottom: 0px; border-bottom: 0px;">
+										<thead>
+											<tr>
+												<th>编号</th>
+												<th>活动名称</th>
+												<th>邀请码</th>
+												<th>礼品方式</th>
+												<th>电子券名称</th>
+												<th>分享ID</th>
+												<th>活动有效期</th>
+												<th>URL</th>
+												<th>邀请码使用剩余数</th>
+												<th>电子券剩余数</th>
+												<th>操作</th>
+											</tr>
+										</thead>
+
+
+										<tbody>
+											<#if couponActListManage?? && couponActListManage?size&gt;0> <#list couponActListManage
+											as act>
+											<tr class="">
+												<td>${act.id!}</td>
+												<td>${act.name!}</td>
+												<td>${act.inviteCode!}</td>
+												<td>${act.giftType!}</td>
+												<td>${act.couponName!}</td>
+												<td>${act.shareTemplateId!}</td>
+												<td>开始：${act.startDate?string('yyyy-MM-dd HH:mm:ss')} <br>结束：${act.endDate?string('yyyy-MM-dd HH:mm:ss')}</td>
+												<td>https://weixin.lvmama.com/couponAct/${act.id!}</td> 
+												<td>${act.usableNum-act.usedNum!}</td>
+												<td>${act.totalNum-act.usedNum!}</td>
+												<td>
+													<a class="btn btn-minier btn-primary" href="${adminPath}/activity/coupon/edit?id=${act.id!}" role="button">编辑</a>
+													<#if act.state&gt;0>
+														<a class="btn btn-minier btn-primary" href="${adminPath}/activity/coupon/usstate?id=${act.id!}&state=0" role="button">关闭</a>
+													<#else>
+														<a class="btn btn-minier btn-primary" href="${adminPath}/activity/coupon/usstate?id=${act.id!}&state=1" role="button">启用</a>
+													</#if>
+												</td>
+											</tr>
+											</#list> <#else>
+											<tr>
+												<td colspan="12">
+													<div class="alert alert-danger" style="margin-bottom: 0px;"
+														role="alert">没有记录!</div>
+												</td>
+											</tr>
+											</#if>
+										</tbody>
+									</table>
+									<#include "paginatorManage.html">
+								</div>
+								<!-- /.span -->
+							</div>
+							<!-- /.row -->
+						</div>
+						<!-- /.col -->
+					</div>
+					<!-- /.row -->
+				</div>
+
+				<div id="statistics" class="tab-pane fade">
+					<!-- <p>Food truck fixie locavore, accusamus mcsweeney's marfa nulla
+						single-origin coffee squid.</p> -->
+						<button type="button" onclick="skip('${adminPath}/activity/coupon/new')" class="btn btn-white btn-primary btn-round">添加活动</button>
+					<hr>
+					<div class="row">
+						<div class="col-xs-12">
+							<!-- PAGE CONTENT BEGINS -->
+							<div class="row">
+								<div class="col-xs-12">
+									<div class="widget-box"
+										style="margin-bottom: 0px; border-bottom: 0px;">
+										<div class="widget-body" style="background-color: #EFF3F8;">
+											<div class="widget-main">
+												<form class="form-inline" id="searchFormStatistical" method="post"
+													action="${adminPath}/activity/coupon">
+													<input type="hidden" name="tab" value="tabStatistical"/>
+													<div class="form-group">
+														<label for="exampleInputName2">活动名称：</label> <input
+															type="text" class="form-control" name="name"
+															value="${conditionStatistical.name!}" placeholder="用户名称">
+													</div>
+													<div class="form-group">
+														<label for="exampleInputName2">邀请码：</label> <input
+															type="text" class="form-control" name="inviteCode"
+															value="${conditionStatistical.inviteCode!}" placeholder="邀请码">
+													</div>
+													<div class="form-group">
+														<label for="exampleInputName2">开始时间：</label> <input
+															type="text" class="form-control beginDatetimepicker"
+															name="beginDate" value="${conditionStatistical.beginDate!}"
+															placeholder="活动开始时间">
+													</div>
+													<div class="form-group">
+														<label for="exampleInputName2">结束时间：</label> <input
+															type="text" class="form-control endDatetimepicker"
+															name="endDate" value="${conditionStatistical.endDate!}"
+															placeholder="活动结束时间">
+													</div>
+													<div class="form-group">
+														<label for="exampleInputName2">状态：</label>
+													</div>
+													<div class="form-group">
+														<select
+															class="form-control" name="status" style="width:100%">
+																<#list statusList as status>
+																<option value=${status.value} <#if conditionStatistical.status == status.value>selected</#if>>${status.showName}</option>
+																</#list>
+														</select>
+													</div>
+													<div class="form-group">
+														<button id="tabStatistical" type="submit" class="btn btn-primary btn-round btn-sm">
+															<span class="ace-icon fa fa-search bigger-110"></span>
+															Search
+														</button>
+													</div>
+												</form>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="row">
+								<div class="col-xs-12">
+									<table id="simple-table"
+										class="table table-striped table-bordered table-hover"
+										style="margin-bottom: 0px; border-bottom: 0px;">
+										<thead>
+											<tr>
+												<th>编号</th>
+												<th>活动名称</th>
+												<th>礼品方式</th>
+												<th>电子券名称</th>
+												<th>活动有效期</th>
+												<th>电子券总数</th>
+												<th>电子券剩余数</th>
+												<th>页面访问量</th>
+												<th>参与人数</th>
+												<th>新注册人数</th>
+												<th>老用户人数</th>
+												<th>状态</th>
+											</tr>
+										</thead>
+
+
+										<tbody>
+											<#if couponActListStatistical?? && couponActListStatistical?size&gt;0> <#list couponActListStatistical
+											as act>
+											<tr class="">
+												<td>${act.id!}</td>
+												<td>${act.name!}</td>
+												<td>${act.giftType!}</td>
+												<td>${act.couponName!}</td>
+												<td>开始：${act.startDate?string('yyyy-MM-dd HH:mm:ss')} &nbsp;&nbsp;&nbsp;结束：${act.endDate?string('yyyy-MM-dd HH:mm:ss')}</td>
+												<td>${act.totalNum!}</td>
+												<td>${act.totalNum-act.usedNum!}</td>
+												<td>${act.pageViews!}</td>
+												<td>${act.usedNum!}</td>
+												<td>${act.newUser!}</td>
+												<td>${act.oldUser!}</td>
+												<#if act.state&gt;0>
+												<td>开启</td> <#else>
+												<td>关闭</td> </#if>
+											</tr>
+											</#list> <#else>
+											<tr>
+												<td colspan="12">
+													<div class="alert alert-danger" style="margin-bottom: 0px;"
+														role="alert">没有记录!</div>
+												</td>
+											</tr>
+											</#if>
+										</tbody>
+									</table>
+									<#include "paginatorStatistical.html">
+								</div>
+								<!-- /.span -->
+							</div>
+							<!-- /.row -->
+						</div>
+						<!-- /.col -->
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<#include "commonFootJs.html">
+	<!-- inline scripts related to this page -->
+	<script src="${webroot}/assets/js/moment.min.js"></script>
+	<script src="${webroot}/assets/js/bootstrap-datetimepicker.min.js"></script>
+	<script type="text/javascript">
+		jQuery(function($) {
+			var optionsBegin = {
+				/* format : 'YYYY-MM-DD  HH:mm:ss' */
+					format : 'YYYY-MM-DD  00:00:00'
+			}
+			var optionsEnd = {
+					/* format : 'YYYY-MM-DD  HH:mm:ss' */
+						format : 'YYYY-MM-DD  23:59:59'
+				}
+			$('.beginDatetimepicker').datetimepicker(optionsBegin).next().on(
+					ace.click_event, function() {
+						$(this).prev().focus();
+					});
+			$('.endDatetimepicker').datetimepicker(optionsEnd).next().on(
+					ace.click_event, function() {
+						$(this).prev().focus();
+					});
+			
+			var tab="${tab}";
+			if(tab=="tabStatistical"){
+				$('#myTab').children("li").eq(1).addClass("active");
+				$('#statistics').addClass("active in");
+			}else if(tab=="tabManage"){
+				$('#myTab').children("li").eq(0).addClass("active");
+				$('#manage').addClass("active in");
+			}
+			
+			
+			/* var search=window.location.search;
+			var tab=search.indexOf("tabManage");
+			if(search.indexOf("tabManage")>0){
+				$('#myTab').children("li").eq(0).addClass("active");
+				$('#manage').addClass("active in");
+			}else if(search.indexOf("tabStatistical")>0){
+				$('#myTab').children("li").eq(1).addClass("active");
+				$('#statistics').addClass("active in");
+			}else{
+				$('#myTab').children("li").eq(0).addClass("active");
+				$('#manage').addClass("active in");
+			} */
+			/* var tab=search.substr(search.indexOf("=")+1,search.length); 
+			if(tab=="" || tab=="tabManage"){
+				$('#myTab').children("li").eq(0).addClass("active");
+				$('#manage').addClass("active in");
+			}else if(tab=="tabStatistical"){
+				$('#myTab').children("li").eq(1).addClass("active");
+				$('#statistics').addClass("active in");
+			}*/
+		})
+		
+	</script>
+</body>
+</html>

@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="AREA_GROUP">
+
+	<select id="selectAll" resultType="AreaGroup">
+		SELECT
+			a.id,
+			a. NAME,
+			a.city_names,
+			a.city_ids,
+			(
+				SELECT
+					count(1)
+				FROM
+					t_wx_product_order
+				WHERE
+					FIND_IN_SET (city_id,city_ids )
+				AND (
+					inbound_tourism = 1
+					OR outbound_tourism = 1
+					OR special_ticket = 1
+				)
+			) order_num
+		FROM
+			t_wx_area_group a;
+	</select>
+
+	<insert id="insert" parameterType="AreaGroup">
+		insert into t_wx_area_group (
+		id,
+		name,
+		create_time
+		) VALUE (
+		#{id},
+		#{name},
+		#{createTime}
+		)
+	</insert>
+
+	<update id="update" parameterType="AreaGroup">
+		update t_wx_area_group set
+		city_names = #{cityNames},
+		city_ids = #{cityIds}
+		where 1=1 and id =
+		#{id}
+	</update>
+
+	<delete id="delete">
+		delete from t_wx_area_group where id=#{id}
+	</delete>
+
+	<select id="selectById" resultType="AreaGroup">
+		select
+		id,name,city_names,city_ids from t_wx_area_group where 1=1 and id =
+		#{id}
+	</select>
+
+	<select id="selectByIds" resultType="AreaGroup">
+		select
+		id,name,city_names,city_ids from t_wx_area_group where 1=1 and id in
+		(#{ids})
+	</select>
+
+</mapper>

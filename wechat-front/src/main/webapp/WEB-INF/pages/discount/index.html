@@ -1,0 +1,110 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>${discountActivity.name}</title>
+    <meta name="Keywords" content="驴妈妈无线,景区门票,旅游度假"/>
+    <meta name="Description" content="驴妈妈无线官网:支持手机快捷预订景区门票,自助游线路,全国酒店,豪华邮轮等各种旅游产品.(中国最领先的在线旅游预订服务商!)"/>
+    <meta content="initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width" name="viewport">
+    <meta id="share" share-linkurl="" name="share" share-title="" share-content="" share-imageurl="">
+    <meta http-equiv="pragma" content="no-cache">
+    <meta http-equiv="Cache-Control" content="max-age=7200" />
+    <meta http-equiv="expires" content="0">
+    <meta http-equiv="Cache-Control" content="no-transform " />
+    <meta http-equiv="Cache-Control" content="no-siteapp" />
+    <link rel="apple-touch-icon" href="//pics.lvjs.com.cn/img/mobile/touch/img/lvmama_v1_png.png"/>
+    <link rel="apple-touch-icon" sizes="72x72" href="//pics.lvjs.com.cn/img/mobile/touch/img/lvmama_v1_png.png"/>
+    <link rel="apple-touch-icon" sizes="114x114" href="//pics.lvjs.com.cn/img/mobile/touch/img/lvmama_v1_png.png"/>
+    <link rel="apple-touch-icon" sizes="144x144" href="//pics.lvjs.com.cn/img/mobile/touch/img/lvmama_v1_png.png"/>
+    <link rel="stylesheet" href="//pics.lvjs.com.cn/mobile/css/globalV1.min.css">  
+    <link rel="stylesheet" href="//pics.lvjs.com.cn/mobile/zt/WeChat/380coupons/css/style.css">
+    <script type="text/javascript" src="//pics.lvjs.com.cn/js/new_v/jquery-1.7.2.min.js"></script>
+</head>
+<body>
+    <div style="width:0; height:0; overflow: hidden; font-size: 0; position: fixed; left: 0;top: 0;">
+        <img src="" alt=""/>
+    </div>
+    <div id="container">
+        <div class="banner"><img src="${discountActivity.banner}" alt=""></div>
+        <div class="coupons">
+            <div class="list"><img src="//pics.lvjs.com.cn/mobile/zt/WeChat/380coupons/images/coupon1.png" alt=""><button value="${couponCodes[0]}" <#if coupon1> class="already_receive" <#else> class="receive"  </#if>  ></button></div>
+            <div class="list"><img src="//pics.lvjs.com.cn/mobile/zt/WeChat/380coupons/images/coupon2.png" alt=""><button value="${couponCodes[1]}" <#if coupon2> class="already_receive" <#else> class="receive"  </#if>  ></button></div>
+            <div class="list"><img src="//pics.lvjs.com.cn/mobile/zt/WeChat/380coupons/images/coupon3.png" alt=""><button value="${couponCodes[2]}" <#if coupon3> class="already_receive" <#else> class="receive"  </#if>  ></button></div>
+            <div class="list"><img src="//pics.lvjs.com.cn/mobile/zt/WeChat/380coupons/images/coupon4.png" alt=""><button value="${couponCodes[3]}" <#if coupon4> class="already_receive" <#else> class="receive"  </#if>  ></button></div>
+            <div class="list"><img src="//pics.lvjs.com.cn/mobile/zt/WeChat/380coupons/images/coupon5.png" alt=""><button value="${couponCodes[4]}" <#if coupon5> class="already_receive" <#else> class="receive"  </#if>  ></button></div>
+            <div class="list"><img src="//pics.lvjs.com.cn/mobile/zt/WeChat/380coupons/images/coupon6.png" alt=""><button value="${couponCodes[5]}" <#if coupon6> class="already_receive" <#else> class="receive"  </#if>  ></button></div>
+            <div class="list"><img src="//pics.lvjs.com.cn/mobile/zt/WeChat/380coupons/images/coupon7.png" alt=""><button value="${couponCodes[6]}" <#if coupon7> class="already_receive" <#else> class="receive"  </#if>  ></button></div>
+        </div>
+        <div class="coupon_footer"><img src="//pics.lvjs.com.cn/mobile/zt/WeChat/380coupons/images/endorsement.png" alt=""></div>
+        <div class="success_popup">
+            <div class="main">
+                <h3>恭喜您!</h3>
+                <p>优惠券领取成功！<br>请在驴妈妈旅游网服务号菜单"个人中心"里查看</p>
+                <button type="button" id="know">我知道了</button>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+        //rem自适应
+        (function (doc, win) {
+            var docEl = doc.documentElement,
+                resizeEvt = "orientationchange" in window ? "orientationchange" : "resize",
+                recalc = function () {
+                    var clientWidth = docEl.clientWidth;
+                    if(clientWidth>640)
+                        clientWidth = 640;
+                    if (!clientWidth) return;
+                    docEl.style.fontSize = 10 * (clientWidth / 320) + "px";
+                };
+            if (!doc.addEventListener) return;
+            win.addEventListener(resizeEvt, recalc, false);
+            doc.addEventListener("DOMContentLoaded", recalc, false);
+        })(document, window);
+
+    </script>
+
+<script type="text/javascript">
+	jQuery(function($) {
+		var loading = false;
+		$('.receive').on('click', function(){
+			var obj=$(this);
+			var classTxt=obj.attr("class");
+			if(classTxt == 'receive'){
+				if(loading)
+	    			return;
+				loading = true;//防止重复点击
+				
+				var couponCode=obj.val();
+				$.ajax({
+					url : '${adminPath}/380Discount/getCoupons',
+					type : "POST",
+					data : {
+						couponCode:couponCode
+					},
+					success:function(data) {
+						if(data.code == 1) {
+							$(".success_popup .main h3").html("恭喜您!");
+							$(".success_popup .main p").html('优惠券领取成功！<br>请在驴妈妈旅游网服务号菜单"个人中心"里查看');
+							$(".success_popup").show();
+							obj.attr("class","already_receive");
+						} else {
+							$(".success_popup .main h3").html("领取失败");
+							$(".success_popup .main p").html("领取失败，请稍后再试!<br>如仍有问题，请联系客服。");
+							$(".success_popup").show();
+						}
+						loading = false;
+					},
+					error:function(data) {
+					}
+				});
+			}
+			
+		}); 
+		
+		$("#know").on('click',function(){
+			$(".success_popup").hide();
+		});
+	})
+</script>
+</body>
+</html>

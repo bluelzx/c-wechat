@@ -1,0 +1,102 @@
+.tip-sign {
+	display: none;
+	position: fixed;
+	left: 50%;
+	top: 50%;
+	-webkit-transform: translate(-50%, -50%);
+	transform: translate(-50%, -50%);
+	border-radius: .3rem;
+	width: 19rem;
+	height: 11rem;
+	background-color: rgba(0, 0, 0, 0.7);
+	text-align: center;
+	color: #fff;
+}
+
+.tip-sign span {
+	position: fixed;
+	width: 100%;
+	left: 50%;
+	top: 50%;
+	-webkit-transform: translate(-50%, -50%);
+	transform: translate(-50%, -50%);
+	padding: 0 10px;
+}
+
+#container1 .main .receive-input .code .unused {
+	background-image: -webkit-linear-gradient(top, gray 50%, gray 50%);
+	background-image: linear-gradient(top, gray 50%, gray 50%);
+	border: gray;
+}
+
+.orderShare .unused {
+	background: gray !important;
+	background-color: gray !important;
+}
+
+#container1 .unused {
+	background: gray !important;
+	background-color: gray !important;
+	box-shadow: none !important; 
+}
+
+.loadingModal {
+	position: fixed;
+	z-index: 2;
+	top: 50%;
+	left: 50%;
+	-webkit-transform: translate(-50%, -50%);
+	transform: translate(-50%, -50%);
+	width: 17rem;
+	color: #fff;
+	text-align: center;
+	padding: 1rem;
+	padding-top: 4rem;
+	border-radius: 0.3rem;
+	background-color: rgba(0, 0, 0, .7)
+}
+.loadingModal .loading {
+  width: 30px;
+  height: 30px;
+  position: absolute;
+  top: 0;
+  left: 50%;
+  -webkit-transform: translateX(-50%);
+  transform: translateX(-50%);
+  top: 10px;
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-image: url("http://pic.lvmama.com/mobile/img/lvmama/v7/module/lv-my/loading.png");
+  background-position: 0 0;
+}
+.loadingModal .loading i {
+  width: 30px;
+  height: 30px;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  -webkit-transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%);
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-image: url("http://pic.lvmama.com/mobile/img/lvmama/v7/module/lv-my/loading-animate.png");
+  background-position: 0 0;
+  -webkit-animation: circle 1s linear 0s infinite;
+  animation: circle 1s linear 0s infinite;
+}
+@keyframes circle {
+  from {transform:translate(-50%,-50%) rotate(0deg);  -webkit-transform:translate(-50%,-50%) rotate(0deg);}
+    to {transform:translate(-50%,-50%) rotate(360deg);-webkit-transform:translate(-50%,-50%) rotate(360deg);}
+}
+@-webkit-keyframes circle {
+  from {transform:translate(-50%,-50%) rotate(0deg);  -webkit-transform:translate(-50%,-50%) rotate(0deg);}
+    to {transform:translate(-50%,-50%) rotate(360deg);-webkit-transform:translate(-50%,-50%) rotate(360deg);}
+}
+@keyframes circle {
+  from {transform:translate(-50%,-50%) rotate(0deg);  -webkit-transform:translate(-50%,-50%) rotate(0deg);}
+    to {transform:translate(-50%,-50%) rotate(360deg);-webkit-transform:translate(-50%,-50%) rotate(360deg);}
+}
+@-webkit-keyframes circle {
+  from {transform:translate(-50%,-50%) rotate(0deg);  -webkit-transform:translate(-50%,-50%) rotate(0deg);}
+    to {transform:translate(-50%,-50%) rotate(360deg);-webkit-transform:translate(-50%,-50%) rotate(360deg);}
+}

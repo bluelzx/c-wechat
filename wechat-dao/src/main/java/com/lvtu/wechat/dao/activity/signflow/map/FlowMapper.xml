@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="T_WX_FLOW" >
+  <resultMap id="BaseResultMap" type="Flow" >
+    <id column="id" property="id" jdbcType="VARCHAR" />
+    <result column="openid" property="openid" jdbcType="VARCHAR" />
+    <result column="total_flow" property="totalFlow" jdbcType="INTEGER" />
+    <result column="surplus_flow" property="surplusFlow" jdbcType="INTEGER" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, openid, total_flow, surplus_flow, got_first_flow
+  </sql>
+  <select id="selectByOpenid" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from t_wx_flow
+    where openid = #{openid,jdbcType=VARCHAR}
+  </select>
+  <insert id="insertSelective" parameterType="Flow" >
+    insert into t_wx_flow
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="openid != null" >
+        openid,
+      </if>
+      <if test="totalFlow != null" >
+        total_flow,
+      </if>
+      <if test="surplusFlow != null" >
+        surplus_flow,
+      </if>
+      <if test="gotFirstFlow != null" >
+        got_first_flow,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="openid != null" >
+        #{openid,jdbcType=VARCHAR},
+      </if>
+      <if test="totalFlow != null" >
+        #{totalFlow,jdbcType=INTEGER},
+      </if>
+      <if test="surplusFlow != null" >
+        #{surplusFlow,jdbcType=INTEGER},
+      </if>
+      <if test="gotFirstFlow != null" >
+        #{gotFirstFlow,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="Flow" >
+    update t_wx_flow
+    <set>
+		<if test="openid != null and openid != ''">
+			openid = #{openid,jdbcType=VARCHAR},
+		</if>
+		<if test="totalFlow != null">
+			total_flow = #{totalFlow,jdbcType=INTEGER},
+		</if>
+		<if test="surplusFlow != null">
+			surplus_flow = #{surplusFlow,jdbcType=INTEGER},
+		</if>
+		<if test="gotFirstFlow != null">
+			got_first_flow = #{gotFirstFlow,jdbcType=INTEGER},
+		</if>
+	</set>
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  
+   <insert id="addwxFlow" parameterType="Flow">
+	    insert into t_wx_flow (
+			    id,
+			    openid,
+			    total_flow,
+			    surplus_flow,
+			    got_first_flow
+	    ) values (
+		       #{id},
+		       #{openid},
+		       #{totalFlow},
+		       #{surplusFlow},
+		       #{gotFirstFlow}
+	    )
+	  </insert>
+	  
+	  <update id="changewxFlow">
+	    update t_wx_flow 
+	    set total_flow = total_flow + ${rechargeFlow}, surplus_flow = surplus_flow + ${rechargeFlow}
+	    where openid = #{openid}
+	  </update>
+	  
+	  
+	  <select id="selectFlow"  resultType="Flow">
+	     select a.id, a.openid, a.total_flow, a.surplus_flow, a.got_first_flow from t_wx_flow a where a.openid = #{openid}
+	  </select>
+</mapper>

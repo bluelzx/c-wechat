@@ -1,0 +1,51 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>【造福朋友圈！驴妈妈免费送流量！我刚领了，你也快来领吧！】</title>
+    <meta name="Keywords" content="驴妈妈无线,景区门票,旅游度假"/>
+    <meta name="Description" content="驴妈妈无线官网:支持手机快捷预订景区门票,自助游线路,全国酒店,豪华邮轮等各种旅游产品.(中国最领先的在线旅游预订服务商!)"/>
+    <meta content="initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width" name="viewport">
+    <link rel="alternate" type="application/vnd.wap.xhtml+xml" media="handheld" href="target"/>
+    <link rel="apple-touch-icon" href="//pics.lvjs.com.cn/img/mobile/touch/img/lvmama_v1_png.png"/>
+    <link rel="apple-touch-icon" sizes="72x72" href="//pics.lvjs.com.cn/img/mobile/touch/img/lvmama_v1_png.png"/>
+    <link rel="apple-touch-icon" sizes="114x114" href="//pics.lvjs.com.cn/img/mobile/touch/img/lvmama_v1_png.png"/>
+    <link rel="apple-touch-icon" sizes="144x144" href="//pics.lvjs.com.cn/img/mobile/touch/img/lvmama_v1_png.png"/>
+    <meta http-equiv="pragma" content="no-cache">
+    <meta http-equiv="Cache-Control" content="max-age=7200" />
+    <meta http-equiv="expires" content="0">
+    <link rel="stylesheet" type="text/css" href="//pics.lvjs.com.cn/mobile/zt/weixin/1510/freeFlow/css/freeFlow.css?v=20160908" />
+    <script type="text/javascript" src="//pics.lvjs.com.cn/js/new_v/jquery-1.7.2.min.js"></script>
+    <script type="text/javascript" src="//res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
+    <script type="text/javascript" src="${webroot}/assets/js/WechatApi.js"></script>
+</head>
+<body>
+<div style="width:0; height:0; overflow: hidden; font-size: 0; position: fixed; left: 0;top: 0;"><img src="//pics.lvjs.com.cn/mobile/zt/weixin/1510/freeFlow/img/share.png" alt=""/></div>
+<div class="container">
+	<div class="m-customer">
+        <span class="header-img" style="background-image: url('${headImg!}');"></span>
+        <h3>${nickName!}</h3>
+        <p>您已获得流量：<i>${totalFlow!}M</i></p>
+	</div>
+	<p class="tip">我是${nickName}<br>我领取了驴妈妈旅游网送的${exchangedFlow!}M手机上网流量，<br>你也来领吧!</p>
+	<div class="m-imgs">
+		<img src="//pics.lvjs.com.cn/mobile/zt/weixin/1510/freeFlow/img/1.jpg"/>
+		<img src="//pics.lvjs.com.cn/mobile/zt/weixin/1510/freeFlow/img/2-1.jpg"/>
+		<img src="//pics.lvjs.com.cn/mobile/zt/weixin/1510/freeFlow/img/3.jpg"/>
+	</div>
+	<span class="share-icon">点击右上角分享给小伙伴吧!</span>
+</div>
+</body>
+<script type="text/javascript">
+$(document).ready(function(){
+    var wxData = {
+        "imgUrl": "//pics.lvjs.com.cn/mobile/zt/weixin/1510/freeFlow/img/share.png",
+        "link": location.href.split('#')[0],
+        "desc": "驴妈妈旅游网给你送手机上网流量啦。让你上网、旅游两不误。",
+        "title": "【造福朋友圈！驴妈妈免费送流量！我刚领了，你也快来领吧！】",
+        "timelineTitle": "【造福朋友圈！驴妈妈免费送流量！我刚领了，你也快来领吧！】驴妈妈旅游网给你送手机上网流量啦。让你上网、旅游两不误！"
+    };
+    WechatApi.share(wxData);
+});
+</script>
+</html>

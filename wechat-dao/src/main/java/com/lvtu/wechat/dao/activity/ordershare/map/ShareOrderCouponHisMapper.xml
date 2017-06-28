@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="SHARE_ORDER_COUPON_HIS" >
+  <resultMap id="BaseResultMap" type="ShareOrderCouponHis" >
+    <id column="id" property="id" jdbcType="VARCHAR" />
+    <result column="order_id" property="orderId" jdbcType="VARCHAR"/>
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="remarks" property="remarks" jdbcType="VARCHAR"/>
+    <association column="openid" property="wxUser" fetchType="eager" select="selectByOpenid" />
+    <association column="so_coupon_id" property="coupon" fetchType="eager" select="selectCouponById" />
+  </resultMap>
+  <resultMap id="UserResultMap" type="WechatUser" >
+    <id column="id" property="id" jdbcType="VARCHAR" />
+    <result column="subscribe" property="subscribe" jdbcType="VARCHAR" />
+    <result column="openid" property="openid" jdbcType="VARCHAR" />
+    <result column="nickname" property="nickname" jdbcType="VARCHAR" />
+    <result column="sex" property="sex" jdbcType="VARCHAR" />
+    <result column="province" property="province" jdbcType="VARCHAR" />
+    <result column="city" property="city" jdbcType="VARCHAR" />
+    <result column="country" property="country" jdbcType="VARCHAR" />
+    <result column="language" property="language" jdbcType="VARCHAR" />
+    <result column="head_img_url" property="headimgurl" jdbcType="VARCHAR" />
+    <result column="unionid" property="unionid" jdbcType="VARCHAR" />
+  </resultMap>
+  <resultMap id="CouponResultMap" type="ShareOrderCoupon" >
+    <id column="id" property="id" jdbcType="VARCHAR" />
+    <result column="code" property="code" jdbcType="VARCHAR" />
+    <result column="amount" property="amount" jdbcType="INTEGER" />
+    <result column="detail" property="detail" jdbcType="VARCHAR" />
+    <result column="probability" property="probability" jdbcType="INTEGER" />
+    <result column="remarks" property="remarks" jdbcType="VARCHAR" />
+  </resultMap>
+
+  <sql id="Base_Column_List" >
+    id, order_id, openid, so_coupon_id, create_time, remarks
+  </sql>
+
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from t_wx_share_order_coupon_his
+    where id = #{id,jdbcType=VARCHAR}
+  </select>
+  
+  <select id="selectByConditions" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from t_wx_share_order_coupon_his
+    <where>
+      <if test="id != null" >
+        id = #{id,jdbcType=VARCHAR}
+      </if>
+      <if test="orderId != null" >
+        and order_id = #{orderId,jdbcType=VARCHAR}
+      </if>
+      <if test="openid != null" >
+        and openid = #{openid,jdbcType=VARCHAR}
+      </if>
+      <if test="soCouponId != null" >
+        and so_coupon_id = #{soCouponId,jdbcType=VARCHAR}
+      </if>
+      <if test="createTime != null" >
+        and create_time = #{createTime,jdbcType=TIMESTAMP}
+      </if>
+      <if test="remarks != null">
+      	and remarks = #{remarks,jdbcType=VARCHAR}
+      </if>
+    </where>
+    	order by create_time desc
+  </select>
+ 
+  <!-- 查询用户 -->
+  <select id="selectByOpenid" resultMap="UserResultMap" parameterType="java.lang.String" >
+    select a.id, a.openid, a.subscribe, a.nickname, a.sex, a.province, a.city, a.country,
+           a.language, a.head_img_url, a.unionid, a.is_sync, a.update_date, a.create_date
+    from wx_user a where a.openid = #{openid,jdbcType=VARCHAR}
+  </select>
+  
+  <!-- 查询优惠券 -->
+  <select id="selectCouponById" resultMap="CouponResultMap" parameterType="java.lang.String" >
+    select a.id, a.code, a.amount, a.detail, a.probability, a.remarks, a.del_flag
+    from t_wx_share_order_coupon a where a.id = #{id,jdbcType=VARCHAR}
+  </select>
+ 
+  <insert id="insert" parameterType="ShareOrderCouponHis" >
+    insert into t_wx_share_order_coupon_his (id, order_id, openid, 
+      so_coupon_id, create_time, remarks)
+    values (#{id,jdbcType=VARCHAR}, #{orderId,jdbcType=VARCHAR}, #{wxUser.openid,jdbcType=VARCHAR}, 
+      #{coupon.id,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{remarks,jdbcType=VARCHAR})
+  </insert>
+  
+  <insert id="insertSelective" parameterType="ShareOrderCouponHis" >
+    insert into t_wx_share_order_coupon_his
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="orderId != null" >
+        order_id,
+      </if>
+      <if test="wxUser.openid != null" >
+        openid,
+      </if>
+      <if test="coupon.id != null" >
+        so_coupon_id,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="remarks != null">
+      	remarks,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="orderId != null" >
+        #{orderId,jdbcType=VARCHAR},
+      </if>
+      <if test="wxUser.openid != null" >
+        #{wxUser.openid,jdbcType=VARCHAR},
+      </if>
+      <if test="coupon.id != null" >
+        #{coupon.id,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="remarks != null">
+      	#{remarks,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+</mapper>

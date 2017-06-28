@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="H5COUPON">
+	<select id="select" resultType="H5Coupon">
+		select a.id, a.name, a.coupon_codes, a.brand_business, a.share_template_id, a.start_date, a.end_date,
+		       a.state, a.banner_url, a.rule_explain, a.first_explain, a.multy_explain, a.create_date, a.public_platform_type 
+		from h5coupon a
+		<trim prefix="WHERE" prefixOverrides="AND | OR">
+			<if test="id != null and id != ''">
+				<![CDATA[AND a.id = #{id}]]>
+			</if>
+			<if test="name != null and name != ''">
+				<![CDATA[AND a.name like CONCAT('%', #{name}, '%')]]>
+			</if>
+			<if test="startDate != null and startDate != ''">
+				<![CDATA[AND a.start_date >= #{startDate}]]>
+			</if>
+			<if test="endDate != null and endDate != ''">
+				<![CDATA[AND a.end_date <= #{endDate}]]>
+			</if>
+			<if test="state != null">
+				AND a.state = #{state}
+			</if>
+		</trim>
+		ORDER BY a.create_date DESC 
+	</select>
+
+	<update id="update">
+		UPDATE h5coupon
+		<set>
+			<if test="name != null and name != ''">
+				name = #{name},
+			</if>
+			<if test="publicPlatformType != null and publicPlatformType != ''">
+				public_platform_type = #{publicPlatformType},
+			</if>
+			<if test="couponCodes != null and couponCodes != ''">
+				coupon_codes = #{couponCodes},
+			</if>
+			<if test="brandBusiness != null and brandBusiness != ''">
+				brand_business = #{brandBusiness},
+			</if>
+				share_template_id = #{shareTemplateId},
+			<if test="startDate != null and startDate != ''">
+				start_date = #{startDate},
+			</if>
+			<if test="endDate != null and endDate != ''">
+				end_date = #{endDate},
+			</if>
+			<if test="state != null">
+				state = #{state},
+			</if>
+			<if test="bannerUrl != null and bannerUrl != ''">
+				banner_url = #{bannerUrl},
+			</if>
+			<if test="ruleExplain != null and ruleExplain != ''">
+				rule_explain = #{ruleExplain},
+			</if>
+			<if test="firstExplain != null">
+				first_explain = #{firstExplain},
+			</if>
+			<if test="multyExplain != null">
+				multy_explain = #{multyExplain},
+			</if>
+		</set>
+		WHERE id = #{id}
+	</update>
+
+	<insert id="insert" parameterType="H5Coupon">
+		insert into h5coupon
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				id,
+			</if>
+			<if test="name != null">
+				name,
+			</if>
+			<if test="couponCodes != null">
+				coupon_codes,
+			</if>
+			<if test="brandBusiness != null">
+				brand_business,
+			</if>
+			<if test="shareTemplateId != null">
+				share_template_id,
+			</if>
+			<if test="startDate != null">
+				start_date,
+			</if>
+			<if test="endDate != null">
+				end_date,
+			</if>
+			<if test="state != null">
+				state,
+			</if>
+			<if test="bannerUrl != null">
+				banner_url,
+			</if>
+			<if test="ruleExplain != null">
+				rule_explain,
+			</if>
+			<if test="firstExplain != null">
+				first_explain,
+			</if>
+			<if test="multyExplain != null">
+				multy_explain,
+			</if>
+			<if test="createDate != null">
+				create_date,
+			</if>
+			<if test="back1 != null">
+				back1,
+			</if>
+			<if test="back2 != null">
+				back2,
+			</if>
+			<if test="publicPlatformType != null">
+				public_platform_type
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=VARCHAR},
+			</if>
+			<if test="name != null">
+				#{name,jdbcType=VARCHAR},
+			</if>
+			<if test="couponCodes != null">
+				#{couponCodes, jdbcType=VARCHAR},
+			</if>
+			<if test="brandBusiness != null">
+				#{brandBusiness, jdbcType=VARCHAR},
+			</if>
+			<if test="shareTemplateId != null">
+				#{shareTemplateId, jdbcType=VARCHAR},
+			</if>
+			<if test="startDate != null">
+				#{startDate,jdbcType=TIMESTAMP},
+			</if>
+			<if test="endDate != null">
+				#{endDate,jdbcType=TIMESTAMP},
+			</if>
+			<if test="state != null">
+				#{state, jdbcType=VARCHAR},
+			</if>
+			<if test="bannerUrl != null">
+				#{bannerUrl,jdbcType=VARCHAR},
+			</if>
+			<if test="ruleExplain != null">
+				#{ruleExplain,jdbcType=VARCHAR},
+			</if>
+			<if test="firstExplain != null">
+				#{firstExplain,jdbcType=VARCHAR},
+			</if>
+			<if test="multyExplain != null">
+				#{multyExplain,jdbcType=VARCHAR},
+			</if>
+			<if test="createDate != null">
+				#{createDate,jdbcType=TIMESTAMP},
+			</if>
+			<if test="back1 != null">
+				#{back1,jdbcType=TEXT},
+			</if>
+			<if test="back2 != null">
+				#{back2,jdbcType=TEXT},
+			</if>
+			<if test="publicPlatformType != null">
+				#{publicPlatformType,jdbcType=VARCHAR}
+			</if>
+		</trim>
+	</insert>
+	
+	
+	<select id="queryH5CouponActivity" resultType="H5Coupon">
+		SELECT a.id, a.name, a.coupon_codes, a.brand_business, a.share_template_id, a.start_date, a.end_date,
+		       a.state, a.banner_url, a.rule_explain, a.first_explain, a.multy_explain, a.create_date, a.public_platform_type
+		FROM h5coupon a
+		WHERE a.id = #{h5couponActId}
+	</select>
+</mapper>

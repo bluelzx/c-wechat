@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="H5COUPON_RECORD">
+	<resultMap id="BaseResultMap" type="H5CouponRecord">
+		<id column="id" property="id" jdbcType="VARCHAR" />
+		<result column="h5coupon_act_id" property="h5CouponActId" jdbcType="VARCHAR" />
+		<result column="h5coupon_code" property="h5CouponCode" jdbcType="VARCHAR" />
+		<result column="openid" property="openid" jdbcType="VARCHAR" />
+		<result column="create_date" property="createDate" jdbcType="TIMESTAMP" />
+		<result column="mobile" property="mobile" jdbcType="VARCHAR" />
+		<result column="lvmama_user_no" property="lvmamaUserNo" jdbcType="INTEGER" />
+	</resultMap>
+	
+	<select id="isAquiredH5Coupon" resultType="H5CouponRecord">
+		select a.id, a.h5coupon_act_id, a.h5coupon_code, a.openid, a.create_date, a.mobile, a.lvmama_user_no 
+		from h5coupon_record a
+		<trim prefix="WHERE" prefixOverrides="AND | OR">
+			<if test="mobile != null and mobile != ''">
+				<![CDATA[AND a.mobile = #{mobile}]]>
+			</if>
+			<if test="h5CouponActId != null and h5CouponActId != ''">
+				<![CDATA[AND a.h5coupon_act_id = #{h5CouponActId}]]>
+			</if>
+			<if test="openid != null and openid != ''">
+				<![CDATA[AND a.openid = #{openid}]]>
+			</if>
+			<if test="lvmamaUserNo != null and lvmamaUserNo != ''">
+				<![CDATA[AND a.lvmama_user_no = #{lvmamaUserNo}]]>
+			</if>
+		</trim>
+	</select>
+	
+	<select id="queryH5CouponRecord" resultType="H5CouponRecord">
+		select a.id, a.h5coupon_act_id, a.h5coupon_code, a.openid, a.create_date, a.mobile, a.lvmama_user_no
+		from h5coupon_record a
+		WHERE a.mobile = #{mobile}
+		AND a.h5coupon_act_id = #{h5CouponActId}
+	</select>
+	
+	
+	<insert id="insertH5CouponRecord"  parameterType="h5CouponRecord">
+				insert into h5coupon_record
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				id,
+			</if>
+			<if test="h5CouponActId != null">
+				h5coupon_act_id,
+			</if>
+			<if test="h5CouponCode != null">
+				h5coupon_code,
+			</if>
+			<if test="openid != null">
+				openid,
+			</if>
+			<if test="createDate != null">
+				create_date,
+			</if>
+			<if test="mobile != null">
+				mobile,
+			</if>
+			<if test="lvmamaUserNo != null">
+				lvmama_user_no
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=VARCHAR},
+			</if>
+			<if test="h5CouponActId != null">
+				#{h5CouponActId,jdbcType=VARCHAR},
+			</if>
+			<if test="h5CouponCode != null">
+				#{h5CouponCode,jdbcType=VARCHAR},
+			</if>
+			<if test="openid != null">
+				#{openid,jdbcType=VARCHAR},
+			</if>
+			<if test="createDate != null">
+				#{createDate,jdbcType=TIMESTAMP},
+			</if>
+			<if test="mobile != null">
+				#{mobile,jdbcType=VARCHAR},
+			</if>
+			<if test="lvmamaUserNo != null">
+				#{lvmamaUserNo,jdbcType=VARCHAR}
+			</if>
+		</trim>
+	</insert>
+</mapper>

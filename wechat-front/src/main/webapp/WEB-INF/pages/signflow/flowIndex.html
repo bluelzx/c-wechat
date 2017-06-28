@@ -1,0 +1,74 @@
+<!DOCTYPE HTML>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<title>驴妈妈旅游网</title>
+		<meta name="Keywords" content="驴妈妈无线,景区门票,旅游度假" />
+		<meta name="Description" content="驴妈妈无线官网:支持手机快捷预订景区门票,自助游线路,全国酒店,豪华邮轮等各种旅游产品.(中国最领先的在线旅游预订服务商!)" />
+		<meta content="initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width" name="viewport">
+		<link rel="alternate" type="application/vnd.wap.xhtml+xml" media="handheld" href="target" />
+		<link rel="apple-touch-icon" href="//pics.lvjs.com.cn/img/mobile/touch/img/lvmama_v1_png.png" />
+		<link rel="apple-touch-icon" sizes="72x72" href="//pics.lvjs.com.cn/img/mobile/touch/img/lvmama_v1_png.png" />
+		<link rel="apple-touch-icon" sizes="114x114" href="//pics.lvjs.com.cn/img/mobile/touch/img/lvmama_v1_png.png" />
+		<link rel="apple-touch-icon" sizes="144x144" href="//pics.lvjs.com.cn/img/mobile/touch/img/lvmama_v1_png.png" />
+		<meta http-equiv="pragma" content="no-cache">
+		<meta http-equiv="Cache-Control" content="max-age=7200" />
+		<meta http-equiv="expires" content="0">
+		<script type="text/javascript" src="//pics.lvjs.com.cn/js/new_v/jquery-1.7.2.min.js"></script>
+		<script type="text/javascript" src="${webroot}/assets/js/common.js"></script>
+		<link rel="stylesheet" type="text/css" href="//pics.lvjs.com.cn/mobile/zt/weixin/1510/freeFlow/css/freeFlow.css?v=20160909" />
+	</head>
+
+	<body>
+		<div style="width:0; height:0; overflow: hidden; font-size: 0; position: fixed; left: 0;top: 0;"><img src="//pics.lvjs.com.cn/mobile/zt/weixin/1510/freeFlow/img/share.png" alt=""/></div>
+		<div class="container">
+			<div class="m-main">
+				<img src="//pics.lvjs.com.cn/mobile/zt/weixin/1510/freeFlow/img/index_bg.png" alt="">
+				<div class="m-content">
+					<input id="telnum" type="tel" name="tel" placeholder="请输入您要充值流量的手机号码" /><br>
+					<a href="javascript:exchangeFlow();">领取流量</a>
+				<form>
+					<fieldset>
+						<legend>活动说明</legend>
+					</fieldset>
+				</form>
+				<ul class="illu-part">
+					<li>将您的微信与您的驴妈妈旅游网账号绑定，绑定即送20M手机流量</li>
+					<li>移动、联通、电信手机用户都能领取</li>
+					<li>签到送流量规则：签到一次送1M，每天可签到一 次。如何签到？关注官方微信公众号「驴妈妈旅游网」，回复「签到」就能进入签到页面。 
+					</li>
+					<li>更多游戏赢流量、问卷赢流量、写点评赢流量将 陆续推出，可累加，无上限。
+					</li>
+					<li>流量可积累不归零，每个月限领取一次。</li>
+					<li>驴妈妈每月送出共 130G 至 200G 流量包，本月没领到，下月可领。</li>
+					<li>不建议在月底1-2天内领取流量</li>
+					<li>领取成功之后，流量会在48小时内由运营商充值 到您的手机号码中。 如果没有按时账可能是以下原因（请咨询您的手机 通讯运营商）：
+						<ul class="last-illu">
+							<li>用户状态异常（欠费、被运营商拉入黑名单）</li>
+							<li>用户已经参加的套餐与流量包充值业务冲突</li>
+							<li>用户当月订购流量包已到达叠加上限</li>
+							<li>月底1天移动充值会出现问题（月末1到2天不 建议充值）
+							</li>
+							<li>用户有正在处理订单</li>
+							<li>用户网别变更，不允许订购</li>
+						</ul>
+					</li>
+				</ul>
+			</div>
+		</div>
+		</div>
+	</body>
+	<script type="text/javascript">
+		var phoneReg = /^1\d{10}$/;
+		var exchangeFlow = function() {
+			var inputPhone = $('#telnum').val();
+			if(inputPhone.match(phoneReg)){
+				window.location='${webroot}/flow/getFlow?phone=' + inputPhone;
+			} else {
+				tipsModal('手机号码格式不正确，请重新输入！', 2);
+				$('#telnum').val("");
+			}
+		}
+	</script>
+</html>

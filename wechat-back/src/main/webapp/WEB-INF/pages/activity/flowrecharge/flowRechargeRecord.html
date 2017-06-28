@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta charset="utf-8" />
+<title>手机充值流量 - 微信后台管理系统</title>
+<meta name="description" content="overview &amp; stats" />
+<meta name="viewport"
+	content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+<!-- bootstrap & fontawesome -->
+<#include "commonHead.html">
+<!-- ace settings handler -->
+<script src="${webroot}/assets/js/ace-extra.min.js"></script>
+<link rel="stylesheet"
+	href="${webroot}/assets/css/bootstrap-datetimepicker.min.css" />
+</head>
+
+<body class="no-skin" style="background-color: #FFF;">
+	<div class="page-content">
+		<div class="tabbable">
+
+			<div class="tab-content">
+				<div id="manage" class="tab-pane fade active in">
+				
+					<hr>
+					<div class="row">
+						<div class="col-xs-12">
+							<!-- PAGE CONTENT BEGINS -->
+							<div class="row">
+								<div class="col-xs-12">
+									<div class="widget-box"
+										style="margin-bottom: 0px; border-bottom: 0px;">
+										<div class="widget-body" style="background-color: #EFF3F8;">
+											<div class="widget-main row">
+												<form class="form-inline" id="searchFormManage" method="post" action="${adminPath}/activity/flowrecharge/record/${id}">
+												<input type="hidden" id="flowRechargeId" name="flowRechargeId" value="${flowRecordCondition.flowRechargeId}"/>
+													<div class="form-group col-xs-2">
+														<button id="export" name="export" type="button"
+															class="btn btn-primary btn-round btn-sm">
+															<span class="ace-icon fa bigger-110"></span> 导出
+														</button>
+													</div>
+												</form>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="row">
+								<div class="col-xs-12">
+									<table id="simple-table"
+										class="table table-striped table-bordered table-hover"
+										style="margin-bottom: 0px; border-bottom: 0px;">
+										<thead>
+											<tr>
+												<th>编号</th>
+												<th>充值活动名称</th>
+												<th>用户昵称</th>
+												<th>openId</th>
+												<th>充值流量</th>
+												<th>操作人</th>
+												<th>备注</th>
+											</tr>
+										</thead>
+
+
+										<tbody>
+											<#if FlowRechargeRecordList?? && FlowRechargeRecordList?size&gt;0>
+											<#list FlowRechargeRecordList as flowRecord>
+											<tr class="">
+												<td>${flowRecord_index + 1}</td>
+												<td>${flowRecord.name!}</td>
+												<td>${flowRecord.nickname!}</td>
+												<td>${flowRecord.openid!}</td>
+												<td>${flowRecord.rechargeFlow!} M</td>
+												<td>${flowRecord.operator!}</td>
+												<td>${flowRecord.remark!}</td>
+											</tr>
+											</#list> <#else>
+											<tr>
+												<td colspan="12">
+													<div class="alert alert-danger" style="margin-bottom: 0px;"
+														role="alert">没有记录!</div>
+												</td>
+											</tr>
+											</#if>
+										</tbody>
+									</table>
+									<#include "paginatorManage.html">
+								</div>
+								<!-- /.span -->
+							</div>
+							<!-- /.row -->
+						</div>
+						<!-- /.col -->
+					</div>
+					<!-- /.row -->
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<#include "commonFootJs.html">
+	<!-- inline scripts related to this page -->
+	<script src="${webroot}/assets/js/moment.min.js"></script>
+	<script src="${webroot}/assets/js/bootstrap-datetimepicker.min.js"></script>
+	<script type="text/javascript">
+		jQuery(function($) {
+			var flowRechargeId=$("#flowRechargeId").val();
+			
+			$("#export").on("click",function(){
+				window.open("${adminPath}/activity/flowrecharge/export?flowRechargeId="+flowRechargeId);
+				
+			});
+			
+		})
+	</script>
+</body>
+</html>

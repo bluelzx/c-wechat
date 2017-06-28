@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta charset="utf-8" />
+<title>优惠券H5模板 - 添加活动</title>
+<meta name="description" content="overview &amp; stats" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+<link rel="stylesheet" href="${webroot}/assets/css/bootstrap-datetimepicker.min.css" />
+<script charset="utf-8" src="${webroot}/assets/third/kindeditor/kindeditor-all-min.js"></script>
+<script charset="utf-8" src="${webroot}/assets/third/kindeditor/lang/zh-CN.js"></script>
+<link rel="stylesheet" href="${webroot}/assets/third/kindeditor/themes/default/default.css" />
+<link rel="stylesheet" href="${webroot}/assets/third/kindeditor/themes/simple/simple.css" />
+<link rel="stylesheet" href="${webroot}/assets/css/upload.css" />
+<#include "commonHead.html">
+<style>
+hr {
+	height: 1px;
+	border: none;
+	border-top: 2px solid #555555;
+}
+
+.imageFileCss {
+	padding: 0px 0px;
+}
+
+.fileupload .inputCss {
+	padding: 6px 0px;
+}
+
+#productInfoImg img {
+	max-height: 100px;
+	max-width: 160px;
+}
+
+.required {
+	color : red;
+	font-size : small;
+}
+</style>
+</head>
+
+<body class="no-skin" style="background-color: #FFF;">
+	<div class="page-content">
+		<div class="page-header">
+			<h1>
+				活动管理 <small> <i class="ace-icon fa fa-angle-double-right"></i>
+					<#if pushTemplate?? && pushTemplate.id??> 修改活动 <#else> 添加活动 </#if>
+				</small>
+			</h1>
+		</div>
+		<div class="row">
+			<div class="col-xs-12">
+				<form id="pushTemplate" class="form-horizontal" role="form"
+					action="${adminPath}/pushTemplate/add" method="POST"
+					enctype="multipart/form-data">
+					<#if pushTemplate?? && pushTemplate.id??> <input type="hidden" id="id"
+						name="id" value="${pushTemplate.id}"> </#if> 		
+					<h3 class="text-warning">模板消息配置</h3>
+					<hr>
+					<div class="form-group">
+						<label class="col-sm-3 control-label no-padding-right"
+							for="form-field-1"> <span class="required">*</span>活动标题： </label>
+						<div class="col-sm-9">
+							<input type="text" id="title" name="title" placeholder="请输入活动标题"
+								value="${pushTemplate.title}" class="col-xs-10 col-sm-5" maxlength="50">
+						</div>
+					</div>
+					
+					
+					<div class="space-4"></div>
+					<div class="form-group">
+						<label class="col-sm-3 control-label no-padding-right"
+							for="form-field-1"> <span class="required">*</span>订阅类型： </label>
+						<div class="col-sm-9">
+								<label>
+								 <input name="type" class="ace input-lg" type="checkbox" value="2" onchange="checkboxOnclick(this)"
+								 <#if pushTemplate.type ?contains ('2')>checked=true</#if>/>							 
+								 <span class="lbl">国内游&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+								 </label>
+								 <label>
+								 <input name="type" class="ace input-lg" type="checkbox" value="1" onchange="checkboxOnclick(this)"
+								 <#if pushTemplate.type ?contains ('1')>checked=true</#if>/>
+								 <span class="lbl">出境游&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+								 </label>
+								 <label>
+								 <input name="type" class="ace input-lg" type="checkbox" value="3" onchange="checkboxOnclick(this)"
+								 <#if pushTemplate.type ?contains ('3')>checked=true</#if>/>
+								 <span class="lbl">特价机票&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+								</label>
+								<label>
+								 <input name="type" class="ace input-lg" type="checkbox" value="4" onchange="checkboxOnclick(this)"
+								 <#if pushTemplate.type ?contains ('4')>checked=true</#if>/>
+								 <span class="lbl">亲子游&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+								</label>
+								<label>
+								 <input name="type" class="ace input-lg" type="checkbox" value="5" onchange="checkboxOnclick(this)"
+								 <#if pushTemplate.type ?contains ('5')>checked=true</#if>/>
+								 <span class="lbl">特价门票&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+								</label>	
+						</div>
+				</div>
+					
+						
+					<div class="space-4"></div>
+					<div class="form-group">
+						<label class="col-sm-3 control-label no-padding-right"
+							for="form-field-1"><span class="required">*</span> 来源： </label>
+						<div class="col-sm-9">
+							<input type="text" id="source" name="source" 
+								placeholder="请输入来源" value="${pushTemplate.source}"
+								class="col-xs-10 col-sm-5" maxlength="50">
+						</div>
+					</div>
+					<div class="space-4"></div>
+					<div class="form-group">
+						<label class="col-sm-3 control-label no-padding-right"
+							for="form-field-1"><span class="required">*</span> 消息内容： </label>
+						<div class="col-sm-9">
+							<input type="text" id="content" name="content"
+								placeholder="请输入消息内容" value="${pushTemplate.content}"
+								class="col-xs-10 col-sm-5" maxlength="200">
+						</div>
+					</div>
+					<div class="space-4"></div>
+					<div class="form-group">
+						<label class="col-sm-3 control-label no-padding-right"
+							for="form-field-1"> <span class="required">*</span>备注： </label>
+						<div class="col-sm-9">
+							<input type="text" id="back" name="back"
+								placeholder="请输入备注" value="${pushTemplate.back}"
+								class="col-xs-10 col-sm-5" maxlength="200">
+						</div>
+					</div>
+					<div class="space-4"></div>
+					<div class="form-group">
+						<label class="col-sm-3 control-label no-padding-right"
+							for="form-field-1"> <span class="required">*</span>详情链接： </label>
+						<div class="col-sm-9">
+							<input type="text" id="url" name="url"
+								placeholder="请输入详情链接" value="${pushTemplate.url}"
+								class="col-xs-10 col-sm-5" maxlength="200">
+						</div>
+					</div>
+					<div class="space-4"></div>
+					<div class="form-group">
+						<label class="col-sm-3 control-label no-padding-right"
+							for="form-field-1"> <span class="required">*</span>发送地区： </label>
+						<div class="col-sm-9">
+						<label>
+								 <input id="form-all-checkbox" onchange="checkboxOnclick(this)"  name="form-all-checkbox" class="ace input-lg" type="checkbox" value="0"
+								 <#if pushTemplate.areasId == '0'>checked=true</#if>/>
+								 <span class="lbl">全部地区&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+						</label>
+						<#if areaGroups?? && areaGroups?size&gt;0>
+							<#list areaGroups as areaGroup>
+								<#if areaGroup.cityIds ??>
+								<label>
+								 <input name="form-field-checkbox" onchange="checkboxOnclick(this)" class="ace input-lg" type="checkbox" value="${areaGroup.id}"
+								 <#if pushTemplate.areasId ?contains (areaGroup.id)>checked=true</#if>/>
+								 <span class="lbl">${areaGroup.name}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+								</label>	
+								</#if>													
+							</#list>
+						</#if>
+
+						</div>
+					</div>
+					<div class="space-4"></div>
+					<div class="form-group">
+						<label class="col-sm-3 control-label no-padding-right"
+							for="form-field-1"> 人数： </label>
+						<div class="col-sm-9">
+							<input type="text" id="count" name="count" disabled="disabled"
+								 value="" class="col-xs-10 col-sm-5" maxlength="200">
+						</div>
+					</div>																				
+					<div class="space-4"></div>
+					<div class="form-group">
+							<label class="col-sm-3 control-label no-padding-right" for="form-field-1"> 是否启用 </label>
+							<div class="col-sm-9">
+								<label style="margin-top:7px;">
+									<input id="useable" name="useable" class="ace ace-switch ace-switch-2" type="checkbox" <#if pushTemplate.useable==0>checked="checked"</#if> >
+									<span class="lbl"></span>
+								</label>
+							</div>
+					</div>
+					<input type="hidden" value="" name="areas_ids" id="areas_ids">
+					<div class="space-4"></div>
+					<div class="form-group">
+						<div class="col-md-offset-4 col-md-8">
+							<button id="submitBtn" class="btn btn-primary btn-round"
+								type="button">
+								<i class="ace-icon fa fa-check bigger-110"></i> 保存配置
+							</button>
+						</div>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+	<#include "commonFootJs.html">
+	<!-- inline scripts related to this page -->
+	<script src="${webroot}/assets/js/moment.min.js"></script>
+	<script src="${webroot}/assets/js/bootstrap-datetimepicker.min.js"></script>
+	<script src="${webroot}/assets/js/ajaxfileupload.js"></script>
+	<script type="text/javascript">
+		jQuery(function($) {
+			$('#submitBtn').on('click', function() {
+				var id = $("#id").val();
+				var title = $("#title").val();
+				var type = "";
+				$("input[name=type]").each(function() {  
+    	            if ($(this).is(':checked')) {  
+    	            	type += $(this).val()+",";  
+    	            } 
+				});												
+				var source = $("#source").val();			
+				var content = $("#content").val();
+				var back = $("#back").val();
+				var url = $("#url").val();	
+				var areasIds = "";
+				if($("#form-all-checkbox").is(':checked')){
+					areasIds="0";
+				}else{
+ 				$("input[name=form-field-checkbox]").each(function() {  
+    	            if ($(this).is(':checked')) {  
+    	            	areasIds += $(this).val()+",";  
+    	            } 
+				});
+				}
+				if($("#useable").is(':checked')){
+					var useable = '0';
+				}else{
+					var useable = '1';
+				}			
+				if (isEmpty(title)) {
+					$("#title").focus();
+					showMsg("活动标题不能为空");
+					return;
+				}
+				if (isEmpty(type)){
+					showMsg("请选择订阅类型");
+					return;
+				}
+				type = type.substr(0,type.length-1);
+				if (isEmpty(source)) {
+					$("#source").focus();
+					showMsg("活动来源不能为空");
+					return;
+				}
+				if (isEmpty(content)) {
+					$("#content").focus();
+					showMsg("活动内容不能为空");
+					return;
+				}
+				if (isEmpty(back)) {
+					$("#back").focus();
+					showMsg("备注不能为空");
+					return;
+				}
+				if (isEmpty(url)) {
+					$("url").focus();
+					showMsg("链接地址不能为空");
+					return;
+				}
+				if (isEmpty(areasIds)){
+					showMsg("请选择发送地区");
+					return;
+				}
+				//用ajax进行form表单提交
+				$.ajax({
+					url:"${adminPath}/pushTemplate/add",
+					type:"POST",
+					data:{
+						id:id,
+						title:title,
+						type:type,
+						source:source,
+						content:content,
+						back:back,
+						url:url,
+						useable:useable,
+						areasId:areasIds
+					},
+					success:function(data){
+						if(data.code){
+							showMsg("保存成功！",2);
+							window.location.href = "${adminPath}/pushTemplate/manage";
+						}else{
+							showMsg("保存失败，请稍后再试！",2);
+						}
+					},
+					error:function(){
+						showMsg("系统错误，请稍后重试！");
+					}
+				});
+			});
+		})
+		
+		function checkboxOnclick(obj) {
+				var type = "";
+				$("input[name=type]").each(function() {  
+    	            if ($(this).is(':checked')) {  
+    	            	type += $(this).val()+",";  
+    	            } 
+				});	
+				
+				var areasIds = "";
+				if($("#form-all-checkbox").is(':checked')){
+					areasIds="0";
+				}else{
+ 				$("input[name=form-field-checkbox]").each(function() {  
+    	            if ($(this).is(':checked')) {  
+    	            	areasIds += $(this).val()+",";  
+    	            } 
+				});
+				}
+				if(type == null || type=="" || areasIds == null || areasIds==""){
+					$("#count").val(0);
+					return;
+				}
+				$.ajax({
+					url:"${adminPath}/pushTemplate/getCount",
+					type:"GET",
+					data:{type:type,
+						areasIds:areasIds},
+					success:function(data){
+						$("#count").val(data.count);
+					}
+				});						
+
+		}
+	</script>
+
+</body>
+</html>

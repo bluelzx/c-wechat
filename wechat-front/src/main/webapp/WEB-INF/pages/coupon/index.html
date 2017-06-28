@@ -1,0 +1,290 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta charset="utf-8">
+<title>驴妈妈微信送福利</title>
+<meta name="Keywords" content="驴妈妈无线,景区门票,旅游度假" />
+<meta name="Description"
+	content="驴妈妈无线官网:支持手机快捷预订景区门票,自助游线路,全国酒店,豪华邮轮等各种旅游产品.(中国最领先的在线旅游预订服务商!)" />
+<meta
+	content="initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width"
+	name="viewport">
+<meta http-equiv="pragma" content="no-cache">
+<meta http-equiv="Cache-Control" content="max-age=7200" />
+<meta http-equiv="expires" content="0">
+<meta http-equiv="Cache-Control" content="no-transform " />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+<link rel="apple-touch-icon"
+	href="//pics.lvjs.com.cn/img/mobile/touch/img/lvmama_v1_png.png" />
+<link rel="apple-touch-icon" sizes="72x72"
+	href="//pics.lvjs.com.cn/img/mobile/touch/img/lvmama_v1_png.png" />
+<link rel="apple-touch-icon" sizes="114x114"
+	href="//pics.lvjs.com.cn/img/mobile/touch/img/lvmama_v1_png.png" />
+<link rel="apple-touch-icon" sizes="144x144"
+	href="//pics.lvjs.com.cn/img/mobile/touch/img/lvmama_v1_png.png" />
+<link rel="stylesheet"
+	href="//pics.lvjs.com.cn/mobile/zt/public/css/base/global.css">
+<link rel="stylesheet"
+	href="//pics.lvjs.com.cn/mobile/zt/4.0.0/1604/wechatfuli/css/style.css">
+</head>
+<body>
+	<div style="width:0; height:0; overflow: hidden; font-size: 0; position: fixed; left: 0;top: 0;"><img id="img_share" src="${activity.imgUrl}" alt=""/></div>
+	<script type="text/javascript" src="//pics.lvjs.com.cn/mobile/js/code/base/ztheader.js"></script>
+	<div id="container2" style="display:none">
+		<div class="banner">
+			<img
+				src="//pics.lvjs.com.cn/mobile/zt/4.0.0/1604/wechatfuli/images/banner.jpg"
+				alt="">
+			<p></p>
+		</div>
+		<div class="succeed">
+			<div class="getReward">
+				<!-- <p>您已成功领取奖品，请到<i>xxxxxxxxx</i>账号 <br/>内查看查看查看!</p> -->
+				<p id="succSubTitle"></p>
+			</div>
+			<div class="redeemCode" style="text-align: center">
+				<i class="code" id="code" style="padding-left: 0px"></i>
+			</div>
+			<div class="hUse">
+				<p>点击“复制”按钮，该兑换码会自动复制到剪切板</p>
+			</div>
+		</div>
+		<div class="notice">
+			<div class="til">温馨提示</div>
+			<div class="detail">
+				<p id="instructions">${activity.instructions}</p>
+			</div>
+		</div>
+		<div class="succImag">
+			<img src=${activity.imgUrl} alt="">
+		</div>
+	</div>
+	<div id="container">
+		<div class="banner">
+			<img
+				src="//pics.lvjs.com.cn/mobile/zt/4.0.0/1604/wechatfuli/images/banner.jpg"
+				alt="">
+			<p>${activity.subTitle}</p>
+		</div>
+		<div class="msg">
+			<form id="getCouponForm" action="${webroot}/couponAct/getCoupons"
+				method="post">
+				<ul class="ul-form">
+					<li><input class="input1" name="inviteCode" type="text"
+						placeholder="请输入你的邀请码" value="${inviteCode}"></li>
+					<li><input class="input2" name="mobile" type="text"
+						placeholder="请输入你的手机号码" value="${mobile}"></li>
+					<li><input class="input3" name="smsCode" type="text"
+						placeholder="请输入验证码" value="${smsCode}">
+						<button id="getAuthCode" type="button">获取验证码</button></li>
+					<input type="hidden" id="couponActId" name="couponActId" value=${activity.id}>
+				</ul>
+			</form>
+			<div class="draw-btn">
+				<button>
+					<strong>立即领取</strong>
+				</button>
+			</div>
+		</div>
+		<div class="notice">
+			<div class="til">温馨提示</div>
+			<div class="detail">
+				<p>${activity.tips}</p>
+			</div>
+		</div>
+		<div class="win-popup">
+			<div class="main">
+				<div class="title">
+					<img
+						src="//pics.lvjs.com.cn/mobile/zt/4.0.0/1604/wechatfuli/images/lvlogo.png"
+						alt="">
+				</div>
+				<h3>领取失败</h3>
+				<p>请重试一下看看，如果问题没解决，请进入微信服务号「驴妈妈旅游网」Joyu_lvmama 回复关键词「客服」找微信客服咨询.</p>
+				<div class="close">
+					<button>
+						<strong>我知道了</strong>
+					</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<script type="text/javascript"
+		src="//pics.lvjs.com.cn/js/new_v/jquery-1.7.2.min.js"></script>
+	<script type="text/javascript"
+		src="//pics.lvjs.com.cn/mobile/zt/public/js/base/global.js"></script>
+
+	<script type="text/javascript"
+		src="//pics.lvjs.com.cn/mobile/zt/public/js/base/base.js"></script>
+	<script type="text/javascript"
+		src="//pics.lvjs.com.cn/mobile/zt/public/js/base/down.js"></script>
+	<script type="text/javascript"
+		src="//pics.lvjs.com.cn/mobile/zt/3.0.0/js/mlosc.js"
+		charset="utf-8"></script>
+	<script type="text/javascript" src="${webroot}/assets/js/common.js"></script>
+    <script type="text/javascript" src="${webroot}/assets/js/WechatApi.js"></script>
+    <script type="text/javascript" src="//res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
+	<script type="text/javascript">
+    	//rem自适应
+		(function (doc, win) {
+		    var docEl = doc.documentElement,
+		        resizeEvt = "orientationchange" in window ? "orientationchange" : "resize",
+		        recalc = function () {
+		            var clientWidth = docEl.clientWidth;
+		            if(clientWidth>640)
+		                clientWidth = 640;
+		            if (!clientWidth) return;
+		            docEl.style.fontSize = 10 * (clientWidth / 320) + "px";
+		        };
+		    if (!doc.addEventListener) return;
+		    win.addEventListener(resizeEvt, recalc, false);
+		    doc.addEventListener("DOMContentLoaded", recalc, false);
+		})(document, window);
+		/* $(".zthead").ztheader(); */
+    </script>
+	<script type="text/javascript">
+	$(document).ready(function() {
+		$("#container2").css("display", "none");
+		$(".btn").css("display", "none");
+		$(".hUse").css("display", "none");
+		$(".code").css("padding-left", "0");
+		$(".redeemCode").css("text-align", "center");
+	});
+	
+	
+ 		//获取验证码
+		$(function() {
+			var loading = false;
+			$("#getAuthCode").click(function() {
+				if(loading || $('#getAuthCode').hasClass('unused'))
+					return;
+				loading = true;//防止重复点击
+				var mobile = $(".input2").val();
+				if(isEmpty(mobile)) {
+					showMsg('请输入手机号码！');
+					loading = false;
+				} else if(!validateMobile(mobile)) {
+					showMsg('手机号码格式错误！');
+					loading = false;
+				} else {
+					$.ajax({
+						url : '${webroot}/couponAct/sendAuthSms',
+						type : "POST",
+						data : {
+							mobile : mobile
+						},
+						success:function(data) {
+							if(data.code == 1) {
+								codeWait(60);
+							}
+							else {
+								showMsg(data.msg);
+							}
+							loading = false;
+						},
+						error:function(data) {
+							loading = false;
+							showMsg('哎呀,网络不给力,请稍后再试试吧！');
+						}
+					});
+				}
+			}); 
+		}); 
+		// 发送验证码倒计时60秒
+		var codeWait = function(num){//倒计时方法 num是要倒计时的秒数
+		    var nowtime = new Date();
+		    var newtime = nowtime;
+		    var count;
+		    nowtime = parseInt(nowtime.getTime()/1000);
+		    var obj = $("#getAuthCode");
+		    obj.addClass('unused');
+		    obj.html(num+"秒后重发");
+		    var timer = setInterval(function(){
+		        newtime = new Date();
+		        count = num-(parseInt(newtime.getTime()/1000)-nowtime);
+		        obj.html(count+"秒后重发");
+		        if(count<=0){
+		            clearInterval(timer);
+		            obj.removeClass('unused');
+		            obj.html('获取验证码');
+		        }
+		    },1000);
+		}
+		//领取优惠券
+		$(function() {
+			var loading = false;
+			$(".draw-btn").click(function() {
+				if(loading){
+					return;
+				}
+				loading = true;//防止重复点击
+				var mobile = $(".input2").val();
+				var inviteCode = $(".input1").val();
+				var smsCode = $(".input3").val();
+				
+				var couponActId = $("#couponActId").val();
+				if(isEmpty(mobile)) {
+					showMsg('请输入手机号码！');
+					loading = false;
+				} else if(!validateMobile(mobile)) {
+					showMsg('手机号码格式错误！');
+					loading = false;
+				} else if (isEmpty(inviteCode)) {
+					showMsg('请输入邀请码！');
+					loading = false;
+				} else if (isEmpty(smsCode)) {
+					showMsg('请输入验证码！');
+					loading = false;
+				} else {
+    				$.getJSON("${webroot}/couponAct/getCoupons", {mobile: mobile, smsCode: smsCode, inviteCode: inviteCode, couponActId: couponActId}, function(data) {
+	   	                if (data.code=='1') {
+	   	                	$("#code").html(data.coupon.couponCode);
+	   	                	$("#succSubTitle").html(data.activity.succSubTitle);
+	   	                	$("#container2").css("display", "block");
+	   	                	$("#container").css("display", "none");
+	   	                	//skipRandom(window.location.href);
+	   	                } else {
+	   	                	if(data.msg != "")
+	   	                		showMsg(data.msg);
+	   	                	else
+	   	                		showMsg("优惠券领取失败，请稍后再试！");
+	   	                }
+	   	             	loading = false;
+	   	            }); 
+				}
+			}); 
+		});
+		var showMsg = function(msg) {
+			$(".win-popup p").html(msg);
+			$(".win-popup").css("display", "block");
+		}
+ 		$(function() {
+			$(".close").click(function() {
+				$(".win-popup").css("display", "none");
+			});
+			/* downPush(); */
+		});
+	</script>
+
+
+	<#if message?? && message!="">
+	<script type="text/javascript">
+		$(document).ready(function(){
+			showMsg('${message}');
+		});
+		</script>
+	</#if>
+
+
+	<script type="text/javascript">
+		$(document).ready(function(){
+			var shareTemplate ="${activity.shareTemplateId}";//分享模板
+			var channel = "1";//微信分享
+			if(!isEmpty(shareTemplate)){
+				loadShareMode(shareTemplate,channel); 
+			}
+		});
+	</script>
+</body>
+</html>

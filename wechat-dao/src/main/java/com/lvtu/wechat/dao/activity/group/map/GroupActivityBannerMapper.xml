@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="GROUP_ACTIVITY_BANNER" >
+	<select id="select" resultType="GroupActivityBanner">
+		SELECT a.id, a.group_activity_id, a.url
+		FROM group_activity_banner a
+		WHERE a.group_activity_id = #{groupActivityId}
+	</select>
+	
+	<insert id="insertBannerImage">
+		INSERT INTO group_activity_banner(id, group_activity_id, url)
+		<foreach collection="list" item="GroupActivityBanner" separator=" union all ">
+			SELECT #{GroupActivityBanner.id}, #{GroupActivityBanner.groupActivityId}, #{GroupActivityBanner.url}
+		</foreach>
+	</insert>
+	
+	<delete id="deleteBannerImage">
+		delete from group_activity_banner where id = #{id};
+	</delete>
+</mapper>

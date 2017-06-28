@@ -1,0 +1,175 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta charset="utf-8">
+<title>驴妈妈甩尾产品订阅中心</title>
+<meta name="Keywords" content="驴妈妈无线,景区门票,旅游度假" />
+<meta name="Description" content="驴妈妈无线官网:支持手机快捷预订景区门票,自助游线路,全国酒店,豪华邮轮等各种旅游产品.(中国最领先的在线旅游预订服务商!)" />
+<meta content="initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width" name="viewport">
+<meta id="share" share-linkurl="" name="share" share-title="" share-content="" share-imageurl="">
+<meta http-equiv="pragma" content="no-cache">
+<meta http-equiv="Cache-Control" content="max-age=7200" />
+<meta http-equiv="expires" content="0">
+<meta http-equiv="Cache-Control" content="no-transform " />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+<link rel="apple-touch-icon" href="//pics.lvjs.com.cn/img/mobile/touch/img/lvmama_v1_png.png" />
+<link rel="apple-touch-icon" sizes="72x72" href="//pics.lvjs.com.cn/img/mobile/touch/img/lvmama_v1_png.png" />
+<link rel="apple-touch-icon" sizes="114x114" href="//pics.lvjs.com.cn/img/mobile/touch/img/lvmama_v1_png.png" />
+<link rel="apple-touch-icon" sizes="144x144" href="//pics.lvjs.com.cn/img/mobile/touch/img/lvmama_v1_png.png" />
+<link rel="stylesheet" href="//pics.lvjs.com.cn/mobile/css/globalV1.min.css">
+<link rel="stylesheet" href="//pics.lvjs.com.cn/mobile/zt/WeChat/bargain-product/css/style.css?v=20170503">
+<script type="text/javascript" src="//pics.lvjs.com.cn/js/new_v/jquery-1.7.2.min.js"></script>
+<script type="text/javascript" src="//res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
+<script type="text/javascript" src="${webroot}/assets/js/WechatApi.js"></script>
+</head>
+<body>
+	<div style="width: 0; height: 0; overflow: hidden; font-size: 0; position: fixed; left: 0; top: 0;">
+		<img src="//pics.lvjs.com.cn/mobile/zt/WeChat/bargain-product/images/lv.png" alt="" />
+		<input type="hidden" id="latitude"></input>
+		<input type="hidden" id="longitude"></input>
+	</div>
+	<div id="container">
+		<div class="top_bg"></div>
+		<span class="lv"></span>
+		<p class="title"></p>
+		<div class="content">
+			<ul>
+				<li>
+					<div class="info">
+						<h3>一键订阅</h3>
+					</div> <span <#if productOrder ?? && productOrder.outboundTourism=='true' &&
+					productOrder.inboundTourism=='true' && productOrder.specialTicket=='true' && 
+					productOrder.homeTourism=='true' && productOrder.hotTicket=='true'>
+					class="open"<#else>class="close"</#if> id="all"><i></i></span>
+				</li>
+				<li>
+					<div class="info">
+						<h3>出境游甩尾产品</h3>
+						<p>自在游天下，海外钜惠！点击订阅，即可接受全球最优惠出境游推荐。</p>
+					</div> <span <#if productOrder ?? && productOrder.outboundTourism=='true'>class="open"<#else>class="close"</#if> id="outbound"><i></i></span>
+				</li>
+				<li>
+					<div class="info">
+						<h3>国内游甩尾产品</h3>
+						<p>国内最超值的产品线路。</p>
+					</div> <span <#if productOrder ?? && productOrder.inboundTourism=='true'>class="open"<#else>class="close"</#if> id="inbound"><i></i></span>
+				</li>
+				<li>
+					<div class="info">
+						<h3>特价机票活动产品</h3>
+						<p>随时了解最新特价机票。</p>
+					</div> <span <#if productOrder ?? && productOrder.specialTicket=='true'>class="open"<#else>class="close"</#if> id="ticket"><i></i></span>
+				</li>
+				<li>
+                    <div class="info"><h3>亲子游甩尾产品</h3><p>最安心的超值亲子家庭主题旅行。</p></div>
+                    <span <#if productOrder ?? && productOrder.homeTourism=='true'>class="open"<#else>class="close"</#if> id="homeTourism"><i></i></span>
+                </li>
+                <li>
+                    <div class="info"><h3>特价景区门票</h3><p>热门景区特价门票抢先购。</p></div>
+                    <span <#if productOrder ?? && productOrder.hotTicket=='true'>class="open"<#else>class="close"</#if> id="hotTicket"><i></i></span>
+                </li>
+			</ul>
+		</div>
+		<div class="bottom_bg">
+			<div class="footer_logo"></div>
+		</div>
+	</div>
+	<script type="text/javascript">
+		//rem自适应
+		(function(doc, win) {
+			var docEl = doc.documentElement, resizeEvt = "orientationchange" in window ? "orientationchange"
+					: "resize", recalc = function() {
+				var clientWidth = docEl.clientWidth;
+				if (clientWidth > 640)
+					clientWidth = 640;
+				if (!clientWidth)
+					return;
+				docEl.style.fontSize = 10 * (clientWidth / 320) + "px";
+			};
+			if (!doc.addEventListener)
+				return;
+			win.addEventListener(resizeEvt, recalc, false);
+			doc.addEventListener("DOMContentLoaded", recalc, false);
+		})(document, window);
+		//订阅按钮触发操作
+		$(".content ul li span").click(function() {			
+			
+							if ($(this).hasClass("close")) {
+								if ($(this).attr("id") == "all") {
+									$(".content ul li span").removeClass("close").addClass("open");
+								} else {
+									$(this).removeClass("close").addClass("open");
+									if ($("#outbound").hasClass("open")
+											&& $("#inbound").hasClass("open")
+											&& $("#ticket").hasClass("open")
+											&& $("#homeTourism").hasClass("open")
+											&& $("#hotTicket").hasClass("open")) {
+										$("#all").removeClass("close").addClass("open");
+									}
+								}
+							} else {
+								if ($(this).attr("id") == "all") {
+									$(".content ul li span").removeClass("open").addClass("close");
+								} else {
+									$(this).removeClass("open").addClass("close");
+									$("#all").removeClass("open").addClass("close");
+								}
+							}
+							order();//执行订阅操作
+						});
+
+		var order = function() {
+			 var latitude =  $("#latitude").val();
+			 var longitude = $("#longitude").val();
+			var outbound = 0;//出境游默认不订阅
+			var inbound = 0;//国内游默认不订阅
+			var ticket = 0;//特价机票默认不订阅
+			var homeTourism = 0;//亲子家庭游
+			var hotTicket = 0;//热门景区门票
+			if ($("#outbound").hasClass("open")) {
+				outbound = 1;
+			}
+			if ($("#inbound").hasClass("open")) {
+				inbound = 1;
+			}
+			if ($("#ticket").hasClass("open")) {
+				ticket = 1;
+			}
+			if ($("#homeTourism").hasClass("open")) {
+				homeTourism = 1;
+			}
+			if ($("#hotTicket").hasClass("open")) {
+				hotTicket = 1;
+			}
+			$.ajax({
+				url : "${webroot}/order/addOrder",
+				type : "POST",
+				data : {
+					outboundTourism : outbound,
+					inboundTourism : inbound,
+					specialTicket : ticket,
+					homeTourism : homeTourism,
+					hotTicket : hotTicket,
+					latitude : latitude,
+					longitude : longitude
+				},
+				success : function(data) {
+					
+				}
+			});
+		}
+		
+		var success = function(res){
+	        var latitude = res.latitude; // 纬度，浮点数，范围为90 ~ -90
+	        var longitude = res.longitude; // 经度，浮点数，范围为180 ~ -180。
+	        $("#latitude").val(latitude);
+	        $("#longitude").val(longitude);
+		}
+		window.onload = function () {
+			WechatApi.getlocation(null,success);
+		}
+			
+		
+	</script>
+</body>
+</html>

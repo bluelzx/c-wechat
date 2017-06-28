@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="FLOWRECHARGERECORD">
+     <insert id="addflowRechargeRecord" parameterType="FlowRechargeRecord" >
+	    insert into flow_recharge_record(
+			          id,
+			          openid,
+			          recharge_flow,
+			          flow_recharge_id,
+			          create_date
+			) VALUES (
+			         #{id}, 
+			         #{openid},
+			         #{rechargeFlow},
+			         #{flowRechargeId},
+			         #{createDate}
+			)
+     </insert>
+     
+    <select id="queryFlowRechargeRecordListById" resultType="FlowRechargeRecordInfo">
+		SELECT
+		fw.name,fw.recharge_flow,fw.operator,fw.remark,fr.openid,wu.nickname
+		FROM flow_recharge_record  fr
+		LEFT JOIN flow_recharge fw ON fr.flow_recharge_id = fw.id
+		LEFT JOIN wx_user wu ON fr.openid = wu.openid
+        WHERE 1 = 1
+		<if test="name != null and name != '' ">
+			AND fw.name = #{name}
+		</if>
+		<if test="rechargeFlow != null and rechargeFlow != '' ">
+			AND fw.recharge_flow = #{rechargeFlow}
+		</if>
+		<if test="operator != null and operator != '' ">
+			AND fw.operator = #{operator}
+		</if>
+		<if test="remark != null and remark != '' ">
+			AND fw.remark = #{remark}
+		</if>
+		<if test="openid != null and openid != '' ">
+			AND fr.openid = #{openid}
+		</if>
+		<if test="nickname != null and nickname != '' ">
+			AND wu.nickname = #{nickname}
+		</if>
+		<if test="flowRechargeId != null and flowRechargeId != '' ">
+			AND fr.flow_recharge_id = #{flowRechargeId}
+		</if>
+	</select>
+	
+	<select id="queryExportFlowRechargeRecord" resultType="ExportFlowRechargeRecord"> 
+	   SELECT
+		fw.name,fw.recharge_flow,fw.operator,fw.remark,fr.openid,wu.nickname
+		FROM flow_recharge_record  fr
+		LEFT JOIN flow_recharge fw ON fr.flow_recharge_id = fw.id
+		LEFT JOIN wx_user wu ON fr.openid = wu.openid
+        WHERE 1 = 1
+		<if test="name != null and name != '' ">
+			AND fw.name = #{name}
+		</if>
+		<if test="rechargeFlow != null and rechargeFlow != '' ">
+			AND fw.recharge_flow = #{rechargeFlow}
+		</if>
+		<if test="operator != null and operator != '' ">
+			AND fw.operator = #{operator}
+		</if>
+		<if test="remark != null and remark != '' ">
+			AND fw.remark = #{remark}
+		</if>
+		<if test="openid != null and openid != '' ">
+			AND fr.openid = #{openid}
+		</if>
+		<if test="nickname != null and nickname != '' ">
+			AND wu.nickname = #{nickname}
+		</if>
+		<if test="flowRechargeId != null and flowRechargeId != '' ">
+			AND fr.flow_recharge_id = #{flowRechargeId}
+		</if>
+	</select>
+</mapper>

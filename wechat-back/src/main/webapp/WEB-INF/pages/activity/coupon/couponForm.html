@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+		<meta charset="utf-8" />
+		<title>给驴粉发券码 - 添加活动</title>
+		<meta name="description" content="overview &amp; stats" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+		<link rel="stylesheet" href="${webroot}/assets/css/bootstrap-datetimepicker.min.css" />
+		<script charset="utf-8" src="${webroot}/assets/third/kindeditor/kindeditor-all-min.js"></script>
+		<script charset="utf-8" src="${webroot}/assets/third/kindeditor/lang/zh-CN.js"></script>
+		<link rel="stylesheet" href="${webroot}/assets/third/kindeditor/themes/default/default.css" />
+		<link rel="stylesheet" href="${webroot}/assets/third/kindeditor/themes/simple/simple.css" />
+		<link rel="stylesheet" href="${webroot}/assets/css/upload.css" />
+		<#include "commonHead.html">
+		<style>
+			hr{
+				height:1px;
+				border:none;
+				border-top:2px solid #555555;
+			}
+			.imageFileCss{ 
+				padding: 0px 0px; 
+ 			} 
+ 			.fileupload .inputCss { 
+				padding: 6px 0px; 
+   			}
+   			#productInfoImg img{
+   				max-height: 100px;
+    			max-width: 160px;
+   			}
+   			.required {
+				color : red;
+				font-size : small;
+			}
+		</style>
+	</head>
+
+	<body class="no-skin" style="background-color: #FFF;">
+		<div class="page-content">
+			<div class="page-header">
+				<h1>
+				活动管理 <small> <i class="ace-icon fa fa-angle-double-right"></i>
+					<#if couponform?? && couponform.id??>
+						编辑发券码活动
+						<#else>
+						新增发券码活动
+						</#if>
+				</small>
+			</h1>
+			</div>
+			<div class="row">
+				<div class="col-xs-12">
+					<form id="couponformForm" class="form-horizontal" role="form" action="${adminPath}/activity/coupon/save" method="POST" enctype="multipart/form-data">
+						<#if couponform?? && couponform.id??>
+						<input type="hidden" id="id" name="id" value="${couponform.id}">
+						</#if>
+						<input type="hidden" id="tipsTxt" name="tipsTxt" value="">
+						<input type="hidden" id="instructionsTxt" name="instructionsTxt" value="">
+						<input type="hidden" id="imgUrl" name="imgUrl" value="">
+						<h3 class="text-warning">基础配置</h3>
+						<hr>
+						<div class="form-group">
+							<label class="col-sm-3 control-label no-padding-right" for="form-field-1"><span class="required">*</span> 活动名称： </label>
+							<div class="col-sm-9">
+								<input type="text" id="name" name="name" placeholder="请输入活动名称" value="${couponform.name!}" class="col-xs-10 col-sm-5">
+							</div>
+						</div>
+						<div class="space-4"></div>
+						<div class="form-group">
+							<label class="col-sm-3 control-label no-padding-right" for="form-field-1"><span class="required">*</span> 邀请码： </label>
+							<div class="col-sm-9">
+								<input type="text" id="inviteCode" name="inviteCode" placeholder="请输入邀请码" value="${couponform.inviteCode!}" class="col-xs-10 col-sm-5">
+							</div>
+						</div>
+						<div class="space-4"></div>
+						<div class="form-group">
+							<label class="col-sm-3 control-label no-padding-right" for="form-field-1"><span class="required">*</span> 礼品名称：</label>
+							<div class="col-sm-9">
+								<input type="radio" id="giftType" name="giftType" value="电子券" checked="checked" class="">
+								<span>电子券</span>
+							</div>
+						</div>
+						<div class="space-4"></div>
+						<div class="form-group">
+							<label class="col-sm-3 control-label no-padding-right" for="form-field-1"><span class="required">*</span> 导入电子券： </label>
+							<div class="col-sm-9">
+								<span class="selectFile-span"><input type="text" name="viewfileTxt" id="viewfileTxt" class="viewfile" /></span>
+								<label for="upload" class="bottom">浏览..</label><span>（txt文件，大小不超过1M）</span>
+								<input type="file" size="30" id="fileTxt"  name="fileTxt" onchange="document.getElementById('viewfileTxt').value=this.value;" class="file" />
+							</div>
+						</div>
+						<div class="space-4"></div>
+						<div class="form-group">
+							<label class="col-sm-3 control-label no-padding-right" for="form-field-1"><span class="required">*</span> 电子券名称： </label>
+							<div class="col-sm-9">
+								<input type="text" id="couponName" name="couponName" placeholder="请输入电子券名称" value="${couponform.couponName}" class="col-xs-10 col-sm-5">
+							</div>
+						</div>
+						<div class="space-4"></div>
+						<div class="form-group">
+							<label class="col-sm-3 control-label no-padding-right" for="form-field-1"><span class="required">*</span>  上线时间： </label>
+							<div class="col-sm-9">
+								<input type="text" id="startDate" name="startDate" placeholder="请输入上线时间" <#if couponform?? && couponform.id??>
+												value="${couponform.startDate?string('yyyy-MM-dd HH:mm:ss')}" <#else>
+												value="" </#if>  class="col-xs-10 col-sm-5 datetimepicker">
+							</div>
+						</div>
+						<div class="space-4"></div>
+						<div class="form-group">
+							<label class="col-sm-3 control-label no-padding-right" for="form-field-1"><span class="required">*</span> 下线时间： </label>
+							<div class="col-sm-9">
+								<input type="text" id="endDate" name="endDate" placeholder="请输入下线时间" <#if couponform?? && couponform.id??>
+												value="${couponform.endDate?string('yyyy-MM-dd HH:mm:ss')}" <#else>
+												value="" </#if> class="col-xs-10 col-sm-5 datetimepicker">
+							</div>
+						</div>
+						<div class="space-4"></div>
+						<div class="form-group">
+							<label class="col-sm-3 control-label no-padding-right" for="form-field-1"><span class="required">*</span>  邀请码使用次数： </label>
+							<div class="col-sm-9">
+								<input type="text" id="usableNum" name="usableNum" placeholder="请输入邀请码使用次数" value="${couponform.usableNum}" class="col-xs-10 col-sm-5">
+							</div>
+						</div>
+						<div class="space-4"></div>
+						<div class="form-group">
+							<label class="col-sm-3 control-label no-padding-right"
+								for="form-field-1"> 分享模版ID： </label>
+							<div class="col-sm-9">
+								<input type="text" id="shareTemplateId" name="shareTemplateId"
+									placeholder="请输入分享模版ID" value="${couponform.shareTemplateId}"
+									class="col-xs-10 col-sm-5">
+							</div>
+						</div>
+						<h3 class="text-warning">领取页配置</h3>
+						<hr>
+						<div class="space-4"></div>
+						<div class="form-group">
+							<label class="col-sm-3 control-label no-padding-right" for="form-field-1"><span class="required">*</span> 副标题文案： </label>
+							<div class="col-sm-9">
+								<input type="text" id="subTitle" name="subTitle" placeholder="请输入副标题文案" value="${couponform.subTitle}" class="col-xs-10 col-sm-5" >
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="col-sm-3 control-label no-padding-right" for="form-field-1"><span class="required">*</span>温馨提示文案： </label>
+							<div class="col-sm-9">
+								<textarea id="tips" name="tips" style="width:700px;height:200px;">${couponform.tips}</textarea>
+							</div>
+						</div>
+						<h3 class="text-warning">领取成功页配置</h3>
+						<hr>
+						<div class="space-4"></div>
+						<div class="form-group">
+							<label class="col-sm-3 control-label no-padding-right" for="form-field-1"><span class="required">*</span> 领取后提醒文案： </label>
+							<div class="col-sm-9">
+								<input type="text" id="succSubTitle" name="succSubTitle" placeholder="请输入领取后提醒文案" value="${couponform.succSubTitle}" class="col-xs-10 col-sm-5" >
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="col-sm-3 control-label no-padding-right" for="form-field-1"><span class="required">*</span>使用说明： </label>
+							<div class="col-sm-9">
+								<textarea id="instructions" name="instructions" style="width:700px;height:200px;">${couponform.instructions}</textarea>
+							</div>
+						</div>
+						<div class="space-4"></div>
+						<div class="form-group">
+							<label class="col-sm-3 control-label no-padding-right" for="form-field-1"> <span class="required">*</span>选择图片： </label>
+							<div class="col-sm-9">
+								<span class="selectFile-span"><input type="text" name="viewfileImg" id="viewfileImg" class="viewfile" /></span>
+								<label for="upload" class="bottom">选择图片</label><font style="font-size: small;color: #F00">只存取上传一张图片，图片尺寸固定为640*400</font>
+								<input type="file" size="15" id="productUpload"  name="productUpload" onchange="document.getElementById('viewfileImg').value=this.value;" class="file" />
+								<button id="imgUpload" type="button">图片上传</button>
+							</div> 
+							<!-- <div class="col-sm-9">
+								<div>
+									<span class="btn  fileinput-button inputCss">
+									<input type="button" id="imageFileCss" class="imageFileCss" onclick="$('#productUpload').click()" value="选择图片">
+									<input type="file" class="hide" id="productUpload" name="productUpload"
+										multiple><font style="font-size: small;color: #F00">只存取上传图片的第一张，图片尺寸固定为640*400</font>
+										<button id="www" type="button">kaishi</button>
+									</span> 
+									<span class="fileupload-loading" ></span>
+								</div>
+								<table role="presentation"
+									class="table table-striped clearfix" >
+									<tbody class="files" id='imgForShow'></tbody>
+								</table>
+								<div id="productInfoImg" >
+								</div>
+							</div> -->
+						</div>
+						<div class="space-4"></div>
+						<div class="form-group">
+							<label class="col-sm-3 control-label no-padding-right" for="form-field-1"></label>
+							<div class="col-sm-9" id="productInfoImg" >
+								<img alt="" src="${couponform.imgUrl}">
+							</div>
+						</div>
+
+						<div class="clearfix form-actions">
+							<div class="col-md-offset-4 col-md-8">
+								<button id="submitBtn" class="btn btn-info" type="button">
+									<i class="ace-icon fa fa-check bigger-110"></i>
+									保存配置
+								</button>
+							</div>
+						</div>
+					</form>
+				</div><!-- /.col -->
+			</div><!-- /.row -->
+		</div>
+		
+		<#include "commonFootJs.html">
+
+		<!-- inline scripts related to this page -->
+		<script src="${webroot}/assets/js/moment.min.js"></script>
+		<script src="${webroot}/assets/js/bootstrap-datetimepicker.min.js"></script>
+		<script src="${webroot}/assets/js/ajaxfileupload.js"></script>
+		<script type="text/javascript">
+			jQuery(function($) {
+				var imgUrl;
+				var imgMsgInfo;
+				$('#imgUpload').on('click', function(){
+					 $.ajaxFileUpload({
+						 	url: '${adminPath}/activity/coupon/imageUpload', 
+				            type: 'POST',
+				            //secureuri: false, //一般设置为false
+				             dataType: 'json', //返回值类型，一般设置为json、application/json
+				            fileElementId: 'productUpload', // 上传文件的id、name属性名
+				           // elementIds: elementIds, //传递参数到服务器
+				            success: function(data, status){ 
+				                $("#productInfoImg img").attr("src",data.url);
+				                imgMsgInfo=data.msgInfo;
+				                imgUrl=data.url;
+				                if(!isEmpty(imgMsgInfo)){
+				                	$("#viewfileImg").focus();
+				                	$("#productInfoImg img").attr("src","${couponform.imgUrl}");
+									showMsg(imgMsgInfo);
+				                }
+				            },
+				            error: function(data, status, e){ 
+				            } 
+					 });
+				});
+				var options = {
+						format : 'YYYY-MM-DD  HH:mm:ss'
+					}
+					$('.datetimepicker').datetimepicker(options).next().on(
+							ace.click_event, function() {
+								$(this).prev().focus();
+							});
+				
+				var editor;
+				var editor_succ;
+				KindEditor.ready(function(K) {
+					editor = K.create('textarea[name="tips"]', {
+						resizeType : 1,
+						allowPreviewEmoticons : false,
+						allowImageUpload : false,
+						filterMode : true,
+						items : ['fontname', 'fontsize', '|', 'forecolor', 'hilitecolor', 'bold', 'italic', 'underline',
+									'removeformat', '|', 'justifyleft', 'justifycenter', 'justifyright', 'insertorderedlist',
+									'insertunorderedlist'
+							/* 'source', '|', 'undo', 'redo', '|', 'preview', 'print', 'template', 'code', 'cut', 'copy', 'paste',
+					        'plainpaste', 'wordpaste', '|', 'justifyleft', 'justifycenter', 'justifyright',
+					        'justifyfull', 'insertorderedlist', 'insertunorderedlist', 'indent', 'outdent', 'subscript',
+					        'superscript', 'clearhtml', 'quickformat', 'selectall', '|', 'fullscreen', '/',
+					        'formatblock', 'fontname', 'fontsize', '|', 'forecolor', 'hilitecolor', 'bold',
+					        'italic', 'underline', 'strikethrough', 'lineheight', 'removeformat', '|', 'image', 'multiimage',
+					        'flash', 'media', 'insertfile', 'table', 'hr', 'emoticons', 'baidumap', 'pagebreak',
+					        'anchor', 'link', 'unlink', '|', 'about' */
+							]
+					});
+					editor_succ=K.create('textarea[name="instructions"]', {
+						resizeType : 1,
+						allowPreviewEmoticons : false,
+						allowImageUpload : false,
+						filterMode : true,
+						items : [
+								'fontname', 'fontsize', '|', 'forecolor', 'hilitecolor', 'bold', 'italic', 'underline',
+								'removeformat', '|', 'justifyleft', 'justifycenter', 'justifyright', 'insertorderedlist',
+								'insertunorderedlist'
+							]
+					});
+				});
+				var editorOptions = {
+						cssPath : '/css/index.css',
+						filterMode : true
+				};
+				//var editor = K.create('textarea[name="content"]', editorOptions);
+				//var editor_succ = K.create('textarea[name="content_succ"]', editorOptions);
+				
+				$('#submitBtn').on('click', function(){
+					/* alert(editor.html());
+					alert(editor_succ.html()); */
+					var couponform_id="${couponform.id}";
+					var couponform_totalNum="${couponform.totalNum}";
+					var couponform_imgUrl="${couponform.imgUrl}";
+					var totalNumData=Number(couponform_totalNum);
+					var name = $("#name").val();
+					var inviteCode = $("#inviteCode").val();
+					var viewfileTxt = $("#viewfileTxt").val();
+					var couponName = $("#couponName").val();
+					var startDate = $("#startDate").val();
+					var endDate = $("#endDate").val();
+					var shareTemplateId=$("#shareTemplateId").val();
+					var usableNum=$("#usableNum").val();
+					var usableNumData = Number(usableNum);
+					var subTitle = $("#subTitle").val();
+					var tips = editor.html();
+					var succSubTitle = $("#succSubTitle").val();
+					var instructions = editor_succ.html();
+					var viewfileImg = $("#viewfileImg").val();
+					var txt = $("#fileTxt").val();
+					var index=txt.indexOf('.');
+					var match=txt.substr(index+1,txt.length);
+					
+					var start = new Date(startDate);
+					var end = new Date(endDate);
+					
+					//数据合法性校验
+					if(isEmpty(name)) {
+						$("#name").focus();
+						showMsg("活动名称不能为空！");
+					} else if(isEmpty(inviteCode)) {
+						$("#inviteCode").focus();
+						showMsg("邀请码不能为空！");
+					} else if(isEmpty(viewfileTxt) && couponform_id=="") {
+						$("#viewfileTxt").focus();
+						showMsg("导入发券码不能为空！");
+					} else if(match!="txt" && match!=""){
+						$("#viewfileTxt").focus();
+						showMsg("请导入.txt格式的文件");
+					}else if(isEmpty(couponName)) {
+						$("#couponName").focus();
+						showMsg("电子券名称不能为空！");
+					} else if(isEmpty(startDate)) {
+						$("#startDate").focus();
+						showMsg("上线时间不能为空！");
+					}else if(isEmpty(endDate)) {
+						$("#endDate").focus();
+						showMsg("下线时间不能为空！");
+					}else if(start >= end){
+						$("#endDate").focus();
+						showMsg("上线时间不能晚于下线时间！");
+					}else if(isEmpty(usableNum)) {
+						$("#usableNum").focus();
+						showMsg("邀请码使用次数不能为空！");
+					}else if(isNaN(usableNumData)) {
+						$("#usableNum").focus();
+						showMsg("邀请码使用次数请输入正确格式！");
+					}else if(isEmpty(subTitle)) {
+						$("#subTitle").focus();
+						showMsg("副标题文案不能为空！");
+					}else if(isEmpty(tips)) {
+						$("#tips").focus();
+						showMsg("温馨提示文案不能为空！");
+					}else if(isEmpty(succSubTitle)) {
+						$("#succSubTitle").focus();
+						showMsg("领取后提醒文案不能为空！");
+					}else if(isEmpty(instructions)) {
+						$("#instructions").focus();
+						showMsg("使用说明不能为空！");
+					}else if(isEmpty(viewfileImg) && couponform_id=="") {
+						$("#viewfileImg").focus();
+						showMsg("选择图片不能为空！");
+					}else if(isEmpty(imgUrl) && couponform_id==""){
+						$("#viewfileImg").focus();
+						showMsg("请选择图片上传！");
+					}else {
+						$("#tipsTxt").attr("value",tips);
+						$("#instructionsTxt").attr("value",instructions);
+						$("#imgUrl").attr("value",imgUrl);
+						$("#couponformForm").submit();
+					} 
+				});
+			})
+			
+		</script>
+		
+	</body>
+</html>

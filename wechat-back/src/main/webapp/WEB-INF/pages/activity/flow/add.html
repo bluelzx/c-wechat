@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+		<meta charset="utf-8" />
+		<title>裂变流量 - 添加活动</title>
+		<meta name="description" content="overview &amp; stats" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+		<link rel="stylesheet" href="${webroot}/assets/css/bootstrap-datetimepicker.min.css" />
+		<script charset="utf-8" src="${webroot}/assets/third/kindeditor/kindeditor-all-min.js"></script>
+		<script charset="utf-8" src="${webroot}/assets/third/kindeditor/lang/zh-CN.js"></script>
+		<link rel="stylesheet" href="${webroot}/assets/third/kindeditor/themes/default/default.css" />
+		<link rel="stylesheet" href="${webroot}/assets/third/kindeditor/themes/simple/simple.css" />
+		<link rel="stylesheet" href="${webroot}/assets/css/upload.css" />
+		<link rel="stylesheet" href="${webroot}/assets/third/fileupload/css/fileinput.css" media="all" type="text/css" />
+		<#include "commonHead.html">
+		<style>
+			hr{
+				height:1px;
+				border:none;
+				border-top:2px solid #555555;
+			}
+			.imageFileCss{ 
+				padding: 0px 0px; 
+ 			} 
+ 			.fileupload .inputCss { 
+				padding: 6px 0px; 
+   			}
+   			.prizesCopyImg{
+   				max-height: 100px;
+    			max-width: 160px;
+   			}
+   			#qrCodeImgInfo img{
+   				max-height: 100px;
+    			max-width: 160px;
+   			}
+   			#pushedMessageImgInfo img{
+   				max-height: 100px;
+    			max-width: 160px;
+   			}
+   			#bannerImgInfo img{
+   				max-height: 100px;
+    			max-width: 160px;
+   			}
+   			#indexImgInfo img{
+   				max-height: 160px;
+    			max-width: 160px;
+   			}
+   			.inputfile{
+			    vertical-align:middle;
+			    position:absolute;
+			    left:-218px;
+			    top:-3px;
+			    filter:alpha(opacity=0);
+			    opacity:0;
+				z-index:1;
+				*width:223px;
+				left: -10px;
+				height: 30px;
+			}
+		</style>
+	</head>
+
+	<body class="no-skin" style="background-color: #FFF;">
+		<div class="page-content">
+			<div class="page-header">
+				<h1>
+				<big id="actManager" style="cursor:pointer;" onclick="skip('${adminPath}/activity/group')">活动管理</big> <small> <i class="ace-icon fa fa-angle-double-right"></i>
+					<#if flowform?? && flowform.id??>
+						编辑裂变流量活动
+						<#else>
+						新增裂变流量活动
+						</#if>
+				</small>
+			</h1>
+			</div>
+			<div class="row">
+				<div class="col-xs-12">
+					<form id="flowformForm" class="form-horizontal" role="form" action="${adminPath}/activity/flow/save" method="POST" enctype="multipart/form-data">
+						<#if flowform?? && flowform.id??>
+						<input type="hidden" id="id" name="id" value="${flowform.id}">						
+						</#if>
+						<input type="hidden" id="state" name="state" value="${flowform.state}">
+						<input type="hidden" id="indexUrl" name="indexUrl" value="">
+						<input type="hidden" id="bannerUrl" name="bannerUrl" value="">
+						<input type="hidden" id="picUrl" name="picUrl" value="">
+						<input type="hidden" id="ruleCopy" name="ruleCopy" value="">
+						<h3 class="text-warning">基础配置</h3>
+						<hr>
+						<div class="form-group">
+							<label class="col-sm-3 control-label no-padding-right" for="form-field-1">
+							<strong class="text-danger">*</strong> 活动名称： </label>
+							<div class="col-sm-9">
+								<input type="text" id="name" name="name" maxlength="13" placeholder="请输入活动名称(不超过13个字符)" value="${flowform.name!}" class="col-xs-10 col-sm-5">
+							</div>
+						</div>
+						<div class="space-4"></div>
+						<div class="form-group">
+							<label class="col-sm-3 control-label no-padding-right" for="form-field-1">
+							<strong class="text-danger">*</strong>  上线时间： </label>
+							<div class="col-sm-9">
+								<input type="text" id="startDate" name="startDate" placeholder="请输入上线时间" 
+								<#if flowform?? && flowform.id??>value="${flowform.startDate?string('yyyy-MM-dd HH:mm:ss')!}"</#if>
+												   class="col-xs-10 col-sm-5 datetimepicker">
+							</div>
+						</div>
+						<div class="space-4"></div>
+						<div class="form-group">
+							<label class="col-sm-3 control-label no-padding-right" for="form-field-1">
+							<strong class="text-danger">*</strong> 下线时间： </label>
+							<div class="col-sm-9">
+								<input type="text" id="endDate" name="endDate" placeholder="请输入下线时间" 
+								<#if flowform?? && flowform.id??>value="${flowform.endDate?string('yyyy-MM-dd HH:mm:ss')!}"</#if>
+												 class="col-xs-10 col-sm-5 datetimepicker">
+							</div>
+						</div>					
+						<div class="space-4"></div>
+						<div class="form-group">
+							<label class="col-sm-3 control-label no-padding-right" for="form-field-1">
+							分享模板ID： </label>
+							<div class="col-sm-9">
+								<input type="text" id="shareTemplateId" name="shareTemplateId" placeholder="请输入分享模板ID" maxlength="64" value="${flowform.shareTemplateId!}" class="col-xs-10 col-sm-5">
+							</div>
+						</div>
+						<div class="space-4"></div>
+						<div class="form-group">
+							<label class="col-sm-3 control-label no-padding-right" for="form-field-1">
+							<strong class="text-danger">*</strong>流量包大小： </label>
+							<div class="col-sm-9">
+								<input type="text" id="totalFlow" name="totalFlow"  onkeyup="(this.v=function(){this.value=this.value.replace(/[^0-9-]+/,'');}).call(this)" onblur="this.v();"
+								 placeholder="请输入总流量" maxlength="4" value="${flowform.totalFlow!}" class="col-xs-10 col-sm-5">
+							</div>
+						</div>
+						<div class="space-4"></div>
+						<div class="form-group">
+							<label class="col-sm-3 control-label no-padding-right" for="form-field-1">
+							<strong class="text-danger">*</strong>参与人数： </label>
+							<div class="col-sm-9">
+								<input type="text" id="teamNum" name="teamNum"  onkeyup="(this.v=function(){this.value=this.value.replace(/[^0-9-]+/,'');}).call(this)" onblur="this.v();" 
+								placeholder="请输入参与人数" maxlength="2" value="${flowform.teamNum!}" class="col-xs-10 col-sm-5">
+							</div>
+						</div>
+						<div class="space-4"></div>
+						<div class="form-group">
+							<label class="col-sm-3 control-label no-padding-right" for="form-field-1"> 状态 </label>
+							<div class="col-sm-9">
+								<label style="margin-top:7px;">
+									<input id="states" name="states" class="ace ace-switch ace-switch-2" type="checkbox" <#if flowform.state==1>checked="checked"</#if> >
+									<span class="lbl"></span>
+								</label>
+							</div>
+						</div>
+						<div class="space-4"></div>
+						<div class="form-group">
+							<label class="col-sm-3 control-label no-padding-right" for="form-field-1">
+							<strong class="text-danger">*</strong>活动规则文案： </label>
+							<div class="col-sm-9">
+								<textarea id="ruleCopys" name="ruleCopys" style="width:700px;height:200px;">${flowform.ruleCopy}</textarea>
+							</div>
+						</div>
+						<div class="space-4"></div>
+						<div class="form-group">
+							<label class="col-sm-3 control-label no-padding-right" for="form-field-1">
+							<strong class="text-danger">*</strong>二维码文案： </label>
+							<div class="col-sm-9">		
+								<input id="qrCodeCopy" name="qrCodeCopy" maxlength="100" style="width:700px;height:50px;" value="${flowform.qrCodeCopy}">
+							</div>
+						</div>
+						
+						
+						<div class="space-4"></div>
+						<div class="form-group">
+							<label class="col-sm-3 control-label no-padding-right" for="form-field-1">
+							<strong class="text-danger">*</strong>流量领取文案：</label>
+							<div class="col-sm-9">
+								<input type="text" id="doleOne" name="doleOne" placeholder="请输入领取文案（一）" maxlength="10" value="${flowform.doleOne!}" class="col-xs-10 col-sm-5">
+							</div>						
+						</div>
+						<div class="form-group">
+							<label class="col-sm-3 control-label no-padding-right" for="form-field-1">
+							<font color="#FF0000">(每条最多10个字)</font></label>
+							<div class="col-sm-9">
+								<input type="text" id="doleTwo" name="doleTwo" placeholder="请输入领取文案（二）" maxlength="10" value="${flowform.doleTwo!}" class="col-xs-10 col-sm-5">
+							</div>						
+						</div>
+						<div class="form-group">
+							<label class="col-sm-3 control-label no-padding-right" for="form-field-1"></label>
+							<div class="col-sm-9">
+								<input type="text" id="doleThree" name="doleThree" placeholder="请输入领取文案（三）" maxlength="10" value="${flowform.doleThree!}" class="col-xs-10 col-sm-5">
+							</div>						
+						</div>
+						<div class="form-group">
+							<label class="col-sm-3 control-label no-padding-right" for="form-field-1"></label>
+							<div class="col-sm-9">
+								<input type="text" id="doleFour" name="doleFour" placeholder="请输入领取文案（四）" maxlength="10" value="${flowform.doleFour!}" class="col-xs-10 col-sm-5">
+							</div>						
+						</div>
+						<div class="form-group">
+							<label class="col-sm-3 control-label no-padding-right" for="form-field-1"></label>
+							<div class="col-sm-9">
+								<input type="text" id="doleFive" name="doleFive" placeholder="请输入领取文案（五）" maxlength="10" value="${flowform.doleFive!}" class="col-xs-10 col-sm-5">
+							</div>						
+						</div>
+						
+						
+						<div class="space-4"></div>
+						<div class="form-group">
+							<label class="col-sm-3 control-label no-padding-right" for="form-field-1">
+							<strong class="text-danger">*</strong> 推送图文消息图片： </label>
+							<div class="col-sm-9">
+								<span class="selectFile-span">
+									<input type="text" name="viewfilePushedMessageImg" id="viewfilePushedMessageImg" class="viewfile" />
+								</span>
+								<label for="upload" class="btn btn-primary btn-sm btn-round">选择图片</label>
+								<font style="font-size: small;color: #F00">只允许上传一张图片，图片尺寸固定为900*500</font>
+								<input type="file" size="15" id="pushedMessageUpload"  name="pushedMessageUpload"
+								 	onchange="document.getElementById('viewfilePushedMessageImg').value=this.value;" class="inputfile" />
+								<button id="pushedMessageImgUpload" type="button" class="btn btn-primary btn-sm btn-round">图片上传</button>
+								<button id="delPushedMessageImg" type="button" onclick="delImg('#pushedMessageImgInfo img');" 
+									class="btn btn-danger btn-sm btn-round" style="margin-left: 15px">图片删除</button>
+							</div> 
+						</div>
+						<div class="space-4"></div>
+						<div class="form-group">
+							<label class="col-sm-3 control-label no-padding-right" for="form-field-1"></label>
+							<div class="col-sm-9" id="pushedMessageImgInfo" >
+								<img alt="" src="${flowform.picUrl}">
+							</div>
+						</div>
+						
+						
+						
+						
+						
+						<div class="space-4"></div>
+						<div class="form-group">
+							<label class="col-sm-3 control-label no-padding-right" for="form-field-1">
+							<strong class="text-danger">*</strong> 主KV： </label>
+							<div class="col-sm-9">
+								<span class="selectFile-span">
+									<input type="text" name="viewfileIndexImg" id="viewfileIndexImg" class="viewfile" />
+								</span>
+								<label for="upload" class="btn btn-primary btn-sm btn-round">选择图片</label>
+								<font style="font-size: small;color: #F00">图片尺寸固定为750*1200，注意内容图片高度为900，下方空余图片高度为300</font>
+								<input type="file" size="15" id="IndexUpload"  name="IndexUpload"
+								 	onchange="document.getElementById('viewfileIndexImg').value=this.value;" class="inputfile" />
+								<button id="indexImgUpload" type="button" class="btn btn-primary btn-sm btn-round">图片上传</button>
+								<button id="delIndexImg" type="button" onclick="delImg('#indexImgInfo img');" 
+									class="btn btn-danger btn-sm btn-round" style="margin-left: 15px">图片删除</button>
+							</div> 
+						</div>
+						
+						<div class="space-4"></div>
+						<div class="form-group">
+							<label class="col-sm-3 control-label no-padding-right" for="form-field-1"></label>
+							<div class="col-sm-9" id="indexImgInfo" >
+								<img alt="" src="${flowform.indexUrl}">
+							</div>
+						</div>
+						
+						
+						
+						
+						
+						
+						
+						
+						<div class="space-4"></div>
+						<div class="form-group">
+							<label class="col-sm-3 control-label no-padding-right" for="form-field-1">
+							<strong class="text-danger">*</strong> banner图片： </label>
+							<div class="col-sm-9">
+								<span class="selectFile-span">
+									<input type="text" name="viewfileBannerImg" id="viewfileBannerImg" class="viewfile" />
+								</span>
+								<label for="upload" class="btn btn-primary btn-sm btn-round">选择图片</label>
+								<font style="font-size: small;color: #F00">只允许上传一张图片，图片尺寸固定为750*400</font>
+								<input type="file" size="15" id="BannerUpload"  name="BannerUpload"
+								 	onchange="document.getElementById('viewfileBannerImg').value=this.value;" class="inputfile" />
+								<button id="bannerImgUpload" type="button" class="btn btn-primary btn-sm btn-round">图片上传</button>
+								<button id="delBannerImg" type="button" onclick="delImg('#bannerImgInfo img');" 
+									class="btn btn-danger btn-sm btn-round" style="margin-left: 15px">图片删除</button>
+							</div> 
+						</div>
+						
+						<div class="space-4"></div>
+						<div class="form-group">
+							<label class="col-sm-3 control-label no-padding-right" for="form-field-1"></label>
+							<div class="col-sm-9" id="bannerImgInfo" >
+								<img alt="" src="${flowform.bannerUrl}">
+							</div>
+						</div>
+
+						<div class="clearfix form-actions">
+							<div class="col-md-offset-4 col-md-8">
+								<button id="submitBtn" class="btn btn-info" type="button">
+									<i class="ace-icon fa fa-check bigger-110"></i>
+									保存配置
+								</button>
+								
+							</div>
+						</div>
+					</form>
+				</div><!-- /.col -->
+			</div><!-- /.row -->
+		</div>
+		
+		<#include "commonFootJs.html">
+
+		<!-- inline scripts related to this page -->
+		<script src="${webroot}/assets/js/moment.min.js"></script>
+		<script src="${webroot}/assets/js/bootstrap-datetimepicker.min.js"></script>
+		<script src="${webroot}/assets/js/ajaxfileupload.js"></script>
+		<script src="${webroot}/assets/third/fileupload/js/fileinput.min.js" type="text/javascript"></script>
+		<script src="${webroot}/assets/third/fileupload/js/fileinput_locale_zh.js" type="text/javascript"></script>
+		<script type="text/javascript">
+		var delImg=function(select) {
+			$(select).attr("src", null);
+		}
+		
+		jQuery(function($) {
+			var pushedMessageImgUrl;
+			var pushedMessageImgMsgInfo;
+			
+			$('#pushedMessageImgUpload').on('click', function(){
+				 $.ajaxFileUpload({
+					 	url: '${adminPath}/activity/group/imageUpload', 
+			            type: 'POST',
+			            data: {fileElementId:"pushedMessageUpload",width:900,height:500},
+			            //secureuri: false, //一般设置为false
+			             dataType: 'json', //返回值类型，一般设置为json、application/json
+			            fileElementId: 'pushedMessageUpload', // 上传文件的id、name属性名
+			           // elementIds: elementIds, //传递参数到服务器
+			            success: function(data, status){ 
+			                $("#pushedMessageImgInfo img").attr("src",data.url);
+			                pushedMessageImgMsgInfo=data.msgInfo;
+			                pushedMessageImgUrl=data.url;
+			                if(!isEmpty(pushedMessageImgMsgInfo)){
+			                	$("#viewfilePushedMessageImg").focus();
+			                	$("#pushedMessageImgInfo img").attr("src","${flowform.picUrl}");
+								showMsg(pushedMessageImgMsgInfo);
+			                }
+			            },
+			            error: function(data, status, e){ 
+			            } 
+				 });
+			}); 
+			
+			
+			
+			var indexImgUrl;
+			var indexImgMsgInfo;
+			$('#indexImgUpload').on('click', function(){
+				 $.ajaxFileUpload({
+					 	url: '${adminPath}/activity/group/imageUpload', 
+			            type: 'POST',
+			            data: {fileElementId:"IndexUpload",width:750,height:1200},
+			             dataType: 'json', //返回值类型，一般设置为json、application/json
+			            fileElementId: 'IndexUpload', // 上传文件的id、name属性名
+			            success: function(data, status){ 
+			                $("#indexImgInfo img").attr("src",data.url);
+			                indexImgMsgInfo=data.msgInfo;
+			                indexImgUrl=data.url;
+			                if(!isEmpty(indexImgMsgInfo)){
+			                	$("#viewfileIndexImg").focus();
+			                	$("#indexImgInfo img").attr("src","${flowform.indexUrl}");
+								showMsg(indexImgMsgInfo);
+			                }
+			            },
+			            error: function(data, status, e){ 
+			            } 
+				 });
+			}); 
+			
+			
+			var bannerImgUrl;
+			var bannerImgMsgInfo;
+			$('#bannerImgUpload').on('click', function(){
+				 $.ajaxFileUpload({
+					 	url: '${adminPath}/activity/group/imageUpload', 
+			            type: 'POST',
+			            data: {fileElementId:"BannerUpload",width:750,height:400},
+			             dataType: 'json', //返回值类型，一般设置为json、application/json
+			            fileElementId: 'BannerUpload', // 上传文件的id、name属性名
+			            success: function(data, status){ 
+			                $("#bannerImgInfo img").attr("src",data.url);
+			                bannerImgMsgInfo=data.msgInfo;
+			                bannerImgUrl=data.url;
+			                if(!isEmpty(bannerImgMsgInfo)){
+			                	$("#viewfileBannerImg").focus();
+			                	$("#bannerImgInfo img").attr("src","${flowform.bannerUrl}");
+								showMsg(bannerImgMsgInfo);
+			                }
+			            },
+			            error: function(data, status, e){ 
+			            } 
+				 });
+			}); 
+			
+			var options = {
+					format : 'YYYY-MM-DD  HH:mm:ss'
+				}
+			$('.datetimepicker').datetimepicker(options).next().on(
+					ace.click_event, function() {
+						$(this).prev().focus();
+					});
+			
+			var editor_ruleCopy;
+			KindEditor.ready(function(K) {
+				editor_ruleCopy = K.create('textarea[name="ruleCopys"]', {
+					resizeType : 1,
+					allowPreviewEmoticons : false,
+					allowImageUpload : false,
+					filterMode : true,
+					items : ['fontname', 'fontsize', '|', 'forecolor', 'hilitecolor', 'bold', 'italic', 'underline',
+								'removeformat', '|', 'justifyleft', 'justifycenter', 'justifyright',
+						  'insertorderedlist'
+						]
+				});
+			});
+			var editorOptions = {
+					cssPath : '/css/index.css',
+					filterMode : true
+			};
+			
+			$('#submitBtn').on('click', function(){			
+			
+			var groupform_id="${flowform.id}";
+			var name = $("#name").val();
+			var startDate = $("#startDate").val();
+			var endDate = $("#endDate").val(); 
+			var shareTemplateId = $("#shareTemplateId").val();
+			var totalFlow = $("#totalFlow").val();
+			var teamNum = $("#teamNum").val();
+			var ruleCopy = editor_ruleCopy.html();
+			var qrCodeCopy = $("#qrCodeCopy").val();
+			var doleOne = $("#doleOne").val();
+			var doleTwo = $("#doleTwo").val();
+			var doleThree = $("#doleThree").val();
+			var doleFour = $("#doleFour").val();
+			var doleFive = $("#doleFive").val();
+			if($("#states").is(':checked')){
+				var state = '1';
+			}else{
+				var state = '0';
+			}	
+			
+			//数据合法性校验
+			if(isEmpty(name)) {
+				$("#name").focus();
+				showMsg("活动名称不能为空！");
+			} else if(isEmpty(startDate)) {
+				$("#startDate").focus();
+				showMsg("上线时间不能为空！");
+			}else if(isEmpty(endDate)) {
+				$("#endDate").focus();
+				showMsg("下线时间不能为空！");
+			}else if(startDate >= endDate){
+				$("#endDate").focus();
+				showMsg("上线时间不能晚于下线时间！");
+			}else if(isEmpty(totalFlow)){
+				$("#totalFlow").focus();
+				showMsg("流量大小不能为空");
+			}else if(isEmpty(teamNum)){
+				$("#teamNum").focus();
+				showMsg("团队人数不能为空");
+			}else if(isEmpty(ruleCopy)){
+				$("#ruleCopy").focus();
+				showMsg("活动规则文案不能为空");
+			}else if(isEmpty(qrCodeCopy)){
+				$("#qrCodeCopy").focus();
+				showMsg("二维码文案不能为空");	
+			}else if(isEmpty(doleOne)){
+				$("#doleOne").focus();
+				showMsg("流量领取文案(一)不能为空");
+			}else if(isEmpty(doleTwo)){
+				$("#doleTwo").focus();
+				showMsg("流量领取文案(二)不能为空");
+			}else if(isEmpty(doleThree)){
+				$("#doleThree").focus();
+				showMsg("流量领取文案(三)不能为空");
+			}else if(isEmpty(doleFour)){
+				$("#doleFour").focus();
+				showMsg("流量领取文案(四)不能为空");
+			}else if(isEmpty(doleFive)){
+				$("#doleFive").focus();
+				showMsg("流量领取文案(五)不能为空");
+			}else if(isEmpty(pushedMessageImgUrl) && groupform_id==""){
+				$("#pushedMessageImgUrl").focus();
+				showMsg("请选择推送图文消息图片上传！");	
+			}else if(isEmpty(indexImgUrl) && groupform_id==""){
+				$("#indexImgUrl").focus();
+				showMsg("请选择主KV图片上传！");	
+			}else if(isEmpty(bannerImgUrl) && groupform_id==""){
+				$("#bannerImgUrl").focus();
+				showMsg("请选择banner图片上传！");	
+			}else{
+				$("#ruleCopy").attr("value",ruleCopy);
+				$("#state").attr("value",state);
+				$("#picUrl").attr("value",pushedMessageImgUrl);
+				$("#indexUrl").attr("value",indexImgUrl);
+				$("#bannerUrl").attr("value",bannerImgUrl);
+				$("#flowformForm").submit();
+			}
+			});
+		});
+		</script>
+	</body>
+</html>

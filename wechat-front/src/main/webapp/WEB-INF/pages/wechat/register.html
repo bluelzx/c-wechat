@@ -1,0 +1,269 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+	<title>注册</title>
+	<#include "/common/define_v5.html">
+	<link rel="stylesheet" href="//pics.lvjs.com.cn/mobile/css/css/file/login.css?version=20150320">
+	<script src="//static.geetest.com/static/tools/gt.js"></script>
+	<script type="text/javascript" src="//pics.lvjs.com.cn/mobile/lib/js/jquery-1.7.2.min.js"></script>
+	<script src="${webroot}/assets/js/login.js?version=20141028"></script>
+	<script>
+	//定义注册渠道
+	var firstChannel="TOUCH";
+	var secondChannel="LVMM";
+	
+	$(function(){
+		/*input 框变色*/
+		$("input.lv-input-01").focus(function(e) {
+			$(this).addClass("lv-input01-focus");
+		});
+		$("input.lv-input-01").blur(function(e) {
+			$(this).removeClass("lv-input01-focus");
+		});	
+		//根据URL获取一级和二级渠道
+		if(getUrlParam("firstChannel")!=null && getUrlParam("firstChannel")!=""){
+			firstChannel=getUrlParam("firstChannel");
+		}
+		if(getUrlParam("secondChannel")!=null && getUrlParam("secondChannel")!=""){
+			secondChannel=getUrlParam("secondChannel");
+		}
+		
+	});
+	</script>
+</head>
+
+<body>
+<script type="text/javascript" src="//pics.lvjs.com.cn/mobile/js/min/base/header.js"></script>
+<input type="hidden" id = "openId" value="${openId!}">
+<input type="hidden" id = "unionid" value="${unionid!}">
+<input type="hidden" id = "bindUrl" value="${bindUrl!}">
+<input type="hidden" id = "channel" value="${channel!}">
+<input type="hidden" id = "callbackUrl" value="${callbackUrl!}">
+<div id="wrapper">
+	<div class="lv-reg" id="content">
+		<div class="tab_select tc">
+			<ul>
+				<li>
+					<div id="c_step1" class="lv-progress lv-progress-active">1</div>
+					<div>输入手机号</div>
+				</li>
+				<li>
+					<div id="c_step2" class="lv-progress lv-progress-node">2</div>
+					<div>验证手机号</div>
+				</li>
+				<li>
+					<div id="c_step3" style="padding-left:1px;" class="lv-progress lv-progress-node">3</div>
+					<div>设置密码</div>
+				</li>
+			</ul>
+		</div>
+		<div class="lv-reg-content">
+			<!-- 第一步 -->
+			<div id="step1">
+				<div class="lv-text-input">
+					<span onclick="union_clear_context('mobile');step1change();" class="clear-icon clear_password" style="display: none;"></span>
+					<input type="tel" onkeyup="step1change();" onblur="step1change();"  value="${mobile!}" placeholder="请输入手机号码"  maxlength="11"  id="mobile" name="mobile">
+				</div>
+				
+				<div class="pic-auto-code"> 
+					<div class="lv-text-input"><input type="text" name="authCode" id="authCode" placeholder="请输入验证码"></div> 
+					<div class="pic"> 
+						<img src="" id="authCodeChange"> 
+						<a href="javascript:void(0);" onclick="changeImg();">换一张</a> 
+					</div> 
+				</div>
+				
+				
+				<div style="display:none;" id="step1_show">
+					<a onclick="getAuthCode();" class="btn_style_1" href="javascript:void(0);">获取验证短信</a>
+				</div>
+				<div id="step1_hide">
+					<a href="javascript:void(0);" class="btn_style_1 disable">获取验证短信</a>
+				</div>
+				<div class="agreement tc">
+					<input type="checkbox" checked id="checkbox" name="checkbox1">
+					<span style="padding:0 10px;">我同意驴妈妈会员服务条款</span>
+					<a  href="//m.lvmama.com/h5/login/service">查看协议</a>
+				</div>
+			</div>
+			<!-- /第一步 -->
+			
+			<!-- 第二步 -->
+			<div id="step2" style="display:none;">
+				<div class="lv-text-input">
+					<span onclick="union_clear_context('authenticationCode');step2change();" class="clear-icon clear_password" style="display: none;"></span>
+					<input type="tel" onkeyup="step2change();" onblur="step2change();" placeholder="请输手机验证码" id="authenticationCode" name="authenticationCode" maxlength="6">
+				</div>
+				<div style="display:none;" id="step2_show">
+					<a onclick="commitAutoCode();" class="view_more btn rose" href="javascript:void(0);">提交验证码</a>
+				</div>
+				<div id="step2_hide">
+					<a class="view_more btn" href="javascript:void(0);">提交验证码</a>
+				</div>
+			</div> 
+			<!-- /第二步 --> 
+			
+			<!-- 第三步 -->
+			<div id="step3" style="display:none;">
+				<div class="lv-text-input">
+					<span onclick="union_clear_context('password');step3change();" class="clear-icon clear_password" style="display: none;"></span>
+					<input type="text" onkeyup="step3change();" onblur="step3change();" placeholder="请输入用户密码" maxlength="16" id="password" name="password">
+				</div>
+				<div style="display:none" id="step3_show">
+					<a onclick="regV7('${activityChannel!}');" class="view_more btn rose" href="javascript:void(0);">注册完成</a>
+				</div>
+				<div style="display:none" id="commiting_show">
+				<div id="popup-captcha-register" style="position: absolute;top: 0px;width: 96%;padding: 0 2%;z-index: 1;"></div>
+				
+					<a class="view_more btn rose" href="javascript:void(0);" id="commiting_show_a_id">提交注册中...</a>
+				</div>
+				<div id="step3_hide">
+					<a class="view_more btn" href="javascript:void(0);">注册完成</a>
+				</div>
+								
+				
+			</div>	
+			 <input type="hidden" value="${service!}" name="service" id="redirect_url">						
+		</div><!-- /.lv-reg-content -->	
+		
+		
+		<script >
+			var _nssoUrl = "${nssoUrl!}" +"/";
+			<#if mobile?? && mobile!="">
+			    $("#step1_show").show();
+	            $("#step1_hide").hide();
+			   <#if mobileChanage?? && mobileChanage=="false">
+			          $("#mobile").attr("readonly","readonly");
+			   </#if>
+			</#if>
+			
+			function changeImg(){       
+		       $("#authCodeChange").attr("src","//api3g2.lvmama.com/api/router/rest.do?method=api.com.validateCode.createNewValidateCode&version=1.0.0&lvsessionid=${lvsessionid}&_="+(new Date).getTime());
+		    }
+		    //手动调用一次
+		    changeImg();
+
+			// 注册 - 验证校验 
+			function regV7(activityChannel) {
+				var mobile = $("#mobile").val();
+				// 校验码
+				var acode = $("#authenticationCode").val();
+				if(!v_authenticationCode(acode)) {
+					return false;
+				}
+				// 密码
+				var p = $("#password").val();
+				if(!v_passworld(p)) {
+					return false;
+				}
+				
+				if(null != activityChannel &&  activityChannel == LT_ACTIVITY_12580) {
+					secondChannel = "12580";
+				} else if(null != activityChannel &&  activityChannel == LT_ACTIVITY_10000) {
+					secondChannel = "10000";
+				}
+				// 提交注册中 
+				commiting_show('1');
+				var url = $("#redirect_url").val();
+				var param = {"mobileOrEMail":mobile,"authenticationCode":acode,"password":encodeURIComponent(p)};
+				$.post("/binding/userRegister",param,function(data) {
+					if(data.success) {
+						commiting_show('2');
+
+						bindCount(data.data);
+					} else if(data.geetest){
+						// 使用initGeetest接口
+			            // 参数1：配置参数
+			            // 参数2：回调，回调的第一个参数验证码对象，之后可以使用它做appendTo之类的事件
+			            initGeetest({
+			                gt: data.geetestGt,
+			                challenge: data.geetestChallenge,
+			                product: "popup", // 产品形式，包括：float，embed，popup。注意只对PC版验证码有效
+			                width:"100%",
+			                offline: !data.geetestSuccess // 表示用户后台检测极验服务器是否宕机，一般不需要关注
+			            }, handlerPopup);
+					} else {
+						commiting_show('3');
+						lvToast(false,data.errorText,3000);
+					}
+				});
+			}
+			/**
+			 * 微信用户绑定驴妈妈账号
+			 */
+			function bindCount(data){
+				var openId = $("#openId").val();
+				var unionid = $("#unionid").val();
+				var bindUrl = $("#bindUrl").val();
+				var channel = $("#channel").val();
+				var callbackUrl = $("#callbackUrl").val();
+				var userName = "${userName!}";
+				var uid = data.userId;
+				$.post("/binding/regGivecoupon",{openId : openId, unionid : unionid, channel : channel, uid :uid},function(data){
+					if(data.bdresult){
+						window.location.href=callbackUrl;
+					}else{
+						window.location.href="http://m.lvmama.com/my";
+					}
+				});
+			}
+			
+			var loginButtonFlag = false;
+			var geetestType = "";
+			var handlerPopup = function(captchaObj){
+				var Rmobile = "";
+				var username = "";
+				// 将验证码加到id为captcha的元素里
+					captchaObj.appendTo("#popup-captcha-register");
+					Rmobile = $("#mobile").val();
+				
+			    captchaObj.onReady(function(){
+			    	$("#popup-captcha-register").css("display","block");
+			    	captchaObj.show();
+			    	$("#popup-captcha-register svg").css({"width":"100%","height":"100%"});
+			    });
+			    captchaObj.onSuccess(function(){
+			    	var validate = captchaObj.getValidate();
+			        if (!validate) {
+			            //alert('请先完成验证！');
+			            return;
+			        }
+			        $.ajax({
+			            url: "/binding/doGeeTest", // 进行二次验证
+			            type: "post",
+			            dataType: "json",
+			            data: {
+			        		//手机号码
+			        		mobileOrEMail:Rmobile,
+			                // 二次验证所需的三个值
+			                geetest_challenge: validate.geetest_challenge,
+			                geetest_validate: validate.geetest_validate,
+			                geetest_seccode: validate.geetest_seccode
+			            },
+			            success: function (data) {
+			                if (data.success) {
+			                	$("#popup-captcha-register").css("display","none");
+			                	$("#popup-captcha-register").html("");
+			                	loginButtonFlag = false;			                	
+			                	regV7('');//极验验证通过再次注册			                	
+			                } else {
+			                	
+			                		$("#mobile").val(Rmobile);
+			                	
+			                	lvToast(false,data.errorText,3000);
+			                	loginButtonFlag = false;
+			                	
+			                }
+			            }
+			        });
+			    });
+			};
+		</script>
+		<script type="text/javascript" src="//pics.lvjs.com.cn/mobile/js/min/base/lazyload.min.js"></script> 
+	</div><!-- /#content -->
+</div><!-- /#wrapper -->
+<script>_LVMAMA_COREMETRICS.init(document.domain);</script>
+<script type="text/javascript">
+</script>
+</body>
+</html>

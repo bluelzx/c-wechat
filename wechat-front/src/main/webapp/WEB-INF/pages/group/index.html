@@ -1,0 +1,248 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>${groupActivity.name}</title>
+    <meta name="Keywords" content="驴妈妈无线,景区门票,旅游度假"/>
+    <meta name="Description" content="驴妈妈无线官网:支持手机快捷预订景区门票,自助游线路,全国酒店,豪华邮轮等各种旅游产品.(中国最领先的在线旅游预订服务商!)"/>
+    <meta content="initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width" name="viewport">
+    <meta id="share" share-linkurl="" name="share" share-title="" share-content="" share-imageurl="">
+    <meta http-equiv="pragma" content="no-cache">
+    <meta http-equiv="Cache-Control" content="max-age=7200" />
+    <meta http-equiv="expires" content="0">
+    <meta name="format-detection" content="telephone=no">
+    <meta http-equiv="Cache-Control" content="no-transform " />
+    <meta http-equiv="Cache-Control" content="no-siteapp" />
+    <link rel="apple-touch-icon" href="//pics.lvjs.com.cn/img/mobile/touch/img/lvmama_v1_png.png"/>
+    <link rel="apple-touch-icon" sizes="72x72" href="//pics.lvjs.com.cn/img/mobile/touch/img/lvmama_v1_png.png"/>
+    <link rel="apple-touch-icon" sizes="114x114" href="//pics.lvjs.com.cn/img/mobile/touch/img/lvmama_v1_png.png"/>
+    <link rel="apple-touch-icon" sizes="144x144" href="//pics.lvjs.com.cn/img/mobile/touch/img/lvmama_v1_png.png"/>
+    <link rel="stylesheet" href="//pics.lvjs.com.cn/mobile/zt/public/css/base/global.css">
+    <link rel="stylesheet" href="//pics.lvjs.com.cn/mobile/zt/4.0.0/1606/graduation-trip/css/style.css?v=20161222">
+    <link rel="stylesheet" href="//pics.lvjs.com.cn/mobile/zt/public/css/base/ui/idangerous.swiper.css">
+    <script type="text/javascript" src="//pics.lvjs.com.cn/mobile/lib/js/jquery-1.7.2.min.js"></script>
+    <script type="text/javascript" src="//pics.lvjs.com.cn/mobile/zt/public/js/base/idangerous.swiper.min.js"></script>
+    <script type="text/javascript" src="//pics.lvjs.com.cn/mobile/zt/4.0.0/1606/graduation-trip/js/index.js"></script>
+    <script type="text/javascript" src="${webroot}/assets/js/WechatApi.js"></script>
+    <script type="text/javascript" src="${webroot}/assets/js/jweixin-1.0.0.js"></script>
+</head>
+<body>
+    <div style="width:0; height:0; overflow: hidden; font-size: 0; position: fixed; left: 0;top: 0;">
+        <img src="" alt=""/>
+    </div>
+    <div class="container home-page">
+        <script type="text/javascript" src="//pics.lvjs.com.cn/mobile/zt/public/js/base/ztheader.js"></script>
+        <div class="banner">
+            <#if logostate == 1>
+            <div class="logo"></div>
+            </#if>
+            <#if (step == 3 || step == 4) && remainNum == 0 && groupMembersList??>
+            <div class="jiqi-tag"></div>
+            </#if>
+            <div class="swiper-main" >
+                <div class="swiper-container" id="mySwipe">
+                    <div class="swiper-wrapper">
+                    	<#list banners as banner>
+                        <div class="swiper-slide">
+                            <a>
+                                <div class="img-wrap"><img src=${banner.url} alt=""></div>
+                            </a>
+                        </div>
+                        </#list> 
+                    </div>
+                </div>
+                <div class="pagination"></div>
+            </div>
+        </div>
+        <div class="container">
+        	<#if groupMembersList?? && groupMembersList?size==0>
+	        <div class="info info1">
+	            <h3>${groupActivity.name}</h3>
+	            <p><i>*</i>${groupActivity.indexTips}</p>
+	            <#if step == 4>
+	            	<button class="see-result" onclick="window.location.href='${groupActivity.rewardsUrl}'">查看中奖结果</button>
+	            <#else>
+	          	 	<button onclick="window.location.href='/groupActivity/iWantJoin/${groupActId}'">我要参加</button>
+	            </#if>
+	        </div>
+	        <#else>
+	        <div class="info info2" style="display:block">
+	            <h3>${groupActivity.name}</h3>
+	            <p>报名截止时间：<i>${deadlineTime}</i></p>
+	        	<#if join == 1>
+	        		<#if remainNum?? && remainNum != 0>
+	        			<#if step == 4> 
+	            			<button class="see-result" onclick="window.location.href='${groupActivity.rewardsUrl}'">查看中奖结果</button>
+	            		<#else>
+				           	<button class="join" onclick="window.location.href='/groupActivity/iWantJoin/${groupActId}?groupId=${groupId}'">我要参加本团</button>
+				             <#if showstate ==1>
+				             <button class="initiate" onclick="window.location.href='/groupActivity/iWantJoin/${groupActId}'">我要发起新团</button>
+			                 </#if>
+			            </#if>
+	            	<#else>
+	            		<#if step == 4> 
+	            			<button class="see-result" onclick="window.location.href='${groupActivity.rewardsUrl}'">查看中奖结果</button>
+	            		<#else>
+	            			<button class="jiqi" onclick="window.location.href='/groupActivity/iWantJoin/${groupActId}'">小伙伴已集齐  我也要参加</button>
+	            		</#if>
+	           		</#if>
+	           	<#else>
+		           	<#if step == 4>	
+		            	<button class="see-result" onclick="window.location.href='${groupActivity.rewardsUrl}'">查看中奖结果</button>
+		            <#elseif step == 3>
+		           		 <button class="see-result" onclick="window.location.href='${groupActivity.rewardsUrl}'">查看中奖结果</button>
+		            <#else>
+		        		<button class="call-partner" onclick="showPopup()">还差${remainNum}人集齐成功 去召唤小伙伴</button>
+		        	</#if>
+	           	</#if>
+	        </div>
+	        </#if>
+	        <#if groupMembersList?? && groupMembersList?size&gt;0>
+	        <div class="participants">
+	            <div class="title">
+	                <p>参与人员</p>
+	                <a href="/groupActivity/getGroupMembers/${groupActId}?groupId=${groupId}"><span>查看详情</span></a>
+	            </div>
+	            <ul class="touxiang">
+	            	<#list groupMembersList as member>
+	                	<li><div class="touxiang-icon" style="background: url(${member.headImgUrl}) center center no-repeat;background-size: 100% 100%;"></div></li>
+	                </#list>
+	                <#if remainNum != 0>
+	                	<#list 1..remainNum as t>
+	                		  <li><div class="touxiang-icon" style=" background: url(//pics.lvjs.com.cn/mobile/zt/4.0.0/1606/graduation-trip/images/touxiang.png?v=20160728) center center no-repeat;background-size: 100% 100%;"></div></li>
+	                	</#list>
+	                </#if>
+	            </ul>
+	        </div>
+	        </#if>
+	        <div class="rule">
+	            <div class="title">
+	                <p>活动规则</p>
+	                <a href="/groupActivity/getRule/${groupActId}?groupId=${groupId}"><span>查看详情</span></a>
+	            </div>
+	            <div class="liucheng">
+	            	<#if step == 1>
+	                <div class="part1 red">
+	                <#else>
+	                 <div class="part1">
+	                </#if>
+	                    <span class="icon"></span>
+	                    <p>我要参加</p>
+	                </div>
+	                <#if step == 2>
+	                <div class="part2 red">
+	                <#else>
+	                 <div class="part2">
+	                </#if>
+	                    <span class="icon"></span>
+	                    <p>等待伙伴<br>参加</p>
+	                </div>
+	               	<#if step == 3>
+	                <div class="part3 red">
+	                <#else>
+	                 <div class="part3">
+	                </#if>
+	                    <span class="icon"></span>
+	                    <p>集齐伙伴<br>等待开奖</p>
+	                </div>
+	               	<#if step == 4>
+	                <div class="part4 red">
+	                <#else>
+	                 <div class="part4">
+	                </#if>
+	                    <span class="icon"></span>
+	                    <p>开奖结果<br>公布</p>
+	                </div>
+	            </div>
+	        </div>
+	        <div class="prize">
+	            <div class="title">
+	                <p>丰富奖品</p>
+	            </div>
+	            <div class="prize-show">
+	                <div class="prize-wrap">
+	                	<#list prizes as prize>
+	                    <div class="prize-list">
+	                        <div class="img-wrap"><img src=${prize.url}  onclick="window.location.href='${prize.linkUrl}'" alt=""></div>
+	                        <div class="content">
+	                            <p class="prize">${prize.prizeLevel}</p>
+	                            <p class="detail">${prize.prizeDetail}</p>
+	                            <p class="number">名额：<i>${prize.peopleNum}</i>人</p>
+	                        </div>   
+	                    </div>
+	                    </#list>            
+	                </div>
+	            </div>
+	        </div>
+        </div>
+        <div class="share-popup" onclick="hidePopup()">
+            <div class="main">
+                <img src="//pics.lvjs.com.cn/mobile/zt/4.0.0/1606/graduation-trip/images/share-pic.png" alt="">
+            </div>
+        </div>
+        <!-- 弹窗-->
+        <div class="wrong-popup">
+            <div class="main">
+                <img src="//pics.lvjs.com.cn/mobile/zt/4.0.0/1606/graduation-trip/images/lv-cry.png" alt="">
+                <p></p>
+                <button>我知道了</button>
+            </div>
+        </div>
+    </div>
+    <!-- // <script type="text/javascript" src="//pics.lvjs.com.cn/mobile/plugins/nativeJs/downloadBar/1.0/build.min.js"></script> -->
+    
+    <script type="text/javascript"> 
+    	function hidePopup(){
+    		$(".share-popup").css("display", "none");
+    	}
+    	function showPopup(){
+    		$(".share-popup").css("display", "block");
+    	}
+   		/**
+   		 * 显示提示框
+   		 */
+   		/**
+   		 * 提示框
+   		 * @param  {[type]} content [description]
+   		 * @param  {[type]} second  [description]
+   		 * @return {[type]}         [description]
+   		 */
+   		var showWrong = function(content, second) {
+   			$(".wrong-popup p").html(content);
+   			$('.wrong-popup').css("display", "block");
+   			setTimeout(function(){$('.wrong-popup').css("display", "none");}, second*1000);
+   		}
+    </script>
+        	
+            	
+    <#if msg>
+    	<script type="text/javascript"> 
+    		showWrong("团队已满员，请参加其他团队", 3);
+    	</script>
+    </#if>   
+    <#if shareContent>
+     	<script type="text/javascript"> 
+    	var wxData;
+		wxData = {
+			  imgUrl: "${imageList.url}",
+			  link: "//weixin.lvmama.com/groupActivity/${groupActId}?groupId=${groupId}",
+			  desc: "${shareContent.shareDesc}",
+			  title: "${shareContent.title}"
+		}
+		if(wxData != undefined) {
+		    WechatApi.share(wxData);
+		}
+		</script>
+	·<#else>
+		<script type="text/javascript"> 
+    	var wxData;
+		wxData = {
+			link: "//weixin.lvmama.com/groupActivity/${groupActId}?groupId=${groupId}"
+		}
+		if(wxData != undefined) {
+		    WechatApi.share(wxData);
+		}
+		</script>
+	</#if>
+</body>
+</html>

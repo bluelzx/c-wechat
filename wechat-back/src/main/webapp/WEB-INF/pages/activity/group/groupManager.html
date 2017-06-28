@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta charset="utf-8" />
+<title>集齐召唤神龙 - 微信后台管理系统</title>
+<meta name="description" content="overview &amp; stats" />
+<meta name="viewport"
+	content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+<#include "commonHead.html">
+<script src="${webroot}/assets/js/ace-extra.min.js"></script>
+<script src="${webroot}/assets/js/jquery.2.1.1.min.js"></script>
+        <script src="${webroot}/assets/js/bootstrap.min.js"></script>
+<link rel="stylesheet" href="${webroot}/assets/css/bootstrap-datetimepicker.min.css" />
+</head>
+
+<body class="no-skin" style="background-color: #FFF;">
+	<div class="page-content">
+		<div class="page-header">
+			<h1>
+				活动管理 <small> <i class="ace-icon fa fa-angle-double-right"></i>
+					集齐召唤神龙
+				</small>
+			</h1>
+		</div>
+		<div class="tabbable">
+			<ul class="nav nav-tabs" id="myTab">
+				<li class=""><a data-toggle="tab" href="#manage"
+					aria-expanded="false"> 活动管理 </a></li>
+
+				<li class=""><a data-toggle="tab" href="#statistics"
+					aria-expanded="true"> 活动统计 </a></li>
+			</ul>
+
+			<div class="tab-content">
+				<div id="manage" class="tab-pane fade">
+					<button type="button" onclick="skip('${adminPath}/activity/group/new')" class="btn btn-white btn-primary btn-round">添加活动</button>
+					<hr>
+					<div class="row">
+						<div class="col-xs-12">
+							<div class="row">
+								<div class="col-xs-12">
+									<div class="widget-box"
+										style="margin-bottom: 0px; border-bottom: 0px;">
+										<div class="widget-body" style="background-color: #EFF3F8;">
+											<div class="widget-main">
+												<form class="form-inline" id="searchFormManage" method="post"
+													action="${adminPath}/activity/group">
+													<input type="hidden" name="tab" value="tabManage"/>
+													<div class="form-group">
+														<label for="exampleInputName2">活动ID：</label> <input
+															type="text" class="form-control" name="id"
+															value="${conditionManage.id!}" placeholder="活动ID">
+													</div>
+													<div class="form-group">
+														<label for="exampleInputName2">活动名称：</label> <input
+															type="text" class="form-control" name="name"
+															value="${conditionManage.name!}" placeholder="活动名称">
+													</div>
+													<div class="form-group">
+														<label for="exampleInputName2">开始时间：</label> <input
+															type="text" class="form-control beginDatetimepicker"
+															name="startDate" value="<#if conditionManage.startDate??>${conditionManage.startDate?string('yyyy-MM-dd HH:mm:ss')}</#if>"
+															placeholder="活动开始时间">
+													</div>
+													<div class="form-group">
+														<label for="exampleInputName2">结束时间：</label> <input
+															type="text" class="form-control endDatetimepicker"
+															name="endDate" value="<#if conditionManage.endDate??>${conditionManage.endDate?string('yyyy-MM-dd HH:mm:ss')}</#if>"
+															placeholder="活动结束时间">
+													</div>
+													<div class="form-group">
+														<label for="exampleInputName2">状态：</label>
+													</div>
+													<div class="form-group">
+														<select
+															class="form-control" name="state" style="width:100%">
+																<#list statusList as state>
+																<option value=${state.value} <#if conditionManage.state == state.value>selected</#if>>${state.showName}</option>
+																</#list>
+														</select>
+													</div>
+													<div class="form-group">
+														<button id="tabManage" type="submit" class="btn btn-primary btn-round btn-sm">
+															<span class="ace-icon fa fa-search bigger-110"></span>
+															Search
+														</button>
+													</div>
+												</form>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="row">
+								<div class="col-xs-12">
+									<table id="simple-table"
+										class="table table-striped table-bordered table-hover"
+										style="margin-bottom: 0px; border-bottom: 0px;">
+										<thead>
+											<tr>
+												<th>编号</th>
+												<th>活动ID</th>
+												<th>活动名称</th>
+												<th>分享ID</th>
+												<th>有效期</th>
+												<th>URL</th>
+												<th>当前状态</th>
+												<th>二维码</th>
+												<th>操作</th>
+											</tr>
+										</thead>
+										<tbody>
+											<#if groupActListManage?? && groupActListManage?size&gt;0> <#list groupActListManage
+											as act>
+											<tr class="">
+												<td>${act_index + 1}</td>
+												<td>${act.id!}</td>
+												<td>${act.name!}</td>
+												<td>${act.shareTemplateId!}</td>
+												<td>开始：${act.startDate?string('yyyy-MM-dd HH:mm:ss')} <br>结束：${act.endDate?string('yyyy-MM-dd HH:mm:ss')}</td>
+												<td>https://weixin.lvmama.com/groupActivity/${act.id!}</td> 
+												<td><#if act.state&gt;0>
+														开启
+													<#else>
+														关闭
+													</#if>
+												</td>
+												<td>
+													<#if act.qRCodeUrl??>
+														<img alt="" src="${act.qRCodeUrl}" style="max-height: 60px;max-width: 60px">
+													<#else>
+														<a class="btn btn-minier btn-primary" role="button" onclick="createQRCode('${act.id}',this);">获取</a>
+													</#if>
+												</td>
+												<td>
+													<a class="btn btn-minier btn-primary" href="${adminPath}/activity/group/edit?id=${act.id!}" role="button">编辑</a>
+													<#if act.state&gt;0>
+														<a class="btn btn-minier btn-primary" href="${adminPath}/activity/group/usstate?id=${act.id!}&state=0" role="button">关闭</a>
+													<#else>
+														<a class="btn btn-minier btn-primary" href="${adminPath}/activity/group/usstate?id=${act.id!}&state=1" role="button">启用</a>
+													</#if>
+												</td>
+											</tr>
+											</#list> <#else>
+											<tr>
+												<td colspan="12">
+													<div class="alert alert-danger" style="margin-bottom: 0px;"
+														role="alert">没有记录!</div>
+												</td>
+											</tr>
+											</#if>
+										</tbody>
+									</table>
+									<#include "paginatorManage.html">
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<div id="statistics" class="tab-pane fade">
+						<button type="button" onclick="skip('${adminPath}/activity/group/new')" class="btn btn-white btn-primary btn-round">添加活动</button>
+					<hr>
+					<div class="row">
+						<div class="col-xs-12" >
+							<div class="row">
+								<div class="col-xs-12">
+									<div class="widget-box"
+										style="margin-bottom: 0px; border-bottom: 0px;">
+										<div class="widget-body" style="background-color: #EFF3F8;">
+											<div class="widget-main">
+												<form class="form-inline" id="searchFormStatistical" method="post"
+													action="${adminPath}/activity/group">
+													<input type="hidden" name="tab" value="tabStatistical"/>
+													<div class="form-group">
+														<label for="exampleInputName2">活动ID：</label> <input
+															type="text" class="form-control" name="id"
+															value="${conditionStatistical.id!}" placeholder="活动ID">
+													</div>
+													<div class="form-group">
+														<label for="exampleInputName2">活动名称：</label> <input
+															type="text" class="form-control" name="name"
+															value="${conditionStatistical.name!}" placeholder="活动名称">
+													</div>
+													<div class="form-group">
+														<label for="exampleInputName2">开始时间：</label> <input
+															type="text" class="form-control beginDatetimepicker" id="startDateStatistics"
+															name="startDate" value="<#if conditionStatistical.startDate??>${conditionStatistical.startDate?string('yyyy-MM-dd HH:mm:ss')}</#if>"
+															placeholder="活动开始时间">
+													</div>
+													<div class="form-group">
+														<label for="exampleInputName2">结束时间：</label> <input
+															type="text" class="form-control endDatetimepicker" id="endDateStatistics"
+															name="endDate" value="<#if conditionStatistical.endDate??>${conditionStatistical.endDate?string('yyyy-MM-dd HH:mm:ss')}</#if>"
+															placeholder="活动结束时间">
+													</div>
+														<div class="form-group">
+														<label for="exampleInputName2">状态：</label>
+													</div>
+													<div class="form-group">
+														<select
+															class="form-control" name="state" style="width:100%">
+																<#list statusList as state>
+																<option value=${state.value} <#if conditionStatistical.state == state.value>selected</#if>>${state.showName}</option>
+																</#list>
+														</select>
+													</div>
+													<div class="form-group">
+														<button id="tabStatistical" type="submit" class="btn btn-primary btn-round btn-sm">
+															<span class="ace-icon fa fa-search bigger-110"></span>
+															Search
+														</button>
+													</div>
+												</form>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="row">
+								<div class="col-xs-12" >
+									<table id="simple-table"
+										class="table table-striped table-bordered table-hover"
+										style="margin-bottom: 0px; border-bottom: 0px;">
+										<thead>
+											<tr>
+												<th>编号</th>
+												<th>活动ID</th>
+												<th>活动名称</th>
+												<th>活动有效期</th>
+												<th>报名截止时间</th>
+												<th>参与人数</th>
+												<th>二次转发量</th>
+												<th>总团数</th>
+												<th>已成团数</th>
+												<th>操作</th>
+											</tr>
+										</thead>
+
+
+										<tbody>
+											<#if groupActListStatistical?? && groupActListStatistical?size&gt;0> <#list groupActListStatistical
+											as act>
+											<tr class="">
+												<td>${act_index + 1}</td>
+												<td>${act.id!}</td>
+												<td>${act.name!}</td>
+												<td>开始：${act.startDate?string('yyyy-MM-dd HH:mm:ss')} &nbsp;&nbsp;&nbsp;结束：${act.endDate?string('yyyy-MM-dd HH:mm:ss')}</td>
+												<td>${act.deadlineTime?string('yyyy-MM-dd HH:mm:ss')}</td>
+												<td><#if act.participantsNum??>${act.participantsNum!}<#else>0</#if></td>
+												<td>${act.secondaryForward!}</td>
+												<td>${act.groupNum!}</td>
+												<td>${act.completeGroupNum!}</td>
+												<td><a class="btn btn-minier btn-primary" role="button" href="${adminPath}/activity/group/view?groupActId=${act.id!}&id=${conditionStatistical.id!}&actName=${conditionStatistical.name!}&startDate=${conditionStatistical.startDate}&endDate=${conditionStatistical.endDate}&state=${conditionStatistical.state}">查看</a></td>
+											</tr>
+											</#list> <#else>
+											<tr>
+												<td colspan="12">
+													<div class="alert alert-danger" style="margin-bottom: 0px;"
+														role="alert">没有记录!</div>
+												</td>
+											</tr>
+											</#if>
+										</tbody>
+									</table>
+									<#include "paginatorStatistical.html">
+								</div>
+							</div>
+						</div>
+						
+						
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<#include "commonFootJs.html">
+	<script src="${webroot}/assets/js/moment.min.js"></script>
+	<script src="${webroot}/assets/js/bootstrap-datetimepicker.min.js"></script>
+	<script type="text/javascript">
+	
+		var createQRCode=function(groupId,obj){
+			$.ajax({
+				url : '${adminPath}/activity/group/createQRcode',
+				type : "POST",
+				data : {
+					groupId:groupId
+				},
+				success:function(data) {
+					if(data.code == 1) {
+						$(obj).parent().append('<img alt="" src="'+data.qRCode.url+'" style="max-height: 60px;max-width: 60px">');
+						$(obj).remove();
+						showMsg(data.msg);
+					} else {
+						showMsg(data.msg);
+					}
+				},
+				error:function(data) {
+				}
+			});
+		}
+	
+		jQuery(function($) {
+			var optionsBegin = {
+				/* format : 'YYYY-MM-DD  HH:mm:ss' */
+					format : 'YYYY-MM-DD  00:00:00'
+			}
+			var optionsEnd = {
+					/* format : 'YYYY-MM-DD  HH:mm:ss' */
+						format : 'YYYY-MM-DD  23:59:59'
+				}
+			$('.beginDatetimepicker').datetimepicker(optionsBegin).next().on(
+					ace.click_event, function() {
+						$(this).prev().focus();
+					});
+			$('.endDatetimepicker').datetimepicker(optionsEnd).next().on(
+					ace.click_event, function() {
+						$(this).prev().focus();
+					});
+			
+			var tab="${tab}";
+			if(tab=="tabStatistical"){
+				$('#myTab').children("li").eq(1).addClass("active");
+				$('#statistics').addClass("active in");
+			}else if(tab=="tabManage"){
+				$('#myTab').children("li").eq(0).addClass("active");
+				$('#manage').addClass("active in");
+			}
+			
+		})
+	</script>
+</body>
+</html>

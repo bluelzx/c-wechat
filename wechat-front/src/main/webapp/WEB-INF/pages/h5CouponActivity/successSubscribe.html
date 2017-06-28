@@ -1,0 +1,49 @@
+        <script type="text/javascript" src="//pics.lvjs.com.cn/mobile/js/code/base/ztheader.js"></script>
+        <div class="banner">
+            <img src="${activity.bannerUrl}" alt="">
+        </div>
+        <div class="msg">
+            <img src="//pics.lvjs.com.cn/mobile/zt/4.0.0/1605/send-coupons/images/bg.png" alt="">
+            <div class="info">
+            	<!-- 恭喜您获得优惠券 -->
+                <h3>${title}</h3>
+                <p>已放至账户<a href="">${mobile}</a></p>
+                <p>登录驴妈妈即可使用</p>
+            </div>
+            <div class="click">
+                <a href="//m.lvmama.com/?losc=058571"><button class="brand-link">去官网看看</button></a>                                    
+                <a href="//d.lvmama.com/#1"><button class="downloadLMM">下载驴妈妈客户端</button></a>
+            </div>
+        </div>
+        <div class="coupon-list">
+        <#if couponList?? && couponList?size&gt;0>
+        	<#list couponList as couponVO>
+        		<div class="coupon-module">
+                <p class="number"><strong>优惠券号：</strong>${couponVO.couponCode.couponCode}</p>
+                <p class="name">${couponVO.coupon.couponName}</p>
+                <p class="des">详情：${couponVO.coupon.description}</p>
+                <p class="term">有效期：<a href="">${couponVO.couponCode.beginTime?string("yyyy-MM-dd")}</a>至<a href="">${couponVO.couponCode.endTime?string("yyyy-MM-dd")}</a></p>
+            </div>
+        	</#list><#else>
+			</#if>
+        </div>
+        <div class="prd">
+		    <#if productAdvertisingList?? && productAdvertisingList?size&gt;0>
+	        	<#list productAdvertisingList as prd>
+    		  		<a href=${prd.productWapURL!}>
+    	  				<div class="prd-list">
+    	  					<div class="prd-pic"><img src=${prd.productImgURL!} alt=""></div>
+          					<div class="describe">
+          						<p class="detail">${prd.productName!}</h3>
+              					<div class="price">
+                  					<span>&yen;${prd.productPrice!}</span>
+              					</div>
+          					</div>
+      					</div>
+  					</a>
+	  			</#list><#else>
+			</#if>
+        </div>
+        <div class="hongbao-footer">
+            <img src="//pics.lvjs.com.cn/mobile/zt/4.0.0/1605/send-coupons/images/footer-pic.png" alt="">
+        </div>

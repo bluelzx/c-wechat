@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="DISCOUNT_NEW_ACTIVITY" >
+	<insert id="insertdiscountActivityNew">
+			INSERT INTO discount_new_activity(
+				id, 
+				name, 
+				banner,
+				period,
+				update_time
+			) VALUES (
+				#{id}, 
+				#{name}, 
+				#{banner},
+				#{period},
+				#{updateTime}
+			)
+	</insert>
+
+	<update id="updatediscountActivityNew">
+		UPDATE discount_new_activity
+		<set>
+			<if test="name != null and name != ''">
+				name = #{name},
+			</if>
+			<if test="banner != null and banner  != ''">
+				banner  = #{banner},
+			</if>
+			<if test="period != null and period  != ''">
+				period  = #{period},
+			</if>
+			<if test="updateTime != null and updateTime != ''">
+				update_time = #{updateTime},
+			</if>
+		</set>
+		WHERE id = #{id}
+	</update>
+	
+	
+	<select id="selectDiscountActivityNew" resultType="DiscountActivityNew">
+		SELECT 
+			a.id, a.name, a.banner, a.period, a.update_time
+		FROM discount_new_activity a
+		WHERE 1 = 1
+	</select>
+	
+	<select id="queryDiscountActivityNew" resultType="DiscountActivityNew">
+		SELECT 
+			a.id, a.name, a.banner, a.period, a.update_time
+		FROM discount_new_activity a
+		WHERE 1 = 1
+		<if test="id != null and id != ''">
+			AND a.id = #{id}
+		</if>
+		<if test="name != null and name != ''">
+			AND a.name = #{name}
+		</if>
+		<if test="banner != null and banner != ''">
+			AND a.banner = #{banner}
+		</if>
+		<if test="period != null and period != ''">
+			AND a.period = #{period}
+		</if>
+		<if test="updateTime != null and updateTime != ''">
+			AND a.update_time = #{updateTime}
+		</if>
+	</select>
+</mapper>

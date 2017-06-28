@@ -1,0 +1,42 @@
+<!DOCTYPE HTML>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<title>驴妈妈旅游网</title>
+		<meta name="Keywords" content="驴妈妈无线,景区门票,旅游度假" />
+		<meta name="Description" content="驴妈妈无线官网:支持手机快捷预订景区门票,自助游线路,全国酒店,豪华邮轮等各种旅游产品.(中国最领先的在线旅游预订服务商!)" />
+		<meta content="initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width" name="viewport">
+		<link rel="alternate" type="application/vnd.wap.xhtml+xml" media="handheld" href="target" />
+		<link rel="apple-touch-icon" href="//pics.lvjs.com.cn/img/mobile/touch/img/lvmama_v1_png.png" />
+		<link rel="apple-touch-icon" sizes="72x72" href="//pics.lvjs.com.cn/img/mobile/touch/img/lvmama_v1_png.png" />
+		<link rel="apple-touch-icon" sizes="114x114" href="//pics.lvjs.com.cn/img/mobile/touch/img/lvmama_v1_png.png" />
+		<link rel="apple-touch-icon" sizes="144x144" href="//pics.lvjs.com.cn/img/mobile/touch/img/lvmama_v1_png.png" />
+		<meta http-equiv="pragma" content="no-cache">
+		<meta http-equiv="Cache-Control" content="max-age=7200" />
+		<meta http-equiv="expires" content="0">
+		<link rel="stylesheet" type="text/css" href="//pics.lvjs.com.cn/mobile/zt/weixin/1510/freeFlow/css/freeFlow.css?v=20160908" />
+	</head>
+
+	<body>
+		<div style="width:0; height:0; overflow: hidden; font-size: 0; position: fixed; left: 0;top: 0;"><img src="//pics.lvjs.com.cn/mobile/zt/weixin/1510/freeFlow/img/share.png" alt=""/></div>
+		<div class="container">
+			<div class="m-main">
+				<img src="//pics.lvjs.com.cn/mobile/zt/weixin/1510/freeFlow/img/index_bg.png" alt="">
+				<div class="words">
+					<p>给驴妈妈旅游网用户无条件送20M手机上网流量。签到、游戏、做问卷送更多，可累加，无上限。三大运营商全覆盖。</p>
+					<p class="yellow">首先要在微信上绑定一下您的驴妈妈账号</p>
+					<p>如果您已经是「驴妈妈旅游网」用户请直接绑定如果还未注册，可以注册新用户并绑定。</p>
+				</div>
+				<#if channel == "1">
+					<a href="//weixin.lvmama.com/binding/index?openid=${wechatUser.openid!}&unionid=${wechatUser.unionid!}&channel=1&callback=${callbackUrl!}">去绑定</a>
+					<a href="//weixin.lvmama.com/binding/register?openId=${wechatUser.openid!}&unionid=${wechatUser.unionid!}&channel=1&callback=${callbackUrl!}">去注册</a>
+				<#else>
+				    <a href="//weixin.lvmama.com/binding/index?openid=${wechatUser.openid!}&unionid=${wechatUser.unionid!}&channel=0&callback=${callbackUrl!}">去绑定</a>
+					<a href="//weixin.lvmama.com/binding/register?openId=${wechatUser.openid!}&unionid=${wechatUser.unionid!}&channel=0&callback=${callbackUrl!}">去注册</a>
+				</#if>
+			</div>
+		</div>
+	</body>
+
+</html>

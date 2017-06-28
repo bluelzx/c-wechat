@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="T_WX_FLOW_EXCHANGE">
+	<resultMap id="BaseResultMap" type="FlowExchange">
+		<id column="id" property="id" jdbcType="VARCHAR" />
+		<result column="openid" property="openid" jdbcType="VARCHAR" />
+		<result column="phone_num" property="phoneNum" jdbcType="VARCHAR" />
+		<result column="operator" property="operator" jdbcType="VARCHAR" />
+		<result column="exchange_time" property="exchangeTime" jdbcType="TIMESTAMP" />
+		<result column="exchange_flow" property="exchangeFlow" jdbcType="INTEGER" />
+		<result column="return_time" property="returnTime" jdbcType="TIMESTAMP" />
+		<result column="return_code" property="returnCode" jdbcType="VARCHAR" />
+		<result column="return_desc" property="returnDesc" jdbcType="VARCHAR" />
+		<result column="succeed" property="succeed" jdbcType="BIT" />
+		<result column="remarks" property="remarks" jdbcType="VARCHAR" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		id, openid, phone_num, operator, exchange_time, exchange_flow, succeed, remarks
+	</sql>
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String">
+		select
+		<include refid="Base_Column_List" />
+		from t_wx_flow_exchange
+		where id = #{id,jdbcType=VARCHAR}
+	</select>
+	<select id="selectByOpenid" resultMap="BaseResultMap" parameterType="java.lang.String">
+		select
+		<include refid="Base_Column_List" />
+		from t_wx_flow_exchange
+		where openid = #{openid,jdbcType=VARCHAR}
+	</select>
+	<insert id="insertSelective" parameterType="FlowExchange">
+		insert into t_wx_flow_exchange
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				id,
+			</if>
+			<if test="openid != null">
+				openid,
+			</if>
+			<if test="phoneNum != null">
+				phone_num,
+			</if>
+			<if test="operator != null">
+				operator,
+			</if>
+			<if test="exchangeTime != null">
+				exchange_time,
+			</if>
+			<if test="exchangeFlow != null">
+				exchange_flow,
+			</if>
+			<if test="returnTime != null">
+				return_time,
+			</if>
+			<if test="returnCode != null">
+				return_code,
+			</if>
+			<if test="returnDesc != null">
+				return_desc,
+			</if>
+			<if test="succeed != null">
+				succeed,
+			</if>
+			<if test="remarks != null">
+				remarks,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=VARCHAR},
+			</if>
+			<if test="openid != null">
+				#{openid,jdbcType=VARCHAR},
+			</if>
+			<if test="phoneNum != null">
+				#{phoneNum,jdbcType=VARCHAR},
+			</if>
+			<if test="operator != null">
+				#{operator,jdbcType=VARCHAR},
+			</if>
+			<if test="exchangeTime != null">
+				#{exchangeTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="exchangeFlow != null">
+				#{exchangeFlow,jdbcType=INTEGER},
+			</if>
+			<if test="returnTime != null">
+				#{returnTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="returnCode != null">
+				#{returnCode,jdbcType=VARCHAR},
+			</if>
+			<if test="returnDesc != null">
+				#{returnDesc,jdbcType=VARCHAR},
+			</if>
+			<if test="succeed != null">
+				#{succeed,jdbcType=BIT},
+			</if>
+			<if test="remarks != null">
+				#{remarks,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKey" parameterType="FlowExchange">
+		update t_wx_flow_exchange
+		set openid = #{openid,jdbcType=VARCHAR},
+		phone_num = #{phoneNum,jdbcType=VARCHAR},
+		operator = #{operator,jdbcType=VARCHAR},
+		exchange_time = #{exchangeTime,jdbcType=TIMESTAMP},
+		exchange_flow = #{exchangeFlow,jdbcType=INTEGER},
+		return_time = #{returnTime,jdbcType=TIMESTAMP},
+		return_code = #{returnCode,jdbcType=VARCHAR},
+		return_desc = #{returnDesc,jdbcType=VARCHAR},
+		succeed = #{succeed,jdbcType=BIT},
+		remarks = #{remarks,jdbcType=VARCHAR}
+		where id = #{id,jdbcType=VARCHAR}
+	</update>
+	<select id="selectByDate" resultMap="BaseResultMap" parameterType="java.util.Map">
+		select
+		<include refid="Base_Column_List" />
+		from t_wx_flow_exchange
+		where DATE_FORMAT(exchange_time, '%Y-%m') = #{date,jdbcType=VARCHAR} and openid = #{openid,jdbcType=VARCHAR}
+	</select>
+	
+	
+	
+	 <select id="selectListByOpenid" resultType="FlowExchange">
+		select fg.id, fg.openid, fg.phone_num, fg.exchange_time, fg.exchange_flow, fg.return_desc, fg.remarks
+		from t_wx_flow_exchange fg 
+		<trim prefix="WHERE" prefixOverrides="AND | OR">
+			<if test="openid != null and openid != ''">
+				<![CDATA[AND fg.openid = #{openid}]]>
+			</if>
+		</trim>
+		order by fg.exchange_time DESC
+	</select>
+	
+</mapper>

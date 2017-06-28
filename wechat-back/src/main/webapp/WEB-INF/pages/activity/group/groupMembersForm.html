@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+		<meta charset="utf-8" />
+		<title>集齐召唤神龙 - 用户编辑</title>
+		<meta name="description" content="overview &amp; stats" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+		<link rel="stylesheet" href="${webroot}/assets/css/bootstrap-datetimepicker.min.css" />
+		<#include "commonHead.html">
+	</head>
+
+	<body class="no-skin" style="background-color: #FFF;">
+		<div class="page-content">
+			<div class="page-header">
+				<h1>
+					集齐召唤神龙
+					<small>
+						<i class="ace-icon fa fa-angle-double-right"></i>
+						编辑用户
+					</small>
+				</h1>
+			</div>
+			<div class="row">
+				<div class="col-xs-12">
+					<form id="platformForm" class="form-horizontal" role="form" action="${adminPath}/activity/group/saveMember" method="POST">
+						<input type="hidden" id="id" name="id" value="${member.id}">
+						<input type="hidden" id="groupActivityId" name="groupActivityId" value="${member.groupActivityId}">
+						<div class="space-4"></div>
+						<div class="form-group">
+							<label class="col-sm-3 control-label no-padding-right" for="form-field-1"> 微信名</label>
+							<div class="col-sm-9">
+								<input type="text" id="nickname" name="nickname" placeholder="微信名" value="${member.nickname!}" class="col-xs-10 col-sm-5" disabled="true" readOnly="true">
+							</div>
+						</div>
+						<div class="space-4 nameInfo"></div>
+						<div id="nameInfo" class="form-group nameInfo">
+							<label class="col-sm-3 control-label no-padding-right" for="form-field-1"> 
+							<strong class="text-danger">*</strong>姓名 </label>
+							<div class="col-sm-9">
+								<input type="text" id="name" name="name" placeholder="姓名" value="${member.name!}" class="col-xs-10 col-sm-5">
+							</div>
+						</div>
+						<div class="space-4 telephoneInfo"></div>
+						<div id="telephoneInfo" class="form-group telephoneInfo">
+							<label class="col-sm-3 control-label no-padding-right" for="form-field-1"> 
+							<strong class="text-danger">*</strong>手机号 </label>
+							<div class="col-sm-9">
+								<input type="text" id="telephone" name="telephone" placeholder="手机号" value="${member.telephone!}" class="col-xs-10 col-sm-5">
+							</div>
+						</div>
+						<div class="space-4 ageInfo"></div>
+						<div id="ageInfo" class="form-group ageInfo">
+							<label class="col-sm-3 control-label no-padding-right" for="form-field-1"> 
+							<strong class="text-danger">*</strong>年龄</label>
+							<div class="col-sm-9">
+								<input type="text" id="age" name="age" placeholder="年龄" value="${member.age!}" class="col-xs-10 col-sm-5">
+							</div>
+						</div>
+						<div class="space-4 constellationInfo"></div>
+						<div id="constellationInfo" class="form-group constellationInfo">
+							<label class="col-sm-3 control-label no-padding-right" for="form-field-1"> 
+							<strong class="text-danger">*</strong>星座 </label>
+							<div class="col-sm-4">
+								<select class="form-control" name="constellation" id="constellation">
+									<#list constellationsList as constellationsState>
+										<option value=${constellationsState.value} <#if member.constellation == constellationsState.value>selected</#if>>${constellationsState.showName}</option>
+									</#list>
+								</select>
+							</div>
+						</div>
+						<div class="space-4 provinceInfo"></div>
+						<div id="provinceInfo" class="form-group provinceInfo">
+							<label class="col-sm-3 control-label no-padding-right" for="form-field-1"> 
+							<strong class="text-danger">*</strong>省份 </label>
+							<div class="col-sm-9">
+								<input type="text" id="province" name="province" placeholder="省份" value="${member.province!}" class="col-xs-10 col-sm-5">
+							</div>
+						</div>
+						<div class="space-4 cityInfo"></div>
+						<div id="cityInfo" class="form-group cityInfo">
+							<label class="col-sm-3 control-label no-padding-right" for="form-field-1"> 
+							<strong class="text-danger">*</strong>城市 </label>
+							<div class="col-sm-9">
+								<input type="text" id="city" name="city" placeholder="城市" value="${member.city!}" class="col-xs-10 col-sm-5">
+							</div>
+						</div>
+						<div class="space-4"></div>
+						<div class="form-group">
+							<label class="col-sm-3 control-label no-padding-right" for="form-field-1"> 身份 </label>
+							<div class="col-sm-4">
+								<select class="form-control" name="isLeader" id="isLeader" disabled="true" readOnly="true">
+									<#list isLeaderStatusList as isLeaderState>
+										<option value=${isLeaderState.value} <#if member.isLeader == isLeaderState.value>selected</#if>>${isLeaderState.showName}</option>
+									</#list>
+								</select>
+							</div>
+						</div>
+						<div class="space-4"></div>
+						<div class="form-group">
+							<label class="col-sm-3 control-label no-padding-right" for="form-field-1"> 团ID </label>
+							<div class="col-sm-9">
+								<input type="text" id="groupId" name="groupId" value="${member.groupId}" placeholder="团ID" class="col-xs-10 col-sm-5" disabled="true" readOnly="true">
+							</div>
+						</div>
+						<div class="space-4"></div>
+						<div class="form-group">
+							<label class="col-sm-3 control-label no-padding-right" for="form-field-1"> 团状态 </label>
+							<div class="col-sm-4">
+								<select class="form-control" name="state" id="state" disabled="true" readOnly="true">
+									<#list statusList as state>
+										<option value=${state.value} <#if member.state == state.value>selected</#if>>${state.showName}</option>
+									</#list>
+								</select>
+							</div>
+						</div>
+						<div class="space-4"></div>
+						<div class="form-group">
+							<label class="col-sm-3 control-label no-padding-right" for="form-field-1"> 目前参团人数 </label>
+							<div class="col-sm-9">
+								<input type="text" id="participantsNum" name="participantsNum" placeholder="目前参团人数" value="${member.participantsNum!}" class="col-xs-10 col-sm-5" disabled="true" readOnly="true">
+							</div>
+						</div>
+						<div class="space-4"></div>
+						<div class="form-group">
+							<label class="col-sm-3 control-label no-padding-right" for="form-field-1">开团时间： </label>
+							<div class="col-sm-9">
+								<input type="text" id="startTime" name="startTime" placeholder="开团时间" <#if member.startTime??>
+												value="${member.startTime?string('yyyy-MM-dd HH:mm:ss')}" <#else>
+												value="" </#if>  class="col-xs-10 col-sm-5 datetimepicker" disabled="true" readOnly="true">
+							</div>
+						</div>
+						<div class="space-4"></div>
+						<div class="form-group">
+							<label class="col-sm-3 control-label no-padding-right" for="form-field-1">成团时间： </label>
+							<div class="col-sm-9">
+								<input type="text" id="completeTime" name="completeTime" placeholder="成团时间" <#if member.completeTime??>
+												value="${member.completeTime?string('yyyy-MM-dd HH:mm:ss')}" <#else>
+												value="" </#if>  class="col-xs-10 col-sm-5 datetimepicker" disabled="true" readOnly="true">
+							</div>
+						</div>
+						
+						<div class="clearfix form-actions">
+							<div class="col-md-offset-4 col-md-8">
+								<button id="submitBtn" class="btn btn-info" type="button">
+									<i class="ace-icon fa fa-check bigger-110"></i>
+									保存
+								</button>
+								<button class="btn btn-info" type="button" onclick="history.back();">
+									<i class="ace-icon fa fa-check bigger-110"></i>
+									取消
+								</button>
+							</div>
+						</div>
+					</form>
+				</div><!-- /.col -->
+			</div><!-- /.row -->
+		</div>
+
+		<#include "commonFootJs.html">
+
+		<!-- inline scripts related to this page -->
+		<script src="${webroot}/assets/js/moment.min.js"></script>
+		<script src="${webroot}/assets/js/bootstrap-datetimepicker.min.js"></script>
+		<script type="text/javascript">
+			jQuery(function($) {
+				$(".nameInfo").hide();
+				$(".telephoneInfo").hide();
+				$(".ageInfo").hide();
+				$(".constellationInfo").hide();
+				$(".provinceInfo").hide();
+				$(".cityInfo").hide();
+				var nameState=0;
+				var telephoneState=0;
+				var ageState=0;
+				var constellationState=0;
+				var provinceState=0;
+				var cityState=0;
+				var userInfoList="${userInfoList}";
+				var str= new Array();   
+				str=userInfoList.split(",");  
+				for(var i=0;i<str.length;i++){
+					if(str[i]==1){
+						$(".nameInfo").show();
+						nameState=1;
+					}
+					if(str[i]==2){
+						$(".telephoneInfo").show();
+						telephoneState=1;
+					}
+					if(str[i]==3){
+						$(".ageInfo").show();
+						ageState=1;
+					}
+					if(str[i]==4){
+						$(".constellationInfo").show();
+						constellationState=1;
+					}
+					if(str[i]==5){
+						$(".provinceInfo").show();
+						provinceState=1;
+					}
+					if(str[i]==6){
+						$(".cityInfo").show();
+						cityState=1;
+					}
+				}
+				
+				var options = {
+						format : 'YYYY-MM-DD  HH:mm:ss'
+					}
+					$('.datetimepicker').datetimepicker(options).next().on(
+							ace.click_event, function() {
+								$(this).prev().focus();
+							});
+				
+				$('#submitBtn').on('click', function(){
+					var name = $("#name").val();
+					var telephone = $("#telephone").val();
+					var age = $("#age").val();
+					var constellation = $("#constellation").val();
+					var province = $("#province").val();
+					var city = $("#city").val();
+					//手机号验证
+					var myreg = /^1[3|4|5|7|8]\d{9}$/;
+										 
+					
+					//数据合法性校验
+					if(isEmpty(name) && nameState==1) {
+						$("#name").focus();
+						showMsg("姓名不能为空！");
+					} else if(isEmpty(telephone) && nameState==1) {
+						$("#telephone").focus();
+						showMsg("手机号不能为空！");
+					} else if(!myreg.test(telephone)){
+						$("#telephone").focus();
+						showMsg("请输入正确格式的手机号！");
+					} else if(isEmpty(age) && ageState==1) {
+						$("#age").focus();
+						showMsg("年龄不能为空！");
+					} else if(isEmpty(constellation) && nameState==1) {
+						$("#constellation").focus();
+						showMsg("星座不能为空！");
+					} else if(isEmpty(province) && provinceState==1) {
+						$("#province").focus();
+						showMsg("省份不能为空！");
+					} else if(isEmpty(city) && cityState==1) {
+						$("#city").focus();
+						showMsg("城市不能为空！");
+					} else {
+						$("#platformForm").submit();
+					}
+				});
+			})
+		</script>
+	</body>
+</html>

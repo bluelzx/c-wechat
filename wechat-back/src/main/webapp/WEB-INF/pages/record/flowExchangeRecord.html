@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta charset="utf-8" />
+<title>手机充值流量 - 微信后台管理系统</title>
+<meta name="description" content="overview &amp; stats" />
+<meta name="viewport"
+	content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+<!-- bootstrap & fontawesome -->
+<#include "commonHead.html">
+<!-- ace settings handler -->
+<script src="${webroot}/assets/js/ace-extra.min.js"></script>
+<script src="${webroot}/assets/js/jquery.2.1.1.min.js"></script>
+        <script src="${webroot}/assets/js/bootstrap.min.js"></script>
+<link rel="stylesheet"
+	href="${webroot}/assets/css/bootstrap-datetimepicker.min.css" />
+</head>
+
+<body class="no-skin" style="background-color: #FFF;">
+	<div class="page-content">
+		<div class="page-header">
+			<h1>
+				通用管理 <small> <i class="ace-icon fa fa-angle-double-right"></i>
+					查询流量充值
+				</small>
+			</h1>
+		</div>
+		<div class="tabbable">
+			<ul class="nav nav-tabs" id="myTab">
+				<li class="active"><a data-toggle="tab" href="#manage"
+					aria-expanded="false"> 查询流量充值 </a></li>
+			</ul>
+
+			<div class="tab-content">
+				<div id="manage" class="tab-pane fade active in">
+					<div class="row">
+						<div class="col-xs-12">
+							<!-- PAGE CONTENT BEGINS -->
+							<div class="row">
+								<div class="col-xs-12">
+									<div class="widget-box"
+										style="margin-bottom: 5px; border-bottom: 0px;">
+										<div class="widget-body" style="background-color: #EFF3F8;">
+											<div class="widget-main">
+												<form class="form-inline" id="searchFormManage"
+													method="post" action="${adminPath}/flowRecord/index">
+													<input type="hidden" name="tab" value="tabManage" />
+													<div class="form-group">
+														<label for="exampleInputName2">openid ：</label> <input
+															type="text" class="form-control" name="openid"
+															value="${conditionManage.openid!}" placeholder="用户的openid">
+													</div>
+													<div class="form-group">
+														<button id="tabManage" type="submit"
+															class="btn btn-primary btn-round btn-sm">
+															<span class="ace-icon fa fa-search bigger-110"></span>
+															Search
+														</button>
+													</div>
+													<#if flow>
+													<div class="form-group">
+														总共获得的流量：${flow.totalFlow!} M
+													</div>
+													<div class="form-group">
+														剩余可兑换流量：${flow.surplusFlow!} M
+													</div>	
+													</#if>
+												</form>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="row">
+								<div class="col-xs-12">
+									<table id="simple-table"
+										class="table table-striped table-bordered table-hover"
+										style="margin-bottom: 0px; border-bottom: 0px;">
+										<thead>
+											<tr>
+												<th>编号</th>
+												<th>微信openid</th>
+												<th>手机号码</th>
+												<th>兑换时间</th>
+												<th>兑换流量</th>
+												<th>第三方回调信息</th>
+												<th>备注</th>
+											</tr>
+										</thead>
+
+
+										<tbody>
+											<#if flowExchangeList?? && flowExchangeList?size&gt;0>
+											<#list flowExchangeList as flowExchange>
+											<tr class="">
+												<td>${flowExchange_index + 1}</td>
+												<td>${flowExchange.openid!}</td>
+												<td>${flowExchange.phoneNum!}</td>
+												<td>${flowExchange.exchangeTime?string('yyyy-MM-dd HH:mm:ss')}</td>
+												<td>${flowExchange.exchangeFlow!} M</td>
+												<td>${flowExchange.returnDesc!}</td>
+												<td>${flowExchange.remarks!}</td>
+											</tr>
+											</#list> <#else>
+											<tr>
+												<td colspan="12">
+													<div class="alert alert-danger" style="margin-bottom: 0px;"
+														role="alert">没有记录!</div>
+												</td>
+											</tr>
+											</#if>
+										</tbody>
+									</table>
+									<#include "paginatorManage.html">
+								</div>
+								<!-- /.span -->
+							</div>
+							<!-- /.row -->
+						</div>
+						<!-- /.col -->
+					</div>
+					<!-- /.row -->
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<#include "commonFootJs.html">
+	<!-- inline scripts related to this page -->
+	<script src="${webroot}/assets/js/moment.min.js"></script>
+	<script src="${webroot}/assets/js/bootstrap-datetimepicker.min.js"></script>
+	<script type="text/javascript">
+		jQuery(function($) {
+			var optionsBegin = {
+				/* format : 'YYYY-MM-DD  HH:mm:ss' */
+				format : 'YYYY-MM-DD  00:00:00'
+			}
+			var optionsEnd = {
+				/* format : 'YYYY-MM-DD  HH:mm:ss' */
+				format : 'YYYY-MM-DD  23:59:59'
+			}
+			$('.beginDatetimepicker').datetimepicker(optionsBegin).next().on(
+					ace.click_event, function() {
+						$(this).prev().focus();
+					});
+			$('.endDatetimepicker').datetimepicker(optionsEnd).next().on(
+					ace.click_event, function() {
+						$(this).prev().focus();
+					});
+		})
+	</script>
+</body>
+</html>

@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="COUPON_RECORD" >
+	<resultMap id="BaseResultMap" type="CouponRecord">
+		<id column="id" property="id" jdbcType="VARCHAR" />
+		<result column="cuopon_id" property="couponId" jdbcType="VARCHAR" />
+		<result column="coupon_act_id" property="couponActId" jdbcType="VARCHAR" />
+		<result column="openid" property="openid" jdbcType="VARCHAR" />
+		<result column="create_date" property="createDate" jdbcType="TIMESTAMP" />
+		<result column="mobile" property="mobile" jdbcType="VARCHAR" />
+		<result column="is_new" property="isNew" jdbcType="INTEGER" />
+	</resultMap>
+	<select id="queryCouponRecord" resultType="CouponRecord">
+		select a.id, a.coupon_id, a.coupon_act_id, a.openid, a.create_date, a.mobile, a.is_new
+		from coupon_record a
+		<trim prefix="WHERE" prefixOverrides="AND | OR">
+			<if test="mobile != null and mobile != ''">
+				<![CDATA[AND a.mobile = #{mobile}]]>
+			</if>
+			<if test="couponActId != null and couponActId != ''">
+				<![CDATA[AND a.coupon_act_id = #{couponActId}]]>
+			</if>
+			<if test="openid != null and openid != ''">
+				<![CDATA[AND a.openid = #{openid}]]>
+			</if>
+		</trim>
+	</select>
+	
+	<insert id="insertCouponRecord"  parameterType="CouponRecord">
+				insert into coupon_record
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				id,
+			</if>
+			<if test="couponId != null">
+				coupon_id,
+			</if>
+			<if test="couponActId != null">
+				coupon_act_id,
+			</if>
+			<if test="openid != null">
+				openid,
+			</if>
+			<if test="createDate != null">
+				create_date,
+			</if>
+			<if test="mobile != null">
+				mobile,
+			</if>
+			<if test="isNew != null">
+				is_new
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=VARCHAR},
+			</if>
+			<if test="couponId != null">
+				#{couponId,jdbcType=VARCHAR},
+			</if>
+			<if test="couponActId != null">
+				#{couponActId,jdbcType=VARCHAR},
+			</if>
+			<if test="openid != null">
+				#{openid,jdbcType=VARCHAR},
+			</if>
+			<if test="createDate != null">
+				#{createDate,jdbcType=TIMESTAMP},
+			</if>
+			<if test="mobile != null">
+				#{mobile,jdbcType=VARCHAR},
+			</if>
+			<if test="isNew != null">
+				#{isNew,jdbcType=INTEGER}
+			</if>
+		</trim>
+	</insert>
+	
+	<select id="queryCouponRecordCount" resultType="Integer">
+		select count(*) from coupon_record where coupon_act_id = #{couponActId}
+	</select>
+</mapper>

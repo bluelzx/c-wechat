@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans 
+    xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:amq="http://activemq.apache.org/schema/core"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+           http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+           http://www.springframework.org/schema/context
+           http://www.springframework.org/schema/context/spring-context-4.0.xsd http://activemq.apache.org/schema/core  http://activemq.apache.org/schema/core/activemq-core-5.7.0.xsd" default-autowire="byName">
+
+    <!-- 自动扫描配置service的远程服务 -->
+	<bean class="com.lvtu.wechat.common.hessian.RemoteServiceScanner">
+	   <property name="basePackage" value="com.lvtu.wechat.common.service" />
+	   <property name="remoteServer" value="${wechat.serviceUrl}" />
+	</bean>
+ 
+</beans>

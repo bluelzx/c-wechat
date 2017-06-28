@@ -1,0 +1,103 @@
+<!DOCTYPE HTML>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<title>驴妈妈旅游网</title>
+		<meta name="Keywords" content="驴妈妈无线,景区门票,旅游度假" />
+		<meta name="Description" content="驴妈妈无线官网:支持手机快捷预订景区门票,自助游线路,全国酒店,豪华邮轮等各种旅游产品.(中国最领先的在线旅游预订服务商!)" />
+		<meta content="initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width" name="viewport">
+		<link rel="alternate" type="application/vnd.wap.xhtml+xml" media="handheld" href="target" />
+		<link rel="apple-touch-icon" href="//pics.lvjs.com.cn/img/mobile/touch/img/lvmama_v1_png.png" />
+		<link rel="apple-touch-icon" sizes="72x72" href="//pics.lvjs.com.cn/img/mobile/touch/img/lvmama_v1_png.png" />
+		<link rel="apple-touch-icon" sizes="114x114" href="//pics.lvjs.com.cn/img/mobile/touch/img/lvmama_v1_png.png" />
+		<link rel="apple-touch-icon" sizes="144x144" href="//pics.lvjs.com.cn/img/mobile/touch/img/lvmama_v1_png.png" />
+		<meta http-equiv="pragma" content="no-cache">
+		<meta http-equiv="Cache-Control" content="max-age=7200" />
+		<meta http-equiv="expires" content="0">
+		<script type="text/javascript" src="//pics.lvjs.com.cn/js/new_v/jquery-1.7.2.min.js"></script>
+		<script type="text/javascript" src="${webroot}/assets/js/common.js"></script>
+		<link rel="stylesheet" type="text/css" href="//pics.lvjs.com.cn/mobile/zt/weixin/1510/freeFlow/css/freeFlow.css?v=20160908" />
+	</head>
+
+	<body>
+		<div style="width:0; height:0; overflow: hidden; font-size: 0; position: fixed; left: 0;top: 0;"><img src="//pics.lvjs.com.cn/mobile/zt/weixin/1510/freeFlow/img/share.png" alt=""/></div>
+		<div class="container">
+			<div class="m-customer">
+				<#if wxUser.headimgurl?? && wxUser.headimgurl!="">
+				<span class="header-img" style="background-image: url('${wxUser.headimgurl}');"></span>
+				<#else>
+				<span class="header-img"></span>
+				</#if>
+				<h3>${wxUser.nickname}</h3>
+				<#if flow??>
+				<p>您已获得流量：<i>${flow.surplusFlow!}M</i></p>
+				<#else>
+				<p>您已获得流量：<i>0M</i></p>
+				</#if>
+			</div>
+			<div class="m-sign">
+				<p>您已连续签到<i>${signInfo.continuousSignCount!}</i>天。</p>
+				<#if signInfo.signed=="true">
+				<a href="javascript:;" class="gray">已签到</a>
+				<#else>
+				<a href="javascript:signIn();">签到</a>
+				</#if>
+			</div>
+			<p class="title">提示</p>
+			<p class="pp">每天可以签到一次，成功签到即送1M流量</p>
+			<div class="bot-banner">
+				<ul>
+				<#if advertisingInfo?? && advertisingInfo?size&gt;0> 
+					<#list advertisingInfo as advertising>
+						<li><a href="#" onclick="clicks('${advertising.id}','${advertising.skipURL}')">
+						<img src=${advertising.imgURL}></a></li>
+					</#list> <#else>
+				
+				</#if>
+				</ul>
+			</div>	
+		</div>
+	</body>
+	
+	<script type="text/javascript"> 
+		var loading = false;
+		var signIn = function() {
+			if(loading)
+				return;
+
+			loading = true;//防止重复点击
+
+			$.ajax({
+				url : '${webroot}/sign/signIn',
+				type : "POST",
+				success:function(data) {
+					if(data.code == 1) {
+						tipsModal('恭喜！签到成功！', 2);
+						loading = false;
+						skip("/sign/index?random=" + Math.random());
+					} else {
+						loading = false;
+						tipsModal(data.msg, 2);
+					}
+				},
+				error:function(data) {
+					loading = false;
+					tipsModal('哎呀,网络不给力,请稍后再试试吧！', 2);
+				}
+			});
+		};
+		var clicks = function(id,url){
+			$.ajax({
+				url :"${webroot}/advertising/click",
+				type :"POST",
+				data:{
+					advertisingId:id
+				},
+				success:function(data){
+					window.location.href = url;
+				}
+			});
+		};
+	</script>
+</html>

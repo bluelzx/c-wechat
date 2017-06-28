@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?> 
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context" xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.0.xsd
+		http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-4.0.xsd">
+
+	<description>Spring-web MVC配置</description>
+	
+	<!-- 加载配置属性文件 -->
+	<context:property-placeholder ignore-unresolvable="true" location="classpath:const.properties" />
+	
+	<!-- 对所有类进行扫描，以完成Bean创建和自动依赖注入的功能(不要包含Service的注解) -->
+	<context:component-scan base-package="com.lvtu.wechat.front.web">
+		<context:include-filter type="annotation" expression="org.springframework.stereotype.Controller" />
+	</context:component-scan>
+	
+	<!-- 这两个类用来启动基于Spring MVC的注解功能，将控制器与方法映射加入到容器中 -->
+	<mvc:annotation-driven>
+		<mvc:message-converters register-defaults="true">
+			<!-- 将StringHttpMessageConverter的默认编码设为UTF-8 -->
+			<bean class="org.springframework.http.converter.StringHttpMessageConverter">
+		    	<constructor-arg value="UTF-8" />
+			</bean>
+		</mvc:message-converters>
+	</mvc:annotation-driven>
+	
+	<!-- 拦截器 -->
+	<mvc:interceptors>
+		<mvc:interceptor>
+			<mvc:mapping path="/api/**"/>
+			<bean class="com.lvtu.wechat.front.interceptor.CORSInterceptor" />
+		</mvc:interceptor>
+		<mvc:interceptor>
+			<mvc:mapping path="/**"/>
+			<bean class="com.lvtu.wechat.front.interceptor.FreqReqInterceptor" />
+		</mvc:interceptor>
+		<mvc:interceptor>
+			<mvc:mapping path="/**"/>
+			<bean class="com.lvtu.wechat.front.interceptor.OauthInterceptor" />
+		</mvc:interceptor>
+		<mvc:interceptor>
+			<mvc:mapping path="/**"/>
+			<bean class="com.lvtu.wechat.front.interceptor.FllowInterceptor" />
+		</mvc:interceptor>
+	</mvc:interceptors>
+
+	<!-- 对某些静态资源，如css,图片等进行过滤 ,有引用 "/resources/**" 的路径引用转到工程的/resources/目录取资源 -->
+	<mvc:resources mapping="/assets/**" location="assets/" />
+	<mvc:resources location="/resource/" mapping="/resource/**"/>
+	
+	<bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver"/>
+	
+	<bean id="viewResolver" class="org.springframework.web.servlet.view.freemarker.FreeMarkerViewResolver">
+		<property name="order" value="0" />
+		<property name="cache" value="true" />
+		<!-- 模板后缀，指定html页面为模板 -->
+		<property name="prefix" value=""/>
+        <property name="suffix" value=".html"/>
+		<!-- 使用这个模板类来解析视图 -->
+		<property name="viewClass" value="org.springframework.web.servlet.view.freemarker.FreeMarkerView" />
+		<property name="exposeSpringMacroHelpers" value="true" />
+		<!-- 允许访问请求属性，默认为false -->
+		<property name="exposeRequestAttributes" value="true" />
+		<!-- 允许访问会话属性，默认为false -->
+		<property name="exposeSessionAttributes" value="true" />
+		<!-- 页面上下文，类似于request.contextPath-->
+		<property name="requestContextAttribute" value="rc" />
+		<!-- 模板输出内容编码，此处应与defaultEncoding保持一致-->
+		<property name="contentType" value="text/html;charset=UTF-8" />
+	</bean>
+	
+	<!-- freemaker  Directive-->
+	<bean id="blockDirective" class="cn.org.rapid_framework.freemarker.directive.BlockDirective"/>
+	<bean id="extendsDirective" class="cn.org.rapid_framework.freemarker.directive.ExtendsDirective"/>
+	<bean id="overrideDirective" class="cn.org.rapid_framework.freemarker.directive.OverrideDirective"/>
+	<bean id="superDirective" class="cn.org.rapid_framework.freemarker.directive.SuperDirective"/>
+
+	<bean id="freemarkerConfig" class="org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer">
+		<!-- 模板文件所在目录-->
+		<property name="templateLoaderPath" value="/WEB-INF/pages/" />
+		<!-- 指定FreeMarker模板文件的编码格式-->
+		<property name="defaultEncoding" value="UTF-8" />
+		<!-- FreeMarker属性配置-->
+		<property name="freemarkerSettings">
+			<props>
+			    <!-- 每隔5小时检查模板是否更新，单位为秒如果不经常更新模板可将更新的延迟时间设定长一点-->
+				<prop key="template_update_delay">0</prop>
+				<!-- 指定地区语言环境，我们的语言是中文-->
+				<prop key="locale">zh_CN</prop>
+				<prop key="default_encoding">UTF-8</prop>
+                <prop key="number_format">0.##########</prop>
+                <prop key="datetime_format">yyyy-MM-dd HH:mm:ss</prop>
+                <prop key="classic_compatible">true</prop>
+                <prop key="template_exception_handler">ignore</prop>
+			</props>
+		</property>
+		<property name="freemarkerVariables">
+			<map>
+				<entry key="extends" value-ref="extendsDirective" />
+				<entry key="override" value-ref="overrideDirective" />
+				<entry key="block" value-ref="blockDirective" />
+				<entry key="super" value-ref="superDirective" />
+			</map>
+		</property>
+	</bean>
+</beans>

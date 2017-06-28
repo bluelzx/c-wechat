@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="COUPON">
+	<select id="queryUseableCoupon" resultType="Coupon">
+		select a.id, a.coupon_act_id, a.coupon_code, a.state 
+		from coupon a 
+		where a.state = #{state}
+		AND a.coupon_act_id = #{couponActId}
+		order by rand() LIMIT 1
+	</select>
+	<select id="selectCouponNum" resultType="java.lang.Integer">
+		select count(*) from coupon where coupon_act_id = #{couponActId}
+	</select>
+
+
+	<update id="updateCoupon" parameterType="Coupon">
+		update coupon set state = #{state,jdbcType=SMALLINT}
+		where id = #{id,jdbcType=VARCHAR} 
+		and state = #{stateHis}
+	</update>
+	
+	<select id="queryCouponById" resultType="Coupon">
+		SELECT a.id, a.coupon_act_id, a.coupon_code, a.state FROM coupon a WHERE a.id = #{id,jdbcType=VARCHAR} 
+	</select>
+
+	<insert id="insert" parameterType="ArrayList">
+		INSERT INTO coupon(
+			id, 
+			coupon_act_id, 
+			coupon_code
+		) VALUES 
+		<foreach collection="list" item="obj" index="index" separator=",">
+			(
+			#{obj.id}, 
+			#{obj.couponActId}, 
+			#{obj.couponCode}
+			)
+		</foreach>
+	</insert>
+</mapper>

@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="FLOW_GROUPS">
+
+	<insert id="insert">
+		INSERT INTO flow_groups
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				id,
+			</if>
+			<if test="flowActivityId != null">
+				flow_activity_id,
+			</if>
+			<if test="totalNum != null">
+				total_num,
+			</if>
+			<if test="nowNum != null">
+				now_num,
+			</if>
+			<if test="totalFlow != null">
+				total_flow,
+			</if>
+			<if test="surplusFlow != null">
+				surplus_flow,
+			</if>
+			<if test="openid != null">
+				openid,
+			</if>
+			<if test="state != null">
+				state,
+			</if>
+			<if test="createTime != null">
+				create_time,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=VARCHAR},
+			</if>
+			<if test="flowActivityId != null">
+				#{flowActivityId,jdbcType=VARCHAR},
+			</if>
+			<if test="totalNum != null">
+				#{totalNum,jdbcType=INTEGER},
+			</if>
+			<if test="nowNum != null">
+				#{nowNum,jdbcType=INTEGER},
+			</if>
+			<if test="totalFlow != null">
+				#{totalFlow,jdbcType=INTEGER},
+			</if>
+			<if test="surplusFlow != null">
+				#{surplusFlow,jdbcType=INTEGER},
+			</if>
+			<if test="openid != null">
+				#{openid,jdbcType=VARCHAR},
+			</if>
+			<if test="state != null">
+				#{state,jdbcType=VARCHAR},
+			</if>
+			<if test="createTime != null">
+				#{createTime},
+			</if>
+		</trim>
+	</insert>
+
+	<select id="queryById" resultType="FlowGroups">
+		select a.id, a.flow_activity_id, a.total_num, a.now_num, a.total_flow, a.surplus_flow, a.openid, a.start_time, a.complete_time, 
+		       a.state, a.create_time, a.update_time, a.is_show 
+		from flow_groups a where 1=1
+		<if test="_parameter != null and _parameter != ''">
+			and a.id = #{_parameter}
+		</if>
+	</select>
+
+	<update id="update">
+		update flow_groups
+		<set>
+			<if test="nowNum != null">now_num = #{nowNum,jdbcType=INTEGER},</if>
+			<if test="surplusFlow != null">surplus_flow = #{surplusFlow,jdbcType=INTEGER},</if>
+			<if test="completeTime != null">complete_time = #{completeTime},</if>
+			<if test="isShow != null">is_show = #{isShow},</if>
+			<if test="state != null">state = #{state,jdbcType=VARCHAR},</if>
+		</set>
+		where 1=1
+		<if test="id != null">AND id = #{id,jdbcType=VARCHAR}</if>
+	</update>
+	
+	<select id="queryByCondition" resultType="FlowGroups">
+		 SELECT 
+		 	`id`, `flow_activity_id`, `total_num`, `now_num`, `total_flow`, `is_show`,
+		 	`surplus_flow`, `openid`, `start_time`, `complete_time`, `state`, `back`, `create_time`, `update_time`
+		  FROM flow_groups WHERE 1=1
+		  	<if test="flowActivityId != null"> AND flow_activity_id = #{flowActivityId}</if>
+		  	<if test="openid != null"> AND openid = #{openid}</if>
+	</select>
+
+
+</mapper>

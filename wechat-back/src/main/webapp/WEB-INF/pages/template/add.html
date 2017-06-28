@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta charset="utf-8" />
+<title>模板消息推送 - 添加模板</title>
+<meta name="description" content="overview &amp; stats" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+<link rel="stylesheet" href="${webroot}/assets/css/bootstrap-datetimepicker.min.css" />
+<script charset="utf-8" src="${webroot}/assets/third/kindeditor/kindeditor-all-min.js"></script>
+<script charset="utf-8" src="${webroot}/assets/third/kindeditor/lang/zh-CN.js"></script>
+<link rel="stylesheet" href="${webroot}/assets/third/kindeditor/themes/default/default.css" />
+<link rel="stylesheet" href="${webroot}/assets/third/kindeditor/themes/simple/simple.css" />
+<link rel="stylesheet" href="${webroot}/assets/css/upload.css" />
+<#include "commonHead.html">
+<style>
+hr {
+	height: 1px;
+	border: none;
+	border-top: 2px solid #555555;
+}
+
+.imageFileCss {
+	padding: 0px 0px;
+}
+
+.fileupload .inputCss {
+	padding: 6px 0px;
+}
+
+#productInfoImg img {
+	max-height: 100px;
+	max-width: 160px;
+}
+
+.required {
+	color : red;
+	font-size : small;
+}
+</style>
+</head>
+
+<body class="no-skin" style="background-color: #FFF;">
+	<div class="page-content">
+		<div class="page-header">
+			<h1>
+				模板管理 <small> <i class="ace-icon fa fa-angle-double-right"></i>
+					<#if template?? && template.id??> 修改模板 <#else> 添加模板 </#if>
+				</small>
+			</h1>
+		</div>
+		<div class="row">
+			<div class="col-xs-12">
+				<form id="pushTemplate" class="form-horizontal" role="form"
+					action="" method="POST"
+					enctype="multipart/form-data">
+					<#if template?? && template.id??> <input type="hidden" id="id"
+						name="id" value="${template.id}"> </#if> 		
+					<h3 class="text-warning">模板配置</h3>
+					<hr>
+					<div class="form-group">
+						<label class="col-sm-3 control-label no-padding-right"
+							for="form-field-1"> <span class="required">*</span>模板标题： </label>
+						<div class="col-sm-9">
+							<input type="text" id="name" name="name" placeholder="请输入模板标题"
+								value="${template.name}" class="col-xs-10 col-sm-5" maxlength="50">
+						</div>
+					</div>	
+					<div class="space-4"></div>
+					<div class="form-group">
+						<label class="col-sm-3 control-label no-padding-right"
+							for="form-field-1"><span class="required">*</span> 模板ID： </label>
+						<div class="col-sm-9">
+							<input type="text" id="templateId" name="templateId" 
+								placeholder="请输入模板ID" value="${template.templateId}"
+								class="col-xs-10 col-sm-5" maxlength="50">
+						</div>
+					</div>
+					<div class="space-4"></div>
+					<div class="form-group">
+						<label class="col-sm-3 control-label no-padding-right"
+							for="form-field-1"><span class="required">*</span> 字段值： </label>
+							
+						<div class="col-sm-9">
+							<input type="text" id="fields" name="fields"
+								placeholder="请输入字段值" value="${template.fields}"
+								class="col-xs-10 col-sm-5" maxlength="200">
+						</div>
+						<font style="font-size: small;color: #F00;padding-left: 26%">多个字段值之间以“,”分割</font>
+					</div>
+					<div class="space-4"></div>
+					<div class="form-group">
+						<label class="col-sm-3 control-label no-padding-right"
+							for="form-field-1"> 重试次数： </label>
+						<div class="col-sm-9">
+							<input type="text" id="retryCount" name="retryCount"
+								placeholder="请输入重试次数" value="${template.retryCount}"
+								class="col-xs-10 col-sm-5" maxlength="200">
+						</div>
+						
+					</div>
+					<div class="space-4"></div>
+					<div class="form-group">
+						<label class="col-sm-3 control-label no-padding-right"
+							for="form-field-1"> 备注： </label>
+						<div class="col-sm-9">
+							<input type="text" id="back" name="back"
+								placeholder="请输入备注" value="${template.back}"
+								class="col-xs-10 col-sm-5" maxlength="200">								
+						</div>
+					</div>
+					
+					
+					<div class="space-4"></div>
+					<div class="form-group">
+						<div class="col-md-offset-4 col-md-8">
+							<button id="submitBtn" class="btn btn-primary btn-round"
+								type="button">
+								<i class="ace-icon fa fa-check bigger-110"></i> 保存配置
+							</button>
+						</div>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+	<#include "commonFootJs.html">
+	<!-- inline scripts related to this page -->
+	<script src="${webroot}/assets/js/moment.min.js"></script>
+	<script src="${webroot}/assets/js/bootstrap-datetimepicker.min.js"></script>
+	<script src="${webroot}/assets/js/ajaxfileupload.js"></script>
+	<script type="text/javascript">
+		jQuery(function($) {
+			$('#submitBtn').on('click', function() {
+				var id = $("#id").val();
+				var name = $("#name").val();
+				var templateId = $("#templateId").val();//选中的值
+				var fields = $("#fields").val();
+				var retryCount = $("#retryCount").val();
+				var back = $("#back").val();						
+				if (isEmpty(name)) {
+					$("#name").focus();
+					showMsg("模板标题不能为空");
+					return;
+				}
+				if (isEmpty(templateId)) {
+					$("#templateId").focus();
+					showMsg("模板ID不能为空");
+					return;
+				}
+				if (isEmpty(fields)) {
+					$("#fields").focus();
+					showMsg("字段值不能为空");
+					return;
+				}				
+				//用ajax进行form表单提交
+				$.ajax({
+					url:"${adminPath}/template/save",
+					type:"POST",
+					data:{
+						id:id,
+						name:name,
+						templateId:templateId,
+						fields:fields,
+						retryCount:retryCount,
+						back:back
+					},
+					success:function(data){
+						if(data.code){
+							showMsg("保存成功！",2);
+							window.location.href = "${adminPath}/template/manage";
+						}else{
+							showMsg("保存失败，请稍后再试！",2);
+						}
+					},
+					error:function(){
+						showMsg("系统错误，请稍后重试！");
+					}
+				});
+			});
+		})
+	</script>
+
+</body>
+</html>

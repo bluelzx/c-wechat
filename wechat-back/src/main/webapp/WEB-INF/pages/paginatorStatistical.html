@@ -1,0 +1,57 @@
+<div class="ui-jqgrid">
+	<div id="grid-pager"
+		class="ui-state-default ui-jqgrid-pager ui-corner-bottom" dir="ltr">
+		<div id="pg_grid-pager" class="ui-pager-control" role="group">
+			<table cellspacing="0" cellpadding="0" border="0" class="ui-pg-table"
+				style="width: 100%; table-layout: fixed; height: 100%;" role="row">
+				<tbody>
+					<tr>
+						<td id="grid-pager_left" align="left"></td>
+						<td id="grid-pager_center" align="center"
+							style="white-space: pre; width: 343px;"><table
+								cellspacing="0" cellpadding="0" border="0"
+								style="table-layout: auto;" class="ui-pg-table">
+								<tbody>
+									<tr>
+										<td id="first_grid-pager" onclick="showPageStatistical(${pageStatistical.firstPage!})"
+											class="ui-pg-button ui-corner-all <#if pageStatistical.isFirstPage>ui-state-disabled</#if>"
+											style="cursor: pointer;"><span
+											class="ui-icon ace-icon fa fa-angle-double-left bigger-140"></span></td>
+										<td id="prev_grid-pager" onclick="showPageStatistical(${pageStatistical.prePage!})"
+											class="ui-pg-button ui-corner-all <#if pageStatistical.isFirstPage>ui-state-disabled</#if>"
+											style="cursor: pointer;"><span
+											class="ui-icon ace-icon fa fa-angle-left bigger-140"></span></td>
+										<td dir="ltr">Page <input class="ui-pg-input" type="text"
+											size="2" maxlength="7" value="${pageStatistical.pageNum!}" role="textbox"> of <span
+											id="sp_1_grid-pager">${pageStatistical.pages!}</span></td>
+										<td id="next_grid-pager" onclick="showPageStatistical(${pageStatistical.nextPage!})" class="ui-pg-button ui-corner-all <#if pageStatistical.isLastPage>ui-state-disabled</#if>"
+											style="cursor: pointer;"><span
+											class="ui-icon ace-icon fa fa-angle-right bigger-140"></span></td>
+										<td id="last_grid-pager" onclick="showPageStatistical(${pageStatistical.lastPage!})" class="ui-pg-button ui-corner-all <#if pageStatistical.isLastPage>ui-state-disabled</#if>"
+											style="cursor: pointer;"><span
+											class="ui-icon ace-icon fa fa-angle-double-right bigger-140"></span></td>
+									</tr>
+								</tbody>
+							</table></td>
+						<td id="grid-pager_right" align="right"><div dir="ltr"
+								style="text-align: right" class="ui-paging-info">View ${pageStatistical.startRow!} -
+								${pageStatistical.endRow!} of ${pageStatistical.total!}</div></td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	</div>
+</div>
+<script type="text/javascript">
+/**
+ * 翻页到指定页数
+ */
+var showPageStatistical = function(page) {
+	if(page!=0){
+		var action = $("#searchFormStatistical").attr("action");
+		action = action + "?page=" + page;
+		$("#searchFormStatistical").attr("action", action);
+		$("#searchFormStatistical").submit();
+	}
+}
+</script>

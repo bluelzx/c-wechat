@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="war" name="wechat-service:war">
+    <output-path>$PROJECT_DIR$/wechat-service/target</output-path>
+    <root id="archive" name="wechat-service.war">
+      <element id="artifact" artifact-name="wechat-service:war exploded" />
+    </root>
+  </artifact>
+</component>

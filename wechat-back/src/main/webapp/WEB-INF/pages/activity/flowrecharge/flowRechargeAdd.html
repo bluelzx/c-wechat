@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta charset="utf-8" />
+<title>手机充值流量 - 微信后台管理系统</title>
+<meta name="description" content="overview &amp; stats" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+<link rel="stylesheet" href="${webroot}/assets/css/bootstrap-datetimepicker.min.css" />
+<script charset="utf-8" src="${webroot}/assets/third/kindeditor/kindeditor-all-min.js"></script>
+<script charset="utf-8" src="${webroot}/assets/third/kindeditor/lang/zh-CN.js"></script>
+<link rel="stylesheet" href="${webroot}/assets/third/kindeditor/themes/default/default.css" />
+<link rel="stylesheet" href="${webroot}/assets/third/kindeditor/themes/simple/simple.css" />
+<link rel="stylesheet" href="${webroot}/assets/css/upload.css" />
+
+<#include "commonHead.html">
+<style>
+hr {
+	height: 1px;
+	border: none;
+	border-top: 2px solid #555555;
+}
+
+.imageFileCss {
+	padding: 0px 0px;
+}
+
+.fileupload .inputCss {
+	padding: 6px 0px;
+}
+
+#productInfoImg img {
+	max-height: 100px;
+	max-width: 160px;
+}
+
+.required {
+	color : red;
+	font-size : small;
+}
+</style>
+</head>
+
+<body class="no-skin" style="background-color: #FFF;">
+	<div class="page-content">
+		<div class="page-header">
+			<h1>
+				活动管理 <small> <i class="ace-icon fa fa-angle-double-right"></i>
+					手动充值流量
+				</small>
+			</h1>
+		</div>
+		<div class="row">
+			<div class="col-xs-12">
+				 <form id="flowForm" class="form-horizontal" role="form"> 
+				    <#if flowRecharge?? && flowRecharge.id??> 
+					<input type="hidden" id="id" name="id" value="${flowRecharge.id}">
+					</#if>
+					<hr>
+					<div class="form-group">
+						<label class="col-sm-3 control-label no-padding-right"
+							for="form-field-1"> <span class="required">*</span>充值活动名称 ： </label>
+						<div class="col-sm-9">
+							<input type="text" id="name" name="name" placeholder="请输入充值活动名称"
+								value="" class="col-xs-10 col-sm-5">
+						</div>
+					</div>
+					<div class="space-4"></div>
+					<div class="form-group">
+						<label class="col-sm-3 control-label no-padding-right"
+							for="form-field-1"> <span class="required"></span>操作人 ： </label>
+						<div class="col-sm-9">
+						<input type="text" id="operator" name="operator" placeholder=""  readonly="readonly"
+								value="${currentUser.name}" class="col-xs-10 col-sm-5">
+						<!-- <label class="col-sm-1 control-label no-padding-left"
+							for="form-field-1"> <span class="required"></span>${currentUser.name} </label> -->
+						</div>
+					</div>
+					<div class="space-4"></div>
+					<div class="form-group">
+						<label class="col-sm-3 control-label no-padding-right"
+							for="form-field-1"> <span class="required">*</span>用户openid (最多100个openid) ： </label>
+						<div class="col-sm-9">
+							<textarea id="openids" name="openids" maxlength="2899" placeholder="用户openid之间用逗号隔开, 最多一次性冲入100个openid" value="" class="col-xs-30 col-sm-5" rows="8" cols="25"></textarea>
+						</div>
+					</div>
+					<div class="space-4"></div>
+					<div class="form-group">
+						<label class="col-sm-3 control-label no-padding-right"
+							for="form-field-1"> <span class="required">*</span>充值流量： </label>
+						<div class="col-sm-9">
+							<input type="text" id="flows" name="flows"
+								placeholder="请输入充值流量" value=""
+								class="col-xs-10 col-sm-5">M
+						</div>
+					</div>
+					<div class="space-4"></div>
+					<div class="form-group">
+						<label class="col-sm-3 control-label no-padding-right"
+							for="form-field-1"> <span class="required"></span>备注： </label>
+						<div class="col-sm-9">
+							<textarea id="remark" name="remark" placeholder="" value="" class="col-xs-10 col-sm-5"></textarea>
+						</div>
+					</div>
+					
+					<div class="space-4"></div>
+					<div class="form-group">
+						<label class="col-sm-3 control-label no-padding-right"
+							for="form-field-1"> <span class="required"></span></label>
+						<div class="col-sm-9">
+						   <!--  <input class="input3" type="text" placeholder="请输入短信验证码"> -->
+						    <input type="text" id="code" name= "code" placeholder="输入短信验证码"  class="col-xs-10 col-sm-1">
+	                        <button id="getAuthCode" type="button">获取验证码</button>
+	                         <span class="required"> 获取验证码的手机号为：${telephonenum}</span>
+						</div>
+					</div>
+					
+					<div class="space-4"></div>
+			 </form>
+			<div class="form-group">
+				<div class="col-md-offset-4 col-md-8">
+					<button  class="btn btn-primary btn-round" type="button" id="saveBtn">保存配置</button>
+				</div>
+			</div>
+			</div>
+			<!-- /.col -->
+		</div>
+		<!-- /.row -->
+	</div>
+
+	<#include "commonFootJs.html">
+
+	<!-- inline scripts related to this page -->
+	<script src="${webroot}/assets/js/moment.min.js"></script>
+	<script src="${webroot}/assets/js/bootstrap-datetimepicker.min.js"></script>
+	<script src="${webroot}/assets/js/ajaxfileupload.js"></script>
+	<script type="text/javascript">
+		
+		 jQuery(function($) {
+			$("#getAuthCode").click(function() {
+					$.ajax({
+						url : '${adminPath}/activity/flowrecharge/sendAuthSms',
+						type : "POST",
+						success:function(data) {
+							if(data.code == 1) {
+								showMsg(data.msg);
+								codeWait(60);
+							}
+							else {
+								showMsg(data.msg);
+							}
+						}
+					});
+			}); 
+		}); 
+		 
+		// 发送验证码倒计时60秒
+		var codeWait = function(num){//倒计时方法 num是要倒计时的秒数
+		    var nowtime = new Date();
+		    var newtime = nowtime;
+		    var count;
+		    nowtime = parseInt(nowtime.getTime()/1000);
+		    var obj = $("#getAuthCode");
+		    obj.addClass('unused');
+		    obj.html(num+"秒后重发");
+		    var timer = setInterval(function(){
+		        newtime = new Date();
+		        count = num-(parseInt(newtime.getTime()/1000)-nowtime);
+		        obj.html(count+"秒后重发");
+		        if(count<=0){
+		            clearInterval(timer);
+		            obj.removeClass('unused');
+		            obj.html('获取验证码');
+		        }
+		    },1000);
+		}
+		
+		
+	 	
+		var flag = true;
+		
+		//点击保存, 充值流量
+		$(function() {
+			$("#saveBtn").click(function(){
+				if (flag) {
+					flag = false;
+				}
+				else {
+					return;
+				}
+				var name = $("#name").val();
+				var openids = $("#openids").val();
+				var flows = $("#flows").val();
+				var code = $("#code").val();
+				var operator = $("#operator").val();
+				var remark = $("#remark").val();
+				
+				if (isEmpty(name)) {
+					$("#name").focus();
+					showMsg("充值活动名称不能为空!");
+					flag = true;
+					return;
+				}
+ 				else if (isEmpty(openids)) {
+					$("#openids").focus();
+					showMsg("用户的openid不能为空!");
+					flag = true;
+					return;
+				}
+ 				 else if(isEmpty(flows)) {
+					$("#flows").focus();
+					showMsg("流量不能为空!");
+					flag = true;
+					return;
+				}	
+				else if(isEmpty(code)) {
+					$("#code").focus();
+					showMsg("验证码不能为空!");
+					flag = true;
+					return;
+				}  
+   				$.ajax({
+   					url :"${adminPath}/activity/flowRecharge/addFlow", 
+   					data :{'name':name, 'openids':openids, 'operator':operator, 'flows':flows, 'remark':remark,'code':code}, 
+   					type : "GET",	
+   					dataType: "json",  
+   					success:function(data) {
+	   					if (data.code=='1') {
+	   	                	showMsg("添加流量成功!");
+	   	                	window.location.href="${adminPath}/activity/flowrecharge";
+	   	                } else {
+	   	                	flag = true;
+	   	                	showMsg(data.msg);
+	   	                }
+   					}
+   	            });
+
+        	});
+		});
+	</script>
+
+</body>
+</html>

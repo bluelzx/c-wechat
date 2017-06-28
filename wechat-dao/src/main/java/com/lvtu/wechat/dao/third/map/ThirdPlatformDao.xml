@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="3rd_platform">
+
+	<resultMap id="3rdPlatformResult" type="ThirdPlatform">
+		<id property="id" column="id" />
+		<result property="name" column="name" />
+		<result property="domain" column="domain" />
+		<result property="apiUrl" column="api_url" />
+		<result property="apiToken" column="api_token" />
+		<result property="forwardType" column="forward_type" typeHandler="com.lvtu.wechat.common.mybatis.ValuedEnumTypeHandler" />
+		<result property="forwardKeyword" column="forward_keyword" />
+		<result property="useable" column="useable" />
+		<result property="remarks" column="remarks" />
+	</resultMap>
+	
+    <sql id="platformColumns">
+    	a.id,
+    	a.name,
+    	a.domain,
+		a.api_url,
+		a.api_token,
+		a.forward_type,
+		a.forward_keyword,
+		a.useable,
+		a.remarks,
+		a.del_flag
+    </sql>
+	
+	<!-- 根据ID获得平台信息 -->
+	<select id="getByPrimaryKey" resultMap="3rdPlatformResult">
+		SELECT
+			<include refid="platformColumns"/>
+		FROM 3rd_platform a
+		WHERE a.id = #{id}
+	</select>
+	<!-- 更具平台和微信通信的url获取 -->
+	<select id="getByUrl" resultMap="3rdPlatformResult">
+		SELECT
+			<include refid="platformColumns"/>
+		FROM 3rd_platform a
+		WHERE a.api_url = #{apiUrl}
+	</select>
+	<!-- 查询平台信息 -->
+	<select id="findAllList" resultMap="3rdPlatformResult">
+		SELECT
+			<include refid="platformColumns"/>
+		FROM 3rd_platform a
+		WHERE a.del_flag = 0
+		ORDER BY a.name
+	</select>
+	<!-- 查询平台信息 -->
+	<select id="findList" resultMap="3rdPlatformResult">
+		SELECT
+			<include refid="platformColumns"/>
+		FROM 3rd_platform a
+		WHERE a.del_flag = 0
+		<if test="name != null and name != ''">
+			AND a.name = #{name}
+		</if>
+		<if test="domain != null and domain != ''">
+			AND a.domain = #{domain}
+		</if>
+		<if test="apiUrl != null and apiUrl != ''">
+			AND a.api_url = #{apiUrl}
+		</if>
+		<if test="apiToken != null and apiToken != ''">
+			AND a.api_token = #{apiToken}
+		</if>
+		<if test="forwardType != null and forwardType != ''">
+			AND a.forward_type = #{forwardType.value}
+		</if>
+		<if test="forwardKeyword != null and forwardKeyword != ''">
+			AND a.forward_keyword = #{forwardKeyword}
+		</if>
+		<if test="useable != null and useable != ''">
+			AND a.useable = #{useable}
+		</if>
+		ORDER BY a.name
+	</select>
+	
+	<!-- 插入平台数据 -->
+	<insert id="insert">
+		INSERT INTO 3rd_platform(
+			id, 
+			name, 
+			domain, 
+			api_url, 
+			api_token, 
+			forward_type, 
+			forward_keyword, 
+			useable, 
+			remarks, 
+			del_flag
+		) VALUES (
+			#{id}, 
+			#{name}, 
+			#{domain}, 
+			#{apiUrl}, 
+			#{apiToken}, 
+			#{forwardType.value}, 
+			#{forwardKeyword}, 
+			#{useable}, 
+			#{remarks}, 
+			#{delFlag}
+		)
+	</insert>
+	
+	<!-- 更新第三方平台 -->
+	<update id="update">
+		UPDATE 3rd_platform
+		<set>
+			<if test="name != null and name != ''">
+				name = #{name},
+			</if>
+			<if test="domain != null and domain != ''">
+				domain = #{domain},
+			</if>
+			<if test="apiUrl != null and apiUrl != ''">
+				api_url = #{apiUrl},
+			</if>
+			<if test="apiToken != null and apiToken != ''">
+				api_token = #{apiToken},
+			</if>
+			<if test="forwardType != null">
+				forward_type = #{forwardType.value},
+			</if>
+			<if test="forwardKeyword != null and forwardKeyword != ''">
+				forward_keyword = #{forwardKeyword},
+			</if>
+			<if test="useable != null">
+				useable = #{useable},
+			</if>
+			<if test="remarks != null and remarks != ''">
+				remarks = #{remarks},
+			</if>
+		</set>
+		WHERE id = #{id}
+	</update>
+	
+	<!-- 逻辑删除第三方平台 -->
+	<update id="delete">
+		UPDATE 3rd_platform SET 
+			del_flag = 1
+		WHERE id = #{id}
+	</update>
+</mapper>

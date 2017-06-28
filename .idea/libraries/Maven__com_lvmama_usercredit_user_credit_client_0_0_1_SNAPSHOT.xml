@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="Maven: com.lvmama.usercredit:user_credit_client:0.0.1-SNAPSHOT">
+    <CLASSES>
+      <root url="jar://$MAVEN_REPOSITORY$/com/lvmama/usercredit/user_credit_client/0.0.1-SNAPSHOT/user_credit_client-0.0.1-20161012.080048-19.jar!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$MAVEN_REPOSITORY$/com/lvmama/usercredit/user_credit_client/0.0.1-SNAPSHOT/user_credit_client-0.0.1-20161012.080048-19-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$MAVEN_REPOSITORY$/com/lvmama/usercredit/user_credit_client/0.0.1-SNAPSHOT/user_credit_client-0.0.1-20161012.080048-19-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

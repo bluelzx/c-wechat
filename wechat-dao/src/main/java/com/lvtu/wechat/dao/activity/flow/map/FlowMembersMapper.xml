@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="FLOW_MEMBERS">
+	<select id="queryByOpenid" resultType="FlowMembers">
+		select a.id, a.activity_id, a.group_id, a.openid, a.is_leader, a.flow_num, a.create_time,
+		       a.update_time, a.dole_copy 
+		from flow_members a where 1=1
+		<if test="openid != null and openid != ''">
+			and a.openid = #{openid}
+		</if>
+		<if test="activityId != null and activityId != ''">
+			and a.activity_id = #{activityId}
+		</if>
+		<if test="groupId != null and groupId != ''">
+			and a.group_id = #{groupId}
+		</if>
+	</select>
+
+	<select id="queryByGroupId" resultType="FlowMembers">
+		SELECT
+		f.activity_id,
+		f.is_leader,
+		w.openid,
+		w.nickname,
+		w.head_img_url,
+		f.flow_num,
+		f.create_time,
+		f.dole_copy
+		FROM
+		flow_members f
+		LEFT JOIN wx_user w ON f.openid = w.openid
+		WHERE 1=1
+		<if test="_parameter != null and _parameter != ''">
+			AND f.group_id = #{_parameter}
+		</if>
+		ORDER BY f.create_time DESC
+	</select>
+
+	<insert id="insert">
+		INSERT INTO flow_members
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				id,
+			</if>
+			<if test="activityId != null">
+				activity_id,
+			</if>
+			<if test="groupId != null">
+				group_id,
+			</if>
+			<if test="openid != null">
+				openid,
+			</if>
+			<if test="isLeader != null">
+				is_leader,
+			</if>
+			<if test="flowNum != null">
+				flow_num,
+			</if>
+			<if test="createTime != null">
+				create_time,
+			</if>
+			<if test="doleCopy != null">
+				dole_copy,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=VARCHAR},
+			</if>
+			<if test="activityId != null">
+				#{activityId,jdbcType=VARCHAR},
+			</if>
+			<if test="groupId != null">
+				#{groupId,jdbcType=VARCHAR},
+			</if>
+			<if test="openid != null">
+				#{openid,jdbcType=VARCHAR},
+			</if>
+			<if test="isLeader != null">
+				#{isLeader,jdbcType=VARCHAR},
+			</if>
+			<if test="flowNum != null">
+				#{flowNum,jdbcType=INTEGER},
+			</if>
+			<if test="createTime != null">
+				#{createTime},
+			</if>
+			<if test="doleCopy != null">
+				#{doleCopy}
+			</if>
+		</trim>
+	</insert>
+	
+	<update id="update">
+		UPDATE flow_members
+		<set>
+			<if test="flowNum != null">
+				flow_num = #{flowNum}
+			</if>
+		</set>
+		WHERE 1=1
+		<if test="id != null">
+			AND id=#{id}
+		</if>
+	</update>
+
+</mapper>

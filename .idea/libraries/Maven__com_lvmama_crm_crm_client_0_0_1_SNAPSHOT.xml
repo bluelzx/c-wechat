@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="Maven: com.lvmama.crm:crm-client:0.0.1-SNAPSHOT">
+    <CLASSES>
+      <root url="jar://$MAVEN_REPOSITORY$/com/lvmama/crm/crm-client/0.0.1-SNAPSHOT/crm-client-0.0.1-20170627.082600-759.jar!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$MAVEN_REPOSITORY$/com/lvmama/crm/crm-client/0.0.1-SNAPSHOT/crm-client-0.0.1-20170627.082600-759-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$MAVEN_REPOSITORY$/com/lvmama/crm/crm-client/0.0.1-SNAPSHOT/crm-client-0.0.1-20170627.082600-759-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

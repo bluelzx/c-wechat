@@ -1,0 +1,222 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="T_WX_PRODUCT_ORDER">
+  <resultMap id="BaseResultMap" type="ProductOrder" >
+    <id column="id" property="id" jdbcType="VARCHAR" />
+    <result column="openid" property="openid" jdbcType="VARCHAR" />
+    <result column="outboundTourism" property="outbound_tourism" jdbcType="INTEGER" />
+	<result column="inboundTourism" property="inbound_tourism" jdbcType="INTEGER" />
+	<result column="specialTicket" property="special_ticket" jdbcType="INTEGER" />
+	<result column="homeTourism" property="home_tourism" jdbcType="INTEGER" />
+	<result column="hotTicket" property="hot_ticket" jdbcType="INTEGER" />
+  </resultMap>
+	<insert id="insertOrder" parameterType="ProductOrder">
+		INSERT INTO t_wx_product_order(
+			id,
+			openid,
+			outbound_tourism,
+			inbound_tourism,
+			special_ticket,
+			home_tourism,
+			hot_ticket,
+			create_time,
+			province_id,
+			city_id
+		) VALUES (
+			#{id},
+			#{openid},
+			#{outboundTourism},
+			#{inboundTourism},
+			#{specialTicket},
+			#{homeTourism},
+			#{hotTicket},
+			#{createTime},
+			${provinceId},
+			${cityId}
+		)
+	</insert>
+	
+	<update id="updateOrderByOpenid">
+		update t_wx_product_order
+		<set>
+			<if test="outboundTourism != null">
+			outbound_tourism = #{outboundTourism,jdbcType=INTEGER},
+			</if>
+			<if test="inboundTourism != null">
+			inbound_tourism = #{inboundTourism,jdbcType=INTEGER},
+			</if>
+			<if test="specialTicket != null">
+			special_ticket = #{specialTicket,jdbcType=INTEGER},
+			</if>
+			<if test="homeTourism != null">
+			home_tourism = #{homeTourism,jdbcType=INTEGER},
+			</if>
+			<if test="hotTicket != null">
+			hot_ticket = #{hotTicket,jdbcType=INTEGER},
+			</if>
+			province_id = ${provinceId},
+			city_id = ${cityId}
+		</set>
+		where id = #{id}
+	</update>
+	
+	<select id="selectOrderByOpenid" resultMap="BaseResultMap"
+		parameterType="java.lang.String">
+		select
+			id,
+			openid,
+			outbound_tourism,
+			inbound_tourism,
+			special_ticket,
+			home_tourism,
+			hot_ticket
+		from t_wx_product_order
+		where openid = #{openid,jdbcType=VARCHAR}
+	</select>
+	
+	<select id="selectOrderByCondition" resultMap="BaseResultMap">
+		SELECT 
+			pr.id,
+			pr.openid,
+			pr.outbound_tourism,
+			pr.inbound_tourism,
+			pr.special_ticket,
+			pr.home_tourism,
+			pr.hot_ticket,
+			pr.create_time,
+			pr.update_time,
+			wu.nickname,
+			pr.province_id,
+			pr.city_id
+		FROM t_wx_product_order pr
+		LEFT JOIN wx_user wu ON pr.openid = wu.openid
+		WHERE 1 =1
+		<if test="openid != null and openid != ''">
+			AND pr.openid = #{openid}
+		</if>
+		<if test="outboundTourism != null and outboundTourism == true">
+			AND pr.outbound_tourism = #{outboundTourism}
+		</if>
+		<if test="inboundTourism != null and inboundTourism == true">
+			AND pr.inbound_tourism = #{inboundTourism}
+		</if>
+		<if test="specialTicket != null and specialTicket == true">
+			AND pr.special_ticket = #{specialTicket}
+		</if>
+		<if test="homeTourism != null and homeTourism == true">
+			AND pr.home_tourism = #{homeTourism}
+		</if>
+		<if test="hotTicket != null and hotTicket == true">
+			AND pr.hot_ticket = #{hotTicket}
+		</if>
+	</select>
+	
+	<select id="selectOpenidByType" resultType="java.lang.String">
+		SELECT 
+			openid
+		FROM t_wx_product_order 
+		WHERE 1 =1
+		<if test="cityIds != null and cityIds !=''">
+			AND city_id in (${cityIds}) 
+		</if>
+		AND ( 1=2
+		<if test="outboundTourism != null and outboundTourism == true">
+			or outbound_tourism = #{outboundTourism}
+		</if>
+		<if test="inboundTourism != null and inboundTourism == true">
+			or inbound_tourism = #{inboundTourism}
+		</if>
+		<if test="specialTicket != null and specialTicket == true">
+			or special_ticket = #{specialTicket}
+		</if>
+		<if test="homeTourism != null and homeTourism == true">
+			or home_tourism = #{homeTourism}
+		</if>	
+		<if test="hotTicket != null and hotTicket == true">
+			or hot_ticket = #{hotTicket}
+		</if>			
+			)
+	</select>
+	
+	<select id="selectByExport" resultType="ExportOrders">
+		select
+			w.nickname,
+			t.openid,
+			t.outbound_tourism,
+			t.inbound_tourism,
+			t.special_ticket,
+			t.home_tourism,
+			t.hot_ticket,
+			t.update_time
+		from t_wx_product_order t
+		left join wx_user w on t.openid = w.openid
+		where t.outbound_tourism=1 or t.inbound_tourism=1 or t.special_ticket=1 or t.home_tourism=1 or t.hot_ticket=1
+	</select>
+	
+	<select id="selectCount" resultType="ExportOrders">
+			SELECT
+			SUM(
+				CASE t.outbound_tourism
+				WHEN 1 THEN
+					1
+				ELSE
+					0
+				END
+			) outbound_tourism,
+			SUM(
+				CASE t.inbound_tourism
+				WHEN 1 THEN
+					1
+				ELSE
+					0
+				END
+			) inbound_tourism,
+			SUM(
+				CASE t.special_ticket
+				WHEN 1 THEN
+					1
+				ELSE
+					0
+				END
+			) special_ticket,
+			SUM(
+				CASE t.home_tourism
+				WHEN 1 THEN
+					1
+				ELSE
+					0
+				END
+			) home_tourism,
+		    SUM(
+				CASE t.hot_ticket
+				WHEN 1 THEN
+					1
+				ELSE
+					0
+				END
+			) hot_ticket
+		FROM
+			t_wx_product_order t
+	</select>
+	
+	
+	
+	<update id="updateList" parameterType="java.util.List">    
+       <foreach collection="list" item="item" index="index" open="" close="" separator=";">
+                UPDATE t_wx_product_order                
+                SET province_id = #{item.provinceId,jdbcType=INTEGER},   
+                     city_id = #{item.cityId,jdbcType=INTEGER}         
+                WHERE openid = #{item.openid,jdbcType=VARCHAR}
+       </foreach>          
+    </update>
+	
+	<select id="selectAllOpenids" resultType="java.lang.String">
+		SELECT 
+			openid
+		FROM t_wx_product_order 
+		WHERE 1 =1 AND (province_id  = 0 or city_id = 0)
+	</select>
+	
+	
+	
+</mapper>

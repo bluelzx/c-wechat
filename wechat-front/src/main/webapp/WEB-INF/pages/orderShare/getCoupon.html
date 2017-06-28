@@ -1,0 +1,125 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>送你驴妈妈专享红包~跟着驴妈妈出游，一秒变壕；</title>
+    <meta name="Keywords" content="驴妈妈无线,景区门票,旅游度假"/>
+    <meta name="Description" content="驴妈妈无线官网:支持手机快捷预订景区门票,自助游线路,全国酒店,豪华邮轮等各种旅游产品.(中国最领先的在线旅游预订服务商!)"/>
+    <meta content="initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width" name="viewport">
+    <meta id="share" share-linkurl="//m.lvmama.com/activity/?s=L1511/weixinhongbao" name="share" share-title="送你驴妈妈专享红包~跟着驴妈妈出游，一秒变壕；" share-content="天上是会掉馅饼滴，拼人品的机会到了！海量红包等你拿！" share-imageurl="//pics.lvjs.com.cn/mobile/zt/weixin/1604/weixinhongbao/share.jpg">
+    <meta http-equiv="pragma" content="no-cache">
+    <meta http-equiv="Cache-Control" content="max-age=7200" />
+    <meta http-equiv="expires" content="0">
+    <link rel="alternate" type="application/vnd.wap.xhtml+xml" media="handheld" href="target"/>
+    <link rel="apple-touch-icon" href="//pics.lvjs.com.cn/img/mobile/touch/img/lvmama_v1_png.png"/>
+    <link rel="apple-touch-icon" sizes="72x72" href="//pics.lvjs.com.cn/img/mobile/touch/img/lvmama_v1_png.png"/>
+    <link rel="apple-touch-icon" sizes="114x114" href="//pics.lvjs.com.cn/img/mobile/touch/img/lvmama_v1_png.png"/>
+    <link rel="apple-touch-icon" sizes="144x144" href="//pics.lvjs.com.cn/img/mobile/touch/img/lvmama_v1_png.png"/>
+    <link rel="stylesheet" href="//pics.lvjs.com.cn/mobile/zt/public/css/base/global.css">   
+    <link rel="stylesheet" href="//pics.lvjs.com.cn/mobile/zt/weixin/1604/weixinhongbao/css/style.css?20161222">
+    <script type="text/javascript" src="//pics.lvjs.com.cn/js/new_v/jquery-1.7.2.min.js"></script>
+    <script type="text/javascript" src="//pics.lvjs.com.cn/mobile/zt/public/js/base/global.js"></script>
+    <script type="text/javascript" src="${webroot}/assets/js/jweixin-1.0.0.js"></script>
+    <script type="text/javascript" src="${webroot}/assets/js/WechatApi.js"></script>
+    <script type="text/javascript" src="${webroot}/assets/js/common.js"></script>
+</head>
+<body>
+    <div style="width:0; height:0; overflow: hidden; font-size: 0; position: fixed; left: 0;top: 0;">
+        <img src="//pics.lvjs.com.cn/mobile/zt/weixin/1604/weixinhongbao/share.jpg" alt=""/>
+    </div>
+    <div id="container">
+        <script type="text/javascript" src="//pics.lvjs.com.cn/mobile/js/code/base/ztheader.js"></script>
+        <#if isGotCoupon>
+        <script type="text/javascript">
+        	globe.lvToast(true, "您已经领取过该红包！");
+        </script>
+        </#if>
+        <div class="content2" style="display:block;">
+            <div class="bg">
+                <img src="//pics.lvjs.com.cn/mobile/zt/weixin/1604/weixinhongbao/images/bg2.jpg" alt="">
+                <div class="hongbao">
+                	<#if isOver>
+                    <div class="sum">
+                        <p>活动<br>提示</p>
+                        <span><i>已领完</i></span>
+                    </div>
+                	<#elseif isOverDays>
+                	<div class="sum">
+                        <p>活动<br>提示</p>
+                        <span><i>已过期</i></span>
+                    </div>
+                	<#else>
+                	<div class="sum">
+                        <p>红包<br>金额</p>
+                        <span><i>${coupon.amount!}</i>元</span>
+                    </div>
+                    <p>红包已放至账户<span><#if lvUser.mobileNumber??>${lvUser.mobileNumber!}<#else>${lvUser.userName!}</#if></span></p>
+                    <button class="use" onclick="skip('//weixin.lvmama.com/wechat/preLogin?target=aHR0cHM6Ly9tLmx2bWFtYS5jb20vP2xvc2M9MDk5Mjc2')">去使用</button>
+                	</#if>
+                </div>                             
+            </div>
+            <#if couponHiss?size&gt;1>
+            <div class="friends">
+                <img src="//pics.lvjs.com.cn/mobile/zt/weixin/1604/weixinhongbao/images/title1.png" alt="">
+                <div class="msg">
+                <#list couponHiss as couponHis>
+                    <div class="module">
+                    	<#if couponHis.wxUser.headimgurl??>
+                        <div class="head" style="background: url('${couponHis.wxUser.headimgurl!}') 0 0 no-repeat;background-size: 100% 100%;"></div>
+                        <#else>
+                        <div class="head"></div>
+                        </#if>
+                        <div class="name">
+                            <span><strong>${couponHis.wxUser.nickname!}</strong> <i>${couponHis.createTime?string('MM.dd HH:mm')}</i></span>
+                            <p>${couponHis.coupon.remarks!}</p>
+                        </div>
+                        <div class="price">${couponHis.coupon.amount!}元</div>
+                    </div>
+                </#list>
+                </div>
+            </div>
+            </#if>
+            <div class="rule">
+                <img src="//pics.lvjs.com.cn/mobile/zt/weixin/1604/weixinhongbao/images/title2.png" alt="">
+                <p>1、每个手机号在同一批红包中仅限领取一个，红包使用规则详见驴妈妈APP中“我的优惠券”一栏；<br>2、红包需注册登录驴妈妈APP才能使用，未注册的手机号码将在领取红包时自动创建驴妈妈账号；<br>3、红包仅限在线支付时使用，有效期为领取之日起30天，红包不找零不兑现；<br>4、驴妈妈保留法律范围内允许的对活动的解释权。</p>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+        if($(".header").length>0){
+            $("#container").css("padding-top","45px");
+        }else{
+            $("#container").css("padding-top","0px");
+        }
+
+        //rem自适应
+        (function (doc, win) {
+            var docEl = doc.documentElement,
+                resizeEvt = "orientationchange" in window ? "orientationchange" : "resize",
+                recalc = function () {
+                    var clientWidth = docEl.clientWidth;
+                    if(clientWidth>640)
+                        clientWidth = 640;
+                    if (!clientWidth) return;
+                    docEl.style.fontSize = 10 * (clientWidth / 320) + "px";
+                };
+            if (!doc.addEventListener) return;
+            win.addEventListener(resizeEvt, recalc, false);
+            doc.addEventListener("DOMContentLoaded", recalc, false);
+        })(document, window);
+    </script>
+	<#if shareInfo??>
+    <script type="text/javascript">
+    $(document).ready(function(){
+        var wxData = {
+            "imgUrl": "${shareInfo.shareImgUrl!}",
+            "link": "${shareInfo.shareUrl!}",
+            "title": "${shareInfo.sharetitle!}",
+            "desc": "${shareInfo.shareContent!}"
+        };
+        WechatApi.share(wxData);
+    });
+    </script>
+    </#if>
+</body>
+</html>

@@ -1,0 +1,40 @@
+.selectFile-span{ 
+   float: left;height: 22px; 
+}
+    	
+input.viewfile {
+	z-index:99;
+	border:1px solid #ccc;
+	height: 30px;
+	width:120px;
+	vertical-align:middle;
+	color:#999;
+}
+
+label.bottom {
+	border:1px solid #ccc;
+	border-left: none;
+	background:#F4F4F4;
+	color:#000;
+	height:30px;
+	line-height:20px;
+	display:block;
+	width:60px;
+	text-align:center;
+	cursor:pointer;
+	float:left;
+	position:relative;
+	*top:1px;
+}
+input.file{
+    vertical-align:middle;
+    position:absolute;
+    left:-218px;
+    top:-3px;
+    filter:alpha(opacity=0);
+    opacity:0;
+	z-index:1;
+	*width:223px;
+	left: -10px;
+	height: 30px;
+}

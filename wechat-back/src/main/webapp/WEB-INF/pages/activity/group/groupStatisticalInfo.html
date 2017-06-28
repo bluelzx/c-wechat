@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta charset="utf-8" />
+<title>集齐召唤神龙 - 微信后台管理系统</title>
+<meta name="description" content="overview &amp; stats" />
+<meta name="viewport"
+	content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+<#include "commonHead.html">
+<script src="${webroot}/assets/js/ace-extra.min.js"></script>
+<script src="${webroot}/assets/js/jquery.2.1.1.min.js"></script>
+        <script src="${webroot}/assets/js/bootstrap.min.js"></script>
+<link rel="stylesheet" href="${webroot}/assets/css/bootstrap-datetimepicker.min.css" />
+</head>
+
+<body class="no-skin" style="background-color: #FFF;">
+	<div class="page-content">
+		<div class="page-header">
+			<h1>
+				<big id="actStatistical" style="cursor:pointer;"> 活动统计 <i class="ace-icon fa fa-angle-double-right"></i></big>
+					集齐召唤神龙
+				<small> <i class="ace-icon fa fa-angle-double-right"></i>
+					详情
+				</small>
+			</h1>
+		</div>
+		<div class="tabbable">
+			<div class="tab-content">
+				<div id="statistics" class="tab-pane active">
+					<div class="row">
+						<div class="col-xs-12" >
+							<div class="row">
+								<div class="col-xs-12">
+									<div class="widget-box"
+										style="margin-bottom: 0px; border-bottom: 0px;">
+										<div class="widget-body" style="background-color: #EFF3F8;">
+											<div class="widget-main">
+												<form class="form-inline" id="searchFormStatistical" method="post"
+													action="${adminPath}/activity/group/view">
+													<input type="hidden" id="id" name="id" value="${groupActivitiesConditionVo.id!}"/> 
+													<input type="hidden" id="actName" name="actName" value="${groupActivitiesConditionVo.name!}"/>
+													<input type="hidden" id="startDate" name="startDate" value="${groupActivitiesConditionVo.startDate!}"/>
+													<input type="hidden" id="endDate" name="endDate" value="${groupActivitiesConditionVo.endDate!}"/>
+													<input type="hidden" id="state" name="state" value="${groupActivitiesConditionVo.state!}"/>
+													<input type="hidden" id="groupActId" name="groupActId" value="${conditionStatistical.groupActId!}"/>
+													<div class="col-xs-12">
+													<div class="form-group">
+														<label for="exampleInputName2">用户微信账号：</label> <input
+															type="text" class="form-control" name="nickname" id="nickname"
+															value="${conditionStatistical.nickname!}" placeholder="用户微信号" style="width:55%">
+													</div>
+													<div class="form-group">
+														<label for="exampleInputName2">姓名：</label> <input
+															type="text" class="form-control" name="name" id="name"
+															value="${conditionStatistical.name!}" placeholder="姓名">
+													</div>
+													<div class="form-group">
+														<label for="exampleInputName2">手机号：</label> <input
+															type="text" class="form-control" name="telephone" id="telephone"
+															value="${conditionStatistical.telephone!}" placeholder="手机号">
+													</div>
+													<div class="form-group">
+														<label for="exampleInputName2">团ID：</label> <input
+															type="text" class="form-control" name="groupId" id="groupId"
+															value="${conditionStatistical.groupId!}" placeholder="团ID">
+													</div>
+														<div class="form-group">
+														<label for="exampleInputName2">团状态：</label>
+													</div>
+													<div class="form-group">
+														<select
+															class="form-control" name="groupState" id="groupState" style="width:100%">
+																<#list statusList as status>
+																<option value=${status.value} <#if conditionStatistical.groupState == status.value>selected</#if>>${status.showName}</option>
+																</#list>
+														</select>
+													</div>
+													<div class="form-group">
+														<button id="tabStatistical" type="button" class="btn btn-primary btn-round btn-sm">
+															<span class="ace-icon fa fa-search bigger-110"></span>
+															Search
+														</button>
+													</div>
+													</div>
+													
+													<div style="margin-top: 20px;">
+													<div class="form-group">
+														<label for="exampleInputName2">排序：</label>
+													</div>
+													<div class="form-group">
+														<select
+															class="form-control" name="sort" id="sort" style="width:100%">
+																<#list sortList as sortStatus>
+																<option value=${sortStatus.value} <#if conditionStatistical.sort == sortStatus.value>selected</#if>>${sortStatus.showName}</option>
+																</#list>
+														</select>
+													</div>
+													<div class="form-group">
+														<button id="sortBtn" type="button" class="btn btn-primary btn-round btn-sm">
+															<span class="ace-icon fa bigger-110"></span>
+															确定
+														</button>
+													</div>
+													<!-- onclick="skip('${adminPath}/activity/group/export')" -->
+													<div class="form-group">
+														<button id="export" type="button"  class="btn btn-primary btn-round btn-sm"> 
+															<span class="ace-icon fa bigger-110"></span>
+															导出
+														</button>
+													</div>
+													</div>
+												</form>
+											</div>
+										</div>
+									</div>
+								</div>
+								
+							</div>
+							<div class="row">
+								<div class="col-xs-12">
+									<table id="simple-table"
+										class="table table-striped table-bordered table-hover"
+										style="margin-bottom: 0px; border-bottom: 0px;">
+										<thead>
+											<tr>
+												<th>用户编号</th>
+												<th>微信名</th>
+												<#if userInfoList?? && userInfoList?size&gt;0>
+													<#list userInfoList as list>
+														<#if list.checked ==true>
+															<th>${list.showName}</th>
+														</#if>
+													</#list>
+												</#if>
+												<th>身份</th>
+												<th>团ID</th>
+												<th>团状态</th>
+												<th>目前参团人数</th>
+												<th>开团时间</th>
+												<th>成团时间</th>
+												<th>操作</th>
+											</tr>
+										</thead>
+										<tbody>
+											<#if groupMembersList?? && groupMembersList?size&gt;0> <#list groupMembersList
+											as groupMember>
+											<tr class="">
+												<td>${groupMember_index + 1}</td>
+												<td>${groupMember.nickname!}</td>
+												<#if userInfoList?? && userInfoList?size&gt;0>
+													<#list userInfoList as list>
+														<#if list.checked ==true>
+															<#if list.value ==1>
+																<td>${groupMember.name!}</td>
+															</#if>
+															<#if list.value ==2>
+																<td>${groupMember.telephone!}</td>
+															</#if>
+															<#if list.value ==3>
+																<td>${groupMember.age!}</td>
+															</#if>
+															<#if list.value ==4>
+																<td><#list constellationsList as status> <#if groupMember.constellation ==
+													status.value>${status.showName}</#if> </#list></td>
+															</#if>
+															<#if list.value ==5>
+																<td>${groupMember.province!}</td>
+															</#if>
+															<#if list.value ==6>
+																<td>${groupMember.city!}</td>
+															</#if>
+														</#if>
+													</#list>
+												</#if>
+												<td><#list isLeaderList as status> <#if groupMember.isLeader ==
+													status.value>${status.showName}</#if> </#list></td>
+												<td>${groupMember.groupId!}</td>
+												<td><#list statusList as status> <#if groupMember.state ==
+													status.value>${status.showName}</#if> </#list></td>
+												<td>${groupMember.participantsNum!}</td>
+												<td>${groupMember.startTime?string('yyyy-MM-dd HH:mm:ss')} </td>
+												<td><#if groupMember.completeTime??>${groupMember.completeTime?string('yyyy-MM-dd HH:mm:ss')}<#else>——————————</#if> </td>
+												<td>
+												    <a class="btn btn-minier btn-primary" href="${adminPath}/activity/group/membersEdit?groupMemberId=${groupMember.id!}&groupActivityId=${groupMember.groupActivityId}" role="button">编辑</a>
+												    <a class="btn btn-minier btn-danger"  onclick="deleteMember('${groupMember.id}', '${groupMember.groupId!}')">删除</a>
+												</td>
+											</tr>
+											</#list> <#else>
+											<tr>
+												<td colspan="12">
+													<div class="alert alert-danger" style="margin-bottom: 0px;"
+														role="alert">没有记录!</div>
+												</td>
+											</tr>
+											</#if>
+										</tbody>
+									</table>
+									<#include "paginatorStatistical.html">
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<#include "commonFootJs.html">
+	<script src="${webroot}/assets/js/moment.min.js"></script>
+	<script src="${webroot}/assets/js/bootstrap-datetimepicker.min.js"></script>
+	<script type="text/javascript">
+		jQuery(function($) {
+			var optionsBegin = {
+				/* format : 'YYYY-MM-DD  HH:mm:ss' */
+					format : 'YYYY-MM-DD  00:00:00'
+			}
+			var optionsEnd = {
+					/* format : 'YYYY-MM-DD  HH:mm:ss' */
+						format : 'YYYY-MM-DD  23:59:59'
+				}
+			$('.beginDatetimepicker').datetimepicker(optionsBegin).next().on(
+					ace.click_event, function() {
+						$(this).prev().focus();
+					});
+			$('.endDatetimepicker').datetimepicker(optionsEnd).next().on(
+					ace.click_event, function() {
+						$(this).prev().focus();
+					});
+			
+			$("#tabStatistical").on("click",function(){
+				$("#sort option").attr("value","");
+				$("#searchFormStatistical").submit();
+			});
+			
+			$("#sortBtn").on("click",function(){
+				$("#searchFormStatistical").submit();
+			});
+			
+			
+			$("#export").on("click",function(){
+				var nickname=$("#nickname").val();
+				var name=$("#name").val();
+				var telephone=$("#telephone").val();
+				var groupId=$("#groupId").val();
+				var groupState=$("#groupState").val();
+				var sort=$("#sort").val();
+				var groupActId=$("#groupActId").val();
+				window.open("${adminPath}/activity/group/export?nickname="+nickname+"&name="+name+"&telephone="+telephone
+						+"&groupId="+groupId+"&groupState="+groupState+"&sort="+sort+"&groupActId="+groupActId);
+			});
+			
+			
+			$("#actStatistical").on("click",function(){
+				var id=$("#id").val();
+				var name=$("#actName").val();
+				var startDate=$("#startDate").val();
+				var endDate=$("#endDate").val();
+				var state=$("#state").val();
+				window.location.href="${adminPath}/activity/group?id="+id+"&name="+name+"&startDate="+startDate+"&endDate="+endDate+"&state="+state+"&tab=tabStatistical";
+			});
+			
+		})
+	</script>
+	
+	<script type="text/javascript">
+		function deleteMember(groupMemberId, groupId) {
+			 $.ajax({
+                 type:"GET",
+                 url:"${adminPath}/activity/group/membersDelete?groupMemberId=" + groupMemberId + "&groupId=" + groupId,
+                 success:function(data){
+                	showMsg(data.msg);
+                	if (data.code == 1) {
+                		location.reload();
+                	}
+                 }
+             });
+		}
+		
+	</script>
+</body>
+</html>

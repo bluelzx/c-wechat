@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="WX_USER_BIND" >
+	<insert id="batchInsertWechatUserBind">
+			INSERT INTO wechat_user_bind(id,openid, unionid, userid, create_date, channel)
+		    VALUES (#{id}, #{openid},#{unionid},#{userId},#{createDate},#{channel})
+	</insert>
+	
+	<select id="queryUserBind" parameterType="WechatUser"  resultType="WechatUser">
+		SELECT DISTINCT openid , userid from wechat_user_bind where openid = #{openid}
+	</select>
+	
+    <update id="updateUserId" parameterType="WechatUser">
+		update wechat_user_bind set userid = #{userId}, channel = #{channel}, update_date = NOW() where openid = #{openid}
+	</update>
+	
+	<update id="updateUserTag" parameterType="WechatUser">
+		update wechat_user_bind set tags = #{tags}, update_date = NOW() where userid = ${userId}
+	</update>
+	
+	
+	<select id="queryUserBindList" resultType="WechatUser">
+		select * from wechat_user_bind where state = '1' order by id LIMIT ${start}, ${end}
+	</select>
+	
+	<select id="querybindUserList" resultType="WechatUser">
+		SELECT
+			 b.id, b.openid, b.unionid, b.userid, b.create_date, b.channel
+		FROM wechat_user_bind b
+		<trim prefix="WHERE" prefixOverrides="AND | OR">
+			<if test="id != null and id != ''">
+				<![CDATA[AND b.id = #{id}]]>
+			</if>
+			<if test="createDate != null and createDate != ''">
+				<![CDATA[AND date(b.create_date) >= date(#{createDate})]]>
+			</if>
+			<if test="endDate != null and endDate != ''">
+				<![CDATA[AND date(b.create_date) <= date(#{endDate})]]>
+			</if>
+			<if test="channel != null">
+			    <![CDATA[AND b.channel = #{channel}]]>
+		    </if>
+	   </trim>
+			order by b.id desc
+	 </select>
+	
+	
+	<select id="queryAllbindUserList" resultType="WechatUser">
+		SELECT
+			 b.id, b.openid, b.unionid, b.userid, b.create_date, b.channel
+		FROM wechat_user_bind b
+		where 1 = 1
+	    order by b.id desc
+	</select>
+	
+	<select id="selectByExport" resultType="ExportBindCount">
+		select
+			b.openid,
+			b.channel,
+			b.create_date
+		from wechat_user_bind b
+		<trim prefix="WHERE" prefixOverrides="AND | OR">
+			<if test="channel != null and endDate != ''">
+				 <![CDATA[AND b.channel = #{channel}]]>
+			</if>
+		</trim>
+	</select>
+	
+	<select id="selectAllByExport" resultType="ExportBindCount">
+		select
+			b.openid,
+			b.channel,
+			b.create_date
+		from wechat_user_bind b
+		where 1 = 1
+	</select>
+</mapper>

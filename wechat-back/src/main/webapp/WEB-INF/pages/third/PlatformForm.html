@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+		<meta charset="utf-8" />
+		<title>第三方平台列表 - 微信后台管理系统</title>
+		<meta name="description" content="overview &amp; stats" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+		<#include "commonHead.html">
+	</head>
+
+	<body class="no-skin" style="background-color: #FFF;">
+		<div class="page-content">
+			<div class="page-header">
+				<h1>
+					第三方平台
+					<small>
+						<i class="ace-icon fa fa-angle-double-right"></i>
+						<#if platform?? && platform.id??>
+						编辑第三方平台
+						<#else>
+						新增第三方平台
+						</#if>
+					</small>
+				</h1>
+			</div>
+			<div class="row">
+				<div class="col-xs-12">
+					<form id="platformForm" class="form-horizontal" role="form" action="${adminPath}/3rd/save" method="POST">
+						<#if platform?? && platform.id??>
+						<input type="hidden" id="id" name="id" value="${platform.id}">
+						</#if>
+						<div class="form-group">
+							<label class="col-sm-3 control-label no-padding-right" for="form-field-1"> 第三方名称 </label>
+							<div class="col-sm-9">
+								<input type="text" id="name" name="name" placeholder="第三方名称" value="${platform.name!}" class="col-xs-10 col-sm-5">
+							</div>
+						</div>
+						<div class="space-4"></div>
+						<div class="form-group">
+							<label class="col-sm-3 control-label no-padding-right" for="form-field-1"> 安全域名 </label>
+							<div class="col-sm-9">
+								<input type="text" id="domain" name="domain" placeholder="第三方平台的域名" value="${platform.domain!}" class="col-xs-10 col-sm-5">
+							</div>
+						</div>
+						<div class="space-4"></div>
+						<div class="form-group">
+							<label class="col-sm-3 control-label no-padding-right" for="form-field-1"> 第三方微信服务器URL </label>
+							<div class="col-sm-9">
+								<input type="text" id="apiUrl" name="apiUrl" placeholder="第三方平台用于接入微信的url地址" value="${platform.apiUrl!}" class="col-xs-10 col-sm-5">
+							</div>
+						</div>
+						<div class="space-4"></div>
+						<div class="form-group">
+							<label class="col-sm-3 control-label no-padding-right" for="form-field-1"> 第三方接口Token </label>
+							<div class="col-sm-9">
+								<input type="text" id="apiToken" name="apiToken" placeholder="第三方平台用于接入微信的token" value="${platform.apiToken!}" class="col-xs-10 col-sm-5">
+							</div>
+						</div>
+						<div class="space-4"></div>
+						<div class="form-group">
+							<label class="col-sm-3 control-label no-padding-right" for="form-field-1"> 转发类型 </label>
+							<div class="col-sm-9">
+								<select class="input-medium" id="forwardType" name="forwardType">
+									<#list types as type>
+									<option value="${type}" <#if platform?? && platform.forwardType==type>selected="selected"</#if> >${type.getShowName()!}</option>
+									</#list>
+								</select>
+							</div>
+						</div>
+						<div class="space-4"></div>
+						<div class="form-group">
+							<label class="col-sm-3 control-label no-padding-right" for="form-field-1"> 触发关键字 </label>
+							<div class="col-sm-9">
+								<input type="text" id="forwardKeyword" name="forwardKeyword" placeholder="触发转发消息的关键字,以逗号隔开"  value="${platform.forwardKeyword!}" class="col-xs-10 col-sm-5">
+							</div>
+						</div>
+						<div class="space-4"></div>
+						<div class="form-group">
+							<label class="col-sm-3 control-label no-padding-right" for="form-field-1"> 是否启用 </label>
+							<div class="col-sm-9">
+								<label style="margin-top:7px;">
+									<input id="useable" name="useable" class="ace ace-switch ace-switch-2" type="checkbox" <#if platform?? && platform.useable>checked="checked"</#if> >
+									<span class="lbl"></span>
+								</label>
+							</div>
+						</div>
+
+						<div class="clearfix form-actions">
+							<div class="col-md-offset-4 col-md-8">
+								<button id="submitBtn" class="btn btn-info" type="button">
+									<i class="ace-icon fa fa-check bigger-110"></i>
+									保存
+								</button>
+							</div>
+						</div>
+					</form>
+				</div><!-- /.col -->
+			</div><!-- /.row -->
+		</div>
+
+		<#include "commonFootJs.html">
+
+		<!-- inline scripts related to this page -->
+		<script type="text/javascript">
+			jQuery(function($) {
+				$("#forwardType").on('change', function(e){
+					var forwardType = $("#forwardType").val();
+					var keywordInput = $("#forwardKeyword");
+					if(forwardType=='NO' || forwardType=='ALL') {
+						keywordInput.attr('disabled' , 'disabled');
+					} else if(forwardType=='KEYWORD') {
+						keywordInput.removeAttr('disabled');
+					}
+				});
+				//手动触发事件
+				$("#forwardType").trigger('change');
+
+				$('#submitBtn').on('click', function(){
+					var name = $("#name").val();
+					var domain = $("#domain").val();
+					var apiUrl = $("#apiUrl").val();
+					var apiToken = $("#apiToken").val();
+					var forwardType = $("#forwardType").val();
+					var forwardKeyword = $("#forwardKeyword").val();
+					var useable = $("#useable").val();
+					//数据合法性校验
+					if(isEmpty(name)) {
+						$("#name").focus();
+						showMsg("平台名称不能为空！");
+					} else if(isEmpty(domain)) {
+						$("#domain").focus();
+						showMsg("安全域名不能为空！");
+					} else if(!validate(domain, DOMAIN_REG)) {
+						$("#domain").focus();
+						showMsg("安全域名格式不正确！");
+					} else if(isEmpty(apiUrl)) {
+						$("#apiUrl").focus();
+						showMsg("服务器URL不能为空！");
+					} else if(!validate(apiUrl, URL_REG)) {
+						$("#apiUrl").focus();
+						showMsg("服务器URL格式不正确！");
+					} else if(isEmpty(apiToken)) {
+						$("#apiToken").focus();
+						showMsg("服务器TOKEN不能为空！");
+					} else {
+						if(forwardType=='KEYWORD' && isEmpty(forwardKeyword)) {
+							$("#forwardKeyword").focus();
+							showMsg("转发类型为关键字转发时，关键字不能为空！");
+						} else {
+							$("#platformForm").submit();
+						}
+					}
+				});
+			})
+		</script>
+	</body>
+</html>

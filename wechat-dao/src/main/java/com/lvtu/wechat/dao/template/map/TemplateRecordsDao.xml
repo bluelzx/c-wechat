@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="TEMPLATE_RECORDS">
+	
+	<select id="select" resultType="TemplateRecords">
+		SELECT 
+			id,openid,template_id,content,success,create_time,sender,retry_count,now_retry_count
+		FROM t_wx_template_records
+		WHERE 1=1
+			<if test="templateId != '' and templateId != null">AND template_id = #{templateId}</if>
+			<if test="openid != '' and openid != null">AND openid = #{openid}</if>
+		ORDER BY create_time DESC
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO t_wx_template_records (id,openid,template_id,content,success,create_time,sender,retry_count,now_retry_count)
+		VALUES (#{id},#{openid},#{templateId},#{content},#{success},#{createTime},#{sender},#{retryCount},#{nowRetryCount})
+	</insert>
+	
+	<select id="selectRetry" resultType="TemplateRecords">
+	 	SELECT id,openid,template_id,content,success,create_time,sender,retry_count,now_retry_count
+	 	FROM t_wx_template_records
+		WHERE create_time > DATE_SUB(NOW(), INTERVAL 5 HOUR)
+		AND success != 2
+		AND retry_count > now_retry_count
+	</select>
+	
+	<update id="update" parameterType="TemplateRecords">
+		UPDATE t_wx_template_records 
+		<set>
+		success=#{success},
+		now_retry_count = now_retry_count+1
+		</set> 
+		WHERE 1=1 AND id = #{id}
+	</update>
+	
+	<select id="selectById" resultType="TemplateRecords">
+		SELECT id,openid,template_id,content,success,create_time,sender,retry_count,now_retry_count
+	 	FROM t_wx_template_records
+		WHERE 1=1
+		AND id=#{id}	
+	</select>
+	
+	
+</mapper>

@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?> 
+<beans xmlns="http://www.springframework.org/schema/beans" 
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+    xmlns:context="http://www.springframework.org/schema/context" 
+    xmlns:aop="http://www.springframework.org/schema/aop" 
+    xmlns:tx="http://www.springframework.org/schema/tx" 
+    xsi:schemaLocation="
+		http://www.springframework.org/schema/beans 
+		http://www.springframework.org/schema/beans/spring-beans-4.0.xsd 
+		http://www.springframework.org/schema/context 
+		http://www.springframework.org/schema/context/spring-context-4.0.xsd 
+		http://www.springframework.org/schema/aop 
+		http://www.springframework.org/schema/aop/spring-aop-4.0.xsd 
+		http://www.springframework.org/schema/tx 
+		http://www.springframework.org/schema/tx/spring-tx-4.0.xsd">
+
+    <!-- 写数据源  -->
+	<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+		<property name="driverClassName"><value>${jdbc.driverClassName}</value></property>
+		<property name="url"><value>${jdbc.url}</value></property>
+		<property name="username"><value>${jdbc.username}</value></property>
+		<property name="password"><value>${jdbc.password}</value></property>
+		<property name="maxActive"><value>${jdbc.maxActive}</value></property>
+		<property name="maxWait"><value>${jdbc.maxWait}</value></property>
+		<property name="maxIdle"><value>${jdbc.maxIdle}</value></property>
+		<property name="initialSize"><value>${jdbc.initSize}</value></property>
+		<property name="removeAbandoned"><value>true</value></property>
+		<property name="testWhileIdle"><value>true</value></property>
+		<property name="testOnBorrow"><value>true</value></property>
+		<property name="validationQuery"><value>select 1</value></property>
+	</bean>
+	
+	<!-- 读数据源  -->
+	<bean id="dataSourceR" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+		<property name="driverClassName"><value>${read.jdbc.driverClassName}</value></property>
+		<property name="url"><value>${read.jdbc.url}</value></property>
+		<property name="username"><value>${read.jdbc.username}</value></property>
+		<property name="password"><value>${read.jdbc.password}</value></property>
+		<property name="maxActive"><value>${read.jdbc.maxActive}</value></property>
+		<property name="maxWait"><value>${read.jdbc.maxWait}</value></property>
+		<property name="maxIdle"><value>${read.jdbc.maxIdle}</value></property>
+		<property name="initialSize"><value>${read.jdbc.initSize}</value></property>
+		<property name="removeAbandoned"><value>true</value></property>
+		<property name="testWhileIdle"><value>true</value></property>
+		<property name="testOnBorrow"><value>true</value></property>
+		<property name="validationQuery"><value>select 1</value></property>
+	</bean>
+	
+   <!-- mybatis配置 默认写-->
+   <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+        <property name="dataSource" ref="dataSource" />
+        <property name="typeAliasesPackage" value="com.lvtu.wechat"/>
+        <property name="typeAliasesSuperType" value="com.lvtu.wechat.common.base.BaseModel"/>
+		<property name="configLocation" value="classpath:mybatis-config.xml" />
+      	<property name="mapperLocations"> 
+			<value>classpath*:/com/lvtu/wechat/dao/**/map/*.xml</value>
+		</property>
+    </bean>
+    
+   <!-- mybatis配置 读 -->
+   <bean id="sqlSessionFactoryR" class="org.mybatis.spring.SqlSessionFactoryBean">
+        <property name="dataSource" ref="dataSourceR" />
+        <property name="typeAliasesPackage" value="com.lvtu.wechat"/>
+        <property name="typeAliasesSuperType" value="com.lvtu.wechat.common.base.BaseModel"/>
+		<property name="configLocation" value="classpath:mybatis-config.xml" />
+      	<property name="mapperLocations"> 
+			<value>classpath*:/com/lvtu/wechat/dao/**/map/*.xml</value>
+		</property>
+    </bean>
+    
+
+    <bean id="sqlSession"  class="org.mybatis.spring.SqlSessionTemplate">  
+          <constructor-arg index="0" ref="sqlSessionFactory" />  
+    </bean> 
+    
+    <bean id="sqlSessionR"  class="org.mybatis.spring.SqlSessionTemplate">  
+          <constructor-arg index="0" ref="sqlSessionFactoryR" />  
+    </bean>
+    
+	<!-- 定义事务 -->
+	<bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource" ref="dataSource" />
+	</bean>
+	<!-- 配置 Annotation 驱动，扫描@Transactional注解的类定义事务  -->
+	<tx:annotation-driven transaction-manager="transactionManager" proxy-target-class="true"/>
+</beans>

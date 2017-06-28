@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>${flowActivity.name!}</title>
+    <meta name="Keywords" content="驴妈妈无线,景区门票,旅游度假"/>
+    <meta name="Description" content="驴妈妈无线官网:支持手机快捷预订景区门票,自助游线路,全国酒店,豪华邮轮等各种旅游产品.(中国最领先的在线旅游预订服务商!)"/>
+    <meta content="telephone=no,email=no" name="format-detection">
+    <meta content="initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width" name="viewport">
+    <meta id="share" share-linkurl="" name="share" share-title="" share-content="" share-imageurl="">
+    <meta http-equiv="pragma" content="no-cache">
+    <meta http-equiv="Cache-Control" content="max-age=7200" />
+    <meta http-equiv="expires" content="0">
+    <meta http-equiv="Cache-Control" content="no-transform " />
+    <meta http-equiv="Cache-Control" content="no-siteapp" />
+    <link rel="apple-touch-icon" href="//pics.lvjs.com.cn/img/mobile/touch/img/lvmama_v1_png.png"/>
+    <link rel="apple-touch-icon" sizes="72x72" href="//pics.lvjs.com.cn/img/mobile/touch/img/lvmama_v1_png.png"/>
+    <link rel="apple-touch-icon" sizes="114x114" href="//pics.lvjs.com.cn/img/mobile/touch/img/lvmama_v1_png.png"/>
+    <link rel="apple-touch-icon" sizes="144x144" href="//pics.lvjs.com.cn/img/mobile/touch/img/lvmama_v1_png.png"/>
+    <link rel="stylesheet" href="//pics.lvjs.com.cn/mobile/zt/public/css/base/newGlobal.css">
+    <link rel="stylesheet" href="//pics.lvjs.com.cn/mobile/wap/fission-sendFlow/css/style.css">
+    <script type="text/javascript" src="//pics.lvjs.com.cn/mobile/lib/js/jquery-1.7.2.min.js"></script>
+    <script type="text/javascript" src="//res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
+    <script type="text/javascript" src="${webroot}/assets/js/WechatApi.js"></script>
+</head>
+<body>  
+    <div class="detail container">
+        <div class="banner"><img src="${flowActivity.bannerUrl!}" alt=""></div>
+        <div class="wrap">
+            <!-- 已参加过状态 -->
+            <div class="status1">
+                <h3>
+					<i>${wecahtUser.nickname}</i>和好友累计领取流量<i><#if flowGroups.state == '1'>${flowGroups.totalFlow!}M<#else>${flowGroups.totalFlow-flowGroups.surplusFlow}M</#if></i>
+				</h3> 
+                <div class="btn">
+                    <button class="exchange" onclick="javascript:window.location.href='${webroot}/flow/index'">兑换流量</button>
+                    <button class="share">分享</button>                
+                </div>                
+            </div>
+            <div class="title"><span>看朋友手气如何</span></div>
+            <div class="list">  
+            <#list listMembers as listMember>
+            	<div class="show">
+                    <div class="head"><span><img src="${listMember.headImgUrl}" style= "height: 100%"></img></span></div>
+                    <div class="info">
+                        <p class="tip1"><i>${listMember.nickname}</i><i>${(listMember.createTime?string("MM.dd HH:mm"))!}</i></p>
+                        <p class="tip2">${listMember.doleCopy}</p>
+                    </div>
+                    <div class="flow">${listMember.flowNum!}M</div>
+                </div>
+            </#list>                                
+            </div>
+            <div class="rule"></div>
+        </div>
+        <div class="share_popup">
+            <img src="//pics.lvjs.com.cn/mobile/wap/fission-sendFlow/images/share_pic.png" alt="">
+        </div>
+        <div class="receive_popup">
+            <div class="main">
+                <p>恭喜您又获得<i>${flowGroups.surplusFlow!}M</i>流量！<br>您领取的<i>${flowGroups.totalFlow!}M</i>流量已全部领完！</p>
+                <div class="close"></div>
+            </div>
+        </div>
+        <div class="rule_popup">
+            <div class="main">
+                <h3>活动规则</h3>
+                <div class="content">
+                   <p> ${flowActivity.ruleCopy!}</p>              
+                </div>
+                <div class="close"></div>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript" src="//pics.lvjs.com.cn/mobile/lib/js/zepto.min.js"></script>
+    <script type="text/javascript" src="//pics.lvjs.com.cn/mobile/wap/fission-sendFlow/js/index.js"></script>  
+        <#if shareContent>
+     	<script type="text/javascript"> 
+    	var wxData;
+		wxData = {
+			  imgUrl: "${imageList.url}",
+			  link: "https://weixin.lvmama.com/flowActivity/index/${flowActivity.id}?groupId=${flowGroups.id}",
+			  desc: "${shareContent.shareDesc}",
+			  title: "${shareContent.title}"
+		}
+		if(wxData != undefined) {
+			var success = function(){
+				$.ajax({
+					type:"GET",
+					url:"${webroot}/flowActivity/addForwardNum/${flowActivity.id}",					
+				});
+			}
+		    WechatApi.share(wxData,success);
+		}
+		</script>
+	<#else>
+		<script type="text/javascript"> 
+    	var wxData;
+		wxData = {
+			link: "https://weixin.lvmama.com/flowActivity/index/${flowActivity.id}?groupId=${flowGroups.id}"
+		}
+		var success = function(){
+			$.ajax({
+				type:"GET",
+				url:"${webroot}/flowActivity/addForwardNum/${flowActivity.id}",					
+			});
+		}
+		    WechatApi.share(wxData,success);		    
+		}
+		</script>
+	</#if> 
+	<#if isShow ??>
+	<script type="text/javascript">
+		$(".receive_popup").css("display", "block");
+		$(".close").click(function() {
+			$(".receive_popup").css("display", "none");
+		});
+	</script>
+	</#if>
+</body>
+</html>

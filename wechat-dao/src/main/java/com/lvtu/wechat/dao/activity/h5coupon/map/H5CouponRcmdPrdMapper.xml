@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="H5COUPON_RCMD_PRD">
+	<select id="selectList" resultType="H5CouponRcmdPrd">
+		select a.id, a.h5coupon_id, a.rcmd_prd_type, a.rcmd_prd_id from
+		h5coupon_rcmd_prd a where a.h5coupon_id = #{h5CouponId}
+	</select>
+
+	<insert id="insert">
+		INSERT INTO h5coupon_rcmd_prd(
+		id,
+		h5coupon_id,
+		rcmd_prd_type,
+		rcmd_prd_id
+		) VALUES (
+		#{id},
+		#{h5CouponId},
+		#{rcmdPrdType},
+		#{rcmdPrdId}
+		)
+	</insert>
+	<delete id="delete">
+		delete from h5coupon_rcmd_prd where id = #{id}
+	</delete>
+
+	<delete id="deleteByH5CouponId">
+		delete from h5coupon_rcmd_prd where h5coupon_id = #{h5coupon_id}
+	</delete>
+	
+	<update id="update">
+		update h5coupon_rcmd_prd 
+		set rcmd_prd_type = #{rcmdPrdType}, rcmd_prd_id=#{rcmdPrdId} 
+		where id = #{id}
+	</update>
+	
+	<select id="queryH5CouponRcmdPrdById" resultType="H5CouponRcmdPrd">
+		select a.id, a.h5coupon_id, a.rcmd_prd_type, a.rcmd_prd_id from
+		h5coupon_rcmd_prd a where a.h5coupon_id = #{h5CouponId}
+	</select>
+</mapper>

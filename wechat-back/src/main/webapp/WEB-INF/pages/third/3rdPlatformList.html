@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+		<meta charset="utf-8" />
+		<title>第三方平台列表 - 微信后台管理系统</title>
+		<meta name="description" content="overview &amp; stats" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+		<#include "commonHead.html">
+	</head>
+
+	<body class="no-skin" style="background-color: #FFF;">
+		<div class="page-content">
+			<div class="page-header">
+				<h1>
+					第三方平台
+					<small>
+						<i class="ace-icon fa fa-angle-double-right"></i>
+						第三方平台列表
+					</small>
+				</h1>
+			</div>
+			<div class="row">
+				<div class="col-xs-12">
+				<div class="clearfix">
+					<div class="pull-left tableTools-container">
+						<button class="btn btn-xs btn-primary" onclick="skip('${adminPath}/3rd/new')"><i class="ace-icon fa fa-pencil-square-o align-top bigger-125"></i>新增</button>
+						<button class="btn btn-xs btn-primary" onclick="skip('${adminPath}/3rd/clearCache')"><i class="ace-icon fa fa-trash-o align-top bigger-125"></i>清除缓存</button>
+					</div>
+				</div>
+				<!-- PAGE CONTENT BEGINS -->
+					<div class="row">
+						<div class="col-xs-12">
+							<table id="simple-table" class="table table-striped table-bordered table-hover">
+								<thead>
+									<tr>
+										<th>#</th>
+										<th>名称</th>
+										<th>域名</th>
+										<th>URL</th>
+										<th>Token</th>
+										<th>转发类型</th>
+										<th>转发触发关键字</th>
+										<th>是否可用</th>
+										<th>操作</th>
+									</tr>
+								</thead>
+
+								<tbody>
+								<#list platforms as platform>
+									<tr class="">
+										<td>${platform_index + 1}</td>
+										<td>${platform.name!}</td>
+										<td>${platform.domain!}</td>
+										<td>${platform.apiUrl!}</td>
+										<td>${platform.apiToken!}</td>
+										<td>${platform.forwardType.getShowName()!}</td>
+										<td>${platform.forwardKeyword!}</td>
+										<td>${(platform.useable)?string('是','否')}</td>
+										<td>
+											<a class="btn btn-minier btn-primary" href="${adminPath}/3rd/edit?id=${platform.id!}" role="button">编辑</a>
+											<a class="btn btn-minier btn-danger" href="${adminPath}/3rd/delete?id=${platform.id!}" role="button">删除</a>
+											<#if platform.useable>
+											<a class="btn btn-minier btn-primary" href="${adminPath}/3rd/usable?id=${platform.id!}&useable=0" role="button">停用</a>
+											<#else>
+											<a class="btn btn-minier btn-primary" href="${adminPath}/3rd/usable?id=${platform.id!}&useable=1" role="button">启用</a>
+											</#if>
+										</td>
+									</tr>
+								</#list>
+								</tbody>
+							</table>
+						</div><!-- /.span -->
+					</div><!-- /.row -->
+				</div><!-- /.col -->
+			</div><!-- /.row -->
+		</div>
+
+		<#include "commonFootJs.html">
+
+		<!-- inline scripts related to this page -->
+		<script type="text/javascript">
+			jQuery(function($) {
+				
+			})
+		</script>
+	</body>
+</html>

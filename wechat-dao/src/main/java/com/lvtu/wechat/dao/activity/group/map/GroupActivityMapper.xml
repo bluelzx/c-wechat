@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="GROUP_ACTIVITY" >
+	<update id="update">
+		UPDATE group_activity
+		<set>
+			<if test="name != null and name != ''">
+				name = #{name},
+			</if>
+			<if test="startDate != null and startDate != ''">
+				start_date = #{startDate},
+			</if>
+			<if test="endDate != null and endDate != ''">
+				end_date = #{endDate},
+			</if>
+			<if test="createDate != null and createDate != ''">
+				create_date = #{createDate},
+			</if>
+			<if test="deadlineTime != null and deadlineTime != ''">
+				deadline_time = #{deadlineTime},
+			</if>
+			<if test="state != null and state != ''">
+				state = #{state},
+			</if>
+				share_template_id = #{shareTemplateId},
+			<if test="teamNumber != null and teamNumber != ''">
+				team_number = #{teamNumber},
+			</if>
+			<if test="signParam != null and signParam != ''">
+				sign_param = #{signParam},
+			</if>
+			<if test="indexTips != null and indexTips != ''">
+				index_tips = #{indexTips},
+			</if>
+			<if test="showButton != null and showButton != ''">
+				show_button = #{showButton},
+			</if>
+			<if test="logoButton != null and logoButton != ''">
+				logo_button = #{logoButton},
+			</if>
+			<if test="ruleCopy != null and ruleCopy != ''">
+				rule_copy = #{ruleCopy},
+			</if>
+			<if test="writeTips != null and writeTips != ''">
+				write_tips = #{writeTips},
+			</if>
+			<if test="qrCodeCopy != null and qrCodeCopy != ''">
+				qr_code_copy = #{qrCodeCopy},
+			</if>
+			<if test="rewardsUrl != null and rewardsUrl != ''">
+				rewards_url = #{rewardsUrl},
+			</if>
+			<if test="picUrl != null and picUrl != ''">
+				pic_url = #{picUrl}
+			</if>
+		</set>
+		WHERE id = #{id}
+	</update>
+
+	<insert id="insert">
+		INSERT INTO group_activity(
+			id, 
+			name, 
+			start_date, 
+			end_date, 
+			create_date, 
+			deadline_time, 
+			state,
+			share_template_id, 
+			team_number,
+			sign_param, 
+			index_tips, 
+			show_button, 
+			logo_button, 
+			rule_copy, 
+			write_tips,
+			qr_code_copy,
+			rewards_url,
+			pic_url
+		) VALUES (
+			#{id}, 
+			#{name}, 
+			#{startDate}, 
+			#{endDate}, 
+			#{createDate}, 
+			#{deadlineTime}, 
+			#{state},
+			#{shareTemplateId},
+			#{teamNumber},
+			#{signParam}, 
+			#{indexTips}, 
+			#{showButton}, 
+			#{logoButton},
+			#{ruleCopy}, 
+			#{writeTips},
+			#{qrCodeCopy},
+			#{rewardsUrl},
+			#{picUrl}
+		)
+	</insert>
+
+
+	<select id="queryGroupActivitiesList" resultType="GroupActivity">
+		SELECT 
+			   a.id, a.name, a.start_date, a.end_date, a.create_date, a.deadline_time, a.url, a.state,
+		       a.share_template_id, a.team_number, a.sign_param, a.index_tips, a.show_button, a.rule_copy,
+		       a.write_tips, a.qr_code_copy, a.rewards_url, a.secondary_forward, a.pic_url, a.wx_qr_code_id, a.logo_button,
+		    (select count(distinct gm.wx_user_id) from group_members gm, groups g where g.group_activity_id=a.id and gm.group_id = g.id) participants_num,
+			(select count(*) from groups where groups.group_activity_id=a.id) group_num,
+			(select count(*) from groups where groups.group_activity_id=a.id and groups.participants_num=groups.total_num) completeGroup_num,
+			(SELECT url FROM wx_qr_code WHERE wx_qr_code.id=(select wx_qr_code_id FROM wx_qr_code_use WHERE wx_qr_code_use.act_id=a.id)) qRCode_url
+		FROM group_activity a
+		WHERE 1 = 1
+		<if test="id != null and id != ''">
+			AND a.id = #{id}
+		</if>
+		<if test="name != null and name != ''">
+			<![CDATA[AND a.name like CONCAT('%', #{name}, '%')]]> 
+		</if>
+		<if test="startDate != null and startDate != ''">
+			<![CDATA[AND a.start_date >= #{startDate}]]>
+		</if>
+		<if test="endDate != null and endDate != ''">
+			<![CDATA[AND a.end_date <= #{endDate}]]>
+		</if>
+		<if test="state != null and state != '' and state !=-1">
+			AND a.state = #{state}
+		</if>
+		ORDER BY a.create_date DESC 
+	</select>
+	
+	
+	<select id="queryGroupActivitiesById" resultType="GroupActivity">
+		SELECT a.id, a.name, a.start_date, a.end_date, a.create_date, a.deadline_time, a.url, a.state,
+		       a.share_template_id, a.team_number, a.sign_param, a.index_tips, a.show_button, a.rule_copy,
+		       a.write_tips, a.qr_code_copy, a.rewards_url, a.secondary_forward, a.pic_url, a.wx_qr_code_id, a.logo_button 
+		FROM group_activity a
+		WHERE a.id = #{id}
+	</select>
+	
+	<!-- 更新状态是否开启 -->
+	<update id="updateState">
+		UPDATE group_activity SET 
+			state = #{state}
+		WHERE id = #{id}
+	</update>
+</mapper>

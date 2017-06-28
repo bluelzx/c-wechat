@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="ADVERTISING_CLICKS" >
+
+	<select id="queryAdvertisingClicksList" resultType="AdvertisingClicks">
+		SELECT 
+			a.id, a.advertising_id, a.page_views, a.unique_visitors, a.click_date
+		FROM advertising_clicks a
+		WHERE 1 = 1
+		<if test="advertisingId != null and advertisingId != ''">
+			AND a.advertising_id =#{advertisingId} 
+		</if>
+		<if test="clickDate != null and clickDate != ''">
+			AND date(a.click_date) = date(#{clickDate})
+		</if>
+		ORDER BY a.click_date DESC	
+	</select>
+	
+	<select id="queryAdsClicksByTime" resultType="AdvertisingClicks">
+		SELECT
+			id,advertising_id,SUM(page_views) page_views,SUM(unique_visitors) unique_visitors
+		FROM advertising_clicks
+		WHERE 1 = 1
+		<if test="advertisingId != null and advertisingId != ''">
+			AND advertising_id =#{advertisingId} 
+		</if>
+		<if test="startTime != null and startTime != ''">
+			AND date(click_date) &gt;= date(#{startTime})
+		</if>
+		<if test="endTime != null and endTime != ''">
+			AND date(click_date) &lt;= date(#{endTime})
+		</if>
+		GROUP BY advertising_id
+		ORDER BY advertising_id 	
+	</select>
+	
+		<update id="update">
+		UPDATE advertising_clicks
+		<set>
+			<if test="uniqueVisitors != null and uniqueVisitors != ''">
+				unique_visitors = #{uniqueVisitors},
+			</if>
+			<if test="pageViews != null and pageViews != ''">
+				page_views = #{pageViews},
+			</if>
+		</set>
+		WHERE id = #{id}
+	</update>
+	
+	<insert id="insert">
+		INSERT INTO advertising_clicks(
+			id, 
+			advertising_id, 
+			page_views, 
+			unique_visitors,
+			click_date
+		) VALUES (
+			#{id}, 
+			#{advertisingId}, 
+			#{pageViews}, 
+			#{uniqueVisitors}, 
+			#{clickDate}
+		)
+	</insert>
+	
+</mapper>

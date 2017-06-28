@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="FLOW_FORWARD_NUMBER">
+	<insert id="insert">
+		INSERT INTO flow_forward_number
+				<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				id,
+			</if>
+			<if test="flowActivityId != null">
+				flow_activity_id,
+			</if>
+			<if test="number != null">
+				number,
+			</if>
+			<if test="createTime != null">
+				create_time,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=VARCHAR},
+			</if>
+			<if test="flowActivityId != null">
+				#{flowActivityId,jdbcType=VARCHAR},
+			</if>
+			<if test="number != null">
+				#{number,jdbcType=INTEGER},
+			</if>
+			<if test="createTime != null">
+				#{createTime}
+			</if>
+		</trim>
+	</insert>
+	
+	<update id="update">
+				UPDATE flow_forward_number
+		<set>
+			<if test="number != null">
+				number = #{number}
+			</if>
+		</set>
+		WHERE 1=1
+		<if test="id != null">
+			AND id=#{id}
+		</if>
+	</update>
+	
+	<select id="selectByActivityId" resultType="FlowForwardNumber">
+		select id,flow_activity_id,number
+		from flow_forward_number
+		where 1=1
+		<if test="_parameter != null">
+			AND flow_activity_id=#{_parameter}
+		</if>
+	</select>
+
+
+</mapper>

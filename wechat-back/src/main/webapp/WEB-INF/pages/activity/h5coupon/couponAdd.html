@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta charset="utf-8" />
+<title>优惠券H5模板 - 添加活动</title>
+<meta name="description" content="overview &amp; stats" />
+<meta name="viewport"
+	content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+<link rel="stylesheet"
+	href="${webroot}/assets/css/bootstrap-datetimepicker.min.css" />
+<script charset="utf-8"
+	src="${webroot}/assets/third/kindeditor/kindeditor-all-min.js"></script>
+<script charset="utf-8"
+	src="${webroot}/assets/third/kindeditor/lang/zh-CN.js"></script>
+<link rel="stylesheet"
+	href="${webroot}/assets/third/kindeditor/themes/default/default.css" />
+<link rel="stylesheet"
+	href="${webroot}/assets/third/kindeditor/themes/simple/simple.css" />
+<link rel="stylesheet" href="${webroot}/assets/css/upload.css" />
+<#include "commonHead.html">
+<style>
+hr {
+	height: 1px;
+	border: none;
+	border-top: 2px solid #555555;
+}
+
+.imageFileCss {
+	padding: 0px 0px;
+}
+
+.fileupload .inputCss {
+	padding: 6px 0px;
+}
+
+#productInfoImg img {
+	max-height: 100px;
+	max-width: 160px;
+}
+
+.required {
+	color : red;
+	font-size : small;
+}
+</style>
+</head>
+
+<body class="no-skin" style="background-color: #FFF;">
+	<div class="page-content">
+		<div class="page-header">
+			<h1>
+				活动管理 <small> <i class="ace-icon fa fa-angle-double-right"></i>
+					<#if h5coupon?? && h5coupon.id??> 修改活动 <#else> 添加活动 </#if>
+				</small>
+			</h1>
+		</div>
+		<div class="row">
+			<div class="col-xs-12">
+				<form id="couponformForm" class="form-horizontal" role="form"
+					action="${adminPath}/activity/h5coupon/add" method="POST"
+					enctype="multipart/form-data">
+					<#if h5coupon?? && h5coupon.id??> <input type="hidden" id="id"
+						name="id" value="${h5coupon.id}"> </#if> <input
+						type="hidden" id="ruleExplain" name="ruleExplain" value="">
+					<input type="hidden" id="bannerUrl" name="bannerUrl" value="${h5coupon.bannerUrl}">
+					<h3 class="text-warning">基础配置</h3>
+					<hr>
+					<div class="form-group">
+						<label class="col-sm-3 control-label no-padding-right"
+							for="form-field-1"> <span class="required">*</span>活动名称： </label>
+						<div class="col-sm-9">
+							<input type="text" id="name" name="name" placeholder="请输入活动名称"
+								value="${h5coupon.name}" class="col-xs-10 col-sm-5">
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="col-sm-3 control-label no-padding-right"
+							for="form-field-1">
+							<strong class="text-danger">*</strong>使用公众号平台类型： </label>
+						<div class="col-sm-1">
+							<select class="form-control" name="publicPlatformType" id="publicPlatformType">
+								<#list publicPlatformTypeList as type>
+									<option value=${type.value} <#if h5coupon.publicPlatformType == type.value>selected</#if>>${type.showName}</option>
+								</#list>
+							</select>
+						</div>
+					</div>
+					<div class="space-4"></div>
+					<div class="form-group">
+						<label class="col-sm-3 control-label no-padding-right"
+							for="form-field-1"><span class="required">*</span> 上线时间： </label>
+						<div class="col-sm-9">
+							<input type="text" id="startDate" name="startDate"
+								placeholder="请输入上线时间"<#if h5coupon?? && h5coupon.id??>
+							value="${h5coupon.startDate?string('yyyy-MM-dd HH:mm:ss')}"
+							<#else> value="" </#if> class="col-xs-10 col-sm-5
+							startDatetimepicker">
+						</div>
+					</div>
+					<div class="space-4"></div>
+					<div class="form-group">
+						<label class="col-sm-3 control-label no-padding-right"
+							for="form-field-1"><span class="required">*</span> 下线时间： </label>
+						<div class="col-sm-9">
+							<input type="text" id="endDate" name="endDate"
+								placeholder="请输入下线时间"<#if h5coupon?? && h5coupon.id??>
+							value="${h5coupon.endDate?string('yyyy-MM-dd HH:mm:ss')}" <#else>
+							value="" </#if> class="col-xs-10 col-sm-5 endDatetimepicker">
+						</div>
+					</div>
+					<div class="space-4"></div>
+					<div class="form-group">
+						<label class="col-sm-3 control-label no-padding-right"
+							for="form-field-1"><span class="required">*</span> 品牌商： </label>
+						<div class="col-sm-9">
+							<input type="text" id="brandBusiness" name="brandBusiness"
+								placeholder="请输入品牌商" value="${h5coupon.brandBusiness}"
+								class="col-xs-10 col-sm-5">
+						</div>
+					</div>
+					<div class="space-4"></div>
+					<div class="form-group">
+						<label class="col-sm-3 control-label no-padding-right"
+							for="form-field-1"> 分享模版ID： </label>
+						<div class="col-sm-9">
+							<input type="text" id="shareTemplateId" name="shareTemplateId"
+								placeholder="请输入分享模版ID" value="${h5coupon.shareTemplateId}"
+								class="col-xs-10 col-sm-5">
+						</div>
+					</div>
+					<div class="space-4"></div>
+					<div class="form-group">
+						<label class="col-sm-3 control-label no-padding-right"
+							for="form-field-1"> <span class="required">*</span>优惠券使用批次号： </label>
+						<div class="col-sm-9">
+							<input type="text" id="couponCodes" name="couponCodes"
+								placeholder="多个优惠券批次号，请以','分隔" value="${h5coupon.couponCodes}"
+								class="col-xs-10 col-sm-5">
+						</div>
+					</div>
+					<h3 class="text-warning">详情配置</h3>
+					<hr>
+					<div class="space-4"></div>
+					<div class="form-group">
+						<label class="col-sm-3 control-label no-padding-right"
+							for="form-field-1"><span class="required">*</span> 专题banner图片： </label>
+						<div class="col-sm-9">
+							<span class="selectFile-span"><input type="text"
+								name="viewfileImg" id="viewfileImg" class="viewfile" /></span>
+							<button class="btn btn-primary btn-sm btn-round">选择图片</button>
+							<font style="font-size: small; color: #F00">只存取上传一张图片，图片尺寸固定为640*400</font>
+							<input type="file" size="15" id="productUpload"
+								name="productUpload"
+								onchange="document.getElementById('viewfileImg').value=this.value;"
+								class="file" />
+							<button id="imgUpload" type="button"
+								class="btn btn-primary btn-sm btn-round">图片上传</button>
+						</div>
+					</div>
+					<div class="space-4"></div>
+					<div class="form-group">
+						<label class="col-sm-3 control-label no-padding-right"
+							for="form-field-1"></label>
+						<div class="col-sm-9" id="productInfoImg">
+							<img alt="" src="${h5coupon.bannerUrl}">
+						</div>
+					</div>
+					<div class="space-4"></div>
+					<div class="form-group">
+						<label class="col-sm-3 control-label no-padding-right"
+							for="form-field-1"><span class="required">*</span>使用规则文案： </label>
+						<div class="col-sm-9">
+							<textarea id="ruleExplainEditor" name="ruleExplainEditor"
+								style="width: 500px; height: 200px;">${h5coupon.ruleExplain}</textarea>
+						</div>
+					</div>
+					<div class="space-4"></div>
+					<div class="form-group">
+						<label class="col-sm-3 control-label no-padding-right"
+							for="form-field-1">第一次领取文案： </label>
+						<div class="col-sm-9">
+							<input type="text" id="firstExplain" name="firstExplain"
+								placeholder="恭喜您获得优惠券" value="${h5coupon.firstExplain}"
+								class="col-xs-10 col-sm-5"><label class="control-label required">最多只能10个字</font>
+						</div>
+					</div>
+					<div class="space-4"></div>
+					<div class="form-group">
+						<label class="col-sm-3 control-label no-padding-right"
+							for="form-field-1">多次领取文案： </label>
+						<div class="col-sm-9">
+							<input type="text" id="multyExplain" name="multyExplain"
+								placeholder="您已领取过优惠券" value="${h5coupon.multyExplain}"
+								class="col-xs-10 col-sm-5"><label class="control-label required">最多只能10个字</font>
+						</div>
+					</div>
+					<div class="space-4"></div>
+					<div class="form-group">
+						<label class="col-sm-3 control-label no-padding-right"
+							for="form-field-1">推荐产品1： </label>
+						<div class="col-sm-1">
+							<select class="form-control" name="prdType1" id="prdType1">
+								<option value="">请选择产品类型</option> <#list productList as
+								product>
+								<option value=${product.value} <#if h5coupon.h5CouponRcmdPrdList[0].rcmdPrdType ==
+									product.value>selected</#if>>${product.showName}</option> </#list>
+							</select>
+						</div>
+						<div class="col-sm-6">
+							<input type="text" id="rcmdId1" name="rcmdId1" value="${h5coupon.h5CouponRcmdPrdList[0].rcmdPrdId}" class="col-sm-5">
+						</div>
+					</div>
+					<div class="space-4"></div>
+					<div class="form-group">
+						<label class="col-sm-3 control-label no-padding-right"
+							for="form-field-1">推荐产品2： </label>
+						<div class="col-sm-1">
+							<select class="form-control" name="prdType2" id="prdType2">
+								<option value="">请选择产品类型</option> <#list productList as
+								product>
+								<option value=${product.value} <#if h5coupon.h5CouponRcmdPrdList[1].rcmdPrdType ==
+									product.value>selected</#if>>${product.showName}</option> </#list>
+							</select>
+						</div>
+						<div class="col-sm-6">
+							<input type="text" id="rcmdId2" name="rcmdId2" value="${h5coupon.h5CouponRcmdPrdList[1].rcmdPrdId}" class="col-sm-5">
+						</div>
+					</div>
+					<div class="space-4"></div>
+					<div class="form-group">
+						<div class="col-md-offset-4 col-md-8">
+							<button id="submitBtn" class="btn btn-primary btn-round"
+								type="button">
+								<i class="ace-icon fa fa-check bigger-110"></i> 保存配置
+							</button>
+						</div>
+					</div>
+				</form>
+			</div>
+			<!-- /.col -->
+		</div>
+		<!-- /.row -->
+	</div>
+
+	<#include "commonFootJs.html">
+
+	<!-- inline scripts related to this page -->
+	<script src="${webroot}/assets/js/moment.min.js"></script>
+	<script src="${webroot}/assets/js/bootstrap-datetimepicker.min.js"></script>
+	<script src="${webroot}/assets/js/ajaxfileupload.js"></script>
+	<script type="text/javascript">
+		jQuery(function($) {
+			var imgUrl;
+			var imgMsgInfo;
+			$('#imgUpload').on(
+					'click',
+					function() {
+						$.ajaxFileUpload({
+							url : '${adminPath}/activity/h5coupon/imageUpload',
+							type : 'POST',
+							//secureuri: false, //一般设置为false
+							dataType : 'json', //返回值类型，一般设置为json、application/json
+							fileElementId : 'productUpload', // 上传文件的id、name属性名
+							// elementIds: elementIds, //传递参数到服务器
+							success : function(data, status) {
+								$("#productInfoImg img").attr("src", data.url);
+								$("#bannerUrl").val(data.url);
+								imgMsgInfo = data.msgInfo;
+								imgUrl = data.url;
+								if (!isEmpty(imgMsgInfo)) {
+									$("#viewfileImg").focus();
+									$("#productInfoImg img").attr("src",
+											"${h5coupon.bannerUrl}");
+									showMsg(imgMsgInfo);
+								}
+							},
+							error : function(data, status, e) {
+							}
+						});
+					});
+			var optionsStart = {
+				/* format : 'YYYY-MM-DD  HH:mm:ss' */
+				format : 'YYYY-MM-DD  00:00:00'
+			}
+			var optionsEnd = {
+				/* format : 'YYYY-MM-DD  HH:mm:ss' */
+				format : 'YYYY-MM-DD  23:59:59'
+			}
+			$('.startDatetimepicker').datetimepicker(optionsStart).next().on(
+					ace.click_event, function() {
+						$(this).prev().focus();
+					});
+			$('.endDatetimepicker').datetimepicker(optionsEnd).next().on(
+					ace.click_event, function() {
+						$(this).prev().focus();
+					});
+			var editor;
+			var editor_succ;
+			KindEditor.ready(function(K) {
+				editor = K.create('textarea[name="ruleExplainEditor"]', {
+					resizeType : 1,
+					allowPreviewEmoticons : false,
+					allowImageUpload : false,
+					filterMode : true,
+					items : [ 'fontname', 'fontsize', '|', 'forecolor',
+							'hilitecolor', 'bold', 'italic', 'underline',
+							'removeformat', '|', 'justifyleft',
+							'justifycenter', 'justifyright',
+							'insertorderedlist', 'insertunorderedlist'
+					/* 'source', '|', 'undo', 'redo', '|', 'preview', 'print', 'template', 'code', 'cut', 'copy', 'paste',
+					'plainpaste', 'wordpaste', '|', 'justifyleft', 'justifycenter', 'justifyright',
+					'justifyfull', 'insertorderedlist', 'insertunorderedlist', 'indent', 'outdent', 'subscript',
+					'superscript', 'clearhtml', 'quickformat', 'selectall', '|', 'fullscreen', '/',
+					'formatblock', 'fontname', 'fontsize', '|', 'forecolor', 'hilitecolor', 'bold',
+					'italic', 'underline', 'strikethrough', 'lineheight', 'removeformat', '|', 'image', 'multiimage',
+					'flash', 'media', 'insertfile', 'table', 'hr', 'emoticons', 'baidumap', 'pagebreak',
+					'anchor', 'link', 'unlink', '|', 'about' */
+					]
+				});
+			});
+			var editorOptions = {
+				cssPath : '/css/index.css',
+				filterMode : true
+			};
+
+			$('#submitBtn').on('click', function() {
+				var regex = "[\\d\\w,]+";
+				var id = "${h5coupon.id}";
+				var startDate = $("#startDate").val();
+				var endDate = $("#endDate").val();
+				var brandBusiness = $("#brandBusiness").val();
+				var name = $("#name").val();
+				var couponCodes = $("#couponCodes").val();
+				var bannerUrl = $("#bannerUrl").val();
+				var ruleExplain = editor.html();
+				var rcmdId1 = $("#rcmdId1").val();
+				var rcmdId2 = $("#rcmdId2").val();
+				var prdType1 = $("#prdType1").val();//选中的值
+				var prdType2 = $("#prdType2").val();//选中的值
+				var firstExplain = $("#firstExplain").val();
+				var multyExplain = $("#multyExplain").val();
+				if (isEmpty(name)) {
+					$("#name").focus();
+					showMsg("活动名称不能为空");
+					return;
+				}
+				if (isEmpty(startDate)) {
+					$("startDate").focus();
+					showMsg("上线时间不能为空");
+					return;
+				}
+				if (isEmpty(endDate)) {
+					$("endDate").focus();
+					showMsg("下线时间不能为空");
+					return;
+				}
+				if (isEmpty(brandBusiness)) {
+					$("brandBusiness").focus();
+					showMsg("品牌商不能为空");
+					return;
+				}
+				if (isEmpty(couponCodes)) {
+					$("couponCodes").focus();
+					showMsg("优惠券批次号不能为空");
+					return;
+				}
+				if (isEmpty(bannerUrl)) {
+					$("bannerUrl").focus();
+					showMsg("专题banner图片不能为空");
+					return;
+				}
+				if (isEmpty(ruleExplain)) {
+					showMsg("使用规则文案不能为空");
+					return;
+				}
+				if (startDate > endDate) {
+					$("#startDate").focus();
+					showMsg("开始时间不能大于结束时间");
+					return;
+				}
+				if (couponCodes != couponCodes.match(regex)) {
+					$("#couponCodes").focus();
+					showMsg("优惠券批次号格式不正确");
+					return;
+				}
+				if (firstExplain.length > 10) {
+					$("#firstExplain").focus();
+					showMsg("第一次领取文案字数不能超过10");
+					return;
+				}
+				if (multyExplain.length > 10) {
+					$("#multyExplain").focus();
+					showMsg("多次领取文案字数不能超过10");
+					return;
+				}
+				if (isEmpty(rcmdId1) && isEmpty(rcmdId2) && isEmpty(prdType1) && isEmpty(prdType2)) {
+					
+				}
+				else if (!isEmpty(rcmdId1) && !isEmpty(rcmdId2) && !isEmpty(prdType1) && !isEmpty(prdType2)) {
+					
+				}
+				else {
+					showMsg("推荐产品1和推荐产品2必须同时输入或者同时不输入");
+					return;
+				}
+				$("#ruleExplain").val(ruleExplain);
+
+				$("#couponformForm").submit();
+			});
+		})
+	</script>
+
+</body>
+</html>

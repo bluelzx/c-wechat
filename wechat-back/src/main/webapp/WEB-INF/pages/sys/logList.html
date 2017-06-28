@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+		<meta charset="utf-8" />
+		<title>首页 - 微信后台管理系统</title>
+		<meta name="description" content="overview &amp; stats" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+		<#include "commonHead.html">
+		<link rel="stylesheet" href="${webroot}/assets/css/bootstrap-datetimepicker.min.css" />
+	</head>
+
+	<body class="no-skin" style="background-color: #FFF;">
+		<div class="page-content">
+			<div class="page-header">
+				<h1>
+					日志查询
+					<small>
+						<i class="ace-icon fa fa-angle-double-right"></i>
+						日志列表
+					</small>
+				</h1>
+			</div>
+			<div class="row">
+				<div class="col-xs-12">
+					<!-- PAGE CONTENT BEGINS -->
+					<div class="row">
+						<div class="col-xs-12">
+							<div class="widget-box" style="margin-bottom: 0px; border-bottom: 0px;">
+								<div class="widget-header widget-header-small">
+									<h5 class="widget-title lighter">筛选条件</h5>
+								</div>
+								<div class="widget-body" style="background-color: #EFF3F8;">
+									<div class="widget-main">
+										<form class="form-inline" id="searchForm" method="post" action="${adminPath}/log/list">
+											<div class="form-group">
+										    	<label for="exampleInputName2">用户名</label>
+										    	<input type="text" class="form-control" name="operator" value="${condition.operator!}" placeholder="查询用户名">
+										  	</div>
+										  	<div class="form-group">
+										    	<label for="exampleInputName2">请求地址</label>
+										    	<input type="text" class="form-control" name="requestUri" value="${condition.requestUri!}" placeholder="请求地址">
+										  	</div>
+										  	<div class="form-group">
+										    	<label for="exampleInputName2">开始时间</label>
+										    	<input type="text" class="form-control datetimepicker" name="beginDate" value="${condition.beginDate!}" placeholder="查询开始时间">
+										  	</div>
+										  	<div class="form-group">
+										    	<label for="exampleInputName2">结束时间</label>
+										    	<input type="text" class="form-control datetimepicker" name="endDate" value="${condition.endDate!}" placeholder="查询结束时间">
+										  	</div>
+										  	<button type="submit" class="btn btn-purple btn-sm">
+												<span class="ace-icon fa fa-search icon-on-right bigger-110"></span>
+												Search
+											</button>
+										</form>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-xs-12">
+							<table id="simple-table" class="table table-striped table-bordered table-hover" style="margin-bottom: 0px;border-bottom: 0px;">
+								<thead>
+									<tr>
+										<th>#</th>
+										<th>用户名</th>
+										<th>IP地址</th>
+										<th>请求地址</th>
+										<th>请求参数</th>
+										<th>创建时间</th>
+									</tr>
+								</thead>
+
+								<tbody>
+								<#if logs?? && logs?size&gt;0>
+									<#list logs as log>
+										<tr class="">
+											<td>${log_index + 1}</td>
+											<td>${log.operator!}</td>
+											<td>${log.remoteAddr!}</td>
+											<td>${log.requestUri!}</td>
+											<#if log.params?? && log.params?length&gt;50>
+											<td title="${log.params!}">${log.params[0..50]!}...</td>
+											<#else>
+											<td>${log.params!}</td>
+											</#if>
+											<td>${log.createDate?string('yyyy-MM-dd HH:mm:ss')}</td>
+										</tr>
+									</#list>
+								<#else>
+									<tr>
+										<td colspan="12">
+											<div class="alert alert-danger" style="margin-bottom: 0px;" role="alert">没有记录!</div>
+										</td>
+									</tr>
+								</#if>
+								</tbody>
+							</table>
+							<#include "paginator.html">
+						</div><!-- /.span -->
+					</div><!-- /.row -->
+				</div><!-- /.col -->
+			</div><!-- /.row -->
+		</div>
+
+		<#include "commonFootJs.html">
+		<script src="${webroot}/assets/js/moment.min.js"></script>
+		<script src="${webroot}/assets/js/bootstrap-datetimepicker.min.js"></script>
+
+		<!-- inline scripts related to this page -->
+		<script type="text/javascript">
+			jQuery(function($) {
+				var options = {
+						format:'YYYY-MM-DD HH:mm:ss'
+				}
+				$('.datetimepicker').datetimepicker(options).next().on(ace.click_event, function(){
+					$(this).prev().focus();
+				});
+			})
+		</script>
+	</body>
+</html>

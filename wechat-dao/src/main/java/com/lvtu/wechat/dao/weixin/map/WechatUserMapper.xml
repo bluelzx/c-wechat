@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="WX_USER" >
+  <resultMap id="BaseResultMap" type="WechatUser" >
+    <id column="id" property="id" jdbcType="VARCHAR" />
+    <result column="subscribe" property="subscribe" jdbcType="VARCHAR" />
+    <result column="openid" property="openid" jdbcType="VARCHAR" />
+    <result column="nickname" property="nickname" jdbcType="VARCHAR" />
+    <result column="sex" property="sex" jdbcType="VARCHAR" />
+    <result column="province" property="province" jdbcType="VARCHAR" />
+    <result column="city" property="city" jdbcType="VARCHAR" />
+    <result column="country" property="country" jdbcType="VARCHAR" />
+    <result column="language" property="language" jdbcType="VARCHAR" />
+    <result column="head_img_url" property="headimgurl" jdbcType="VARCHAR" />
+    <result column="unionid" property="unionid" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, subscribe, openid, nickname, sex, province, city, country, language, head_img_url, 
+    unionid
+  </sql>
+  <select id="selectByOpenid" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from wx_user
+    where openid = #{openid,jdbcType=VARCHAR}
+  </select>
+  <select id="selectByUnionid" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from wx_user
+    where unionid = #{unionid,jdbcType=VARCHAR}
+  </select>
+  <insert id="insertSelective" parameterType="WechatUser" >
+    insert into wx_user
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="subscribe != null" >
+        subscribe,
+      </if>
+      <if test="openid != null" >
+        openid,
+      </if>
+      <if test="nickname != null" >
+        nickname,
+      </if>
+      <if test="sex != null" >
+        sex,
+      </if>
+      <if test="province != null" >
+        province,
+      </if>
+      <if test="city != null" >
+        city,
+      </if>
+      <if test="country != null" >
+        country,
+      </if>
+      <if test="language != null" >
+        language,
+      </if>
+      <if test="headimgurl != null" >
+        head_img_url,
+      </if>
+      <if test="unionid != null" >
+        unionid,
+      </if>
+      <if test="createDate != null">
+      	create_date,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="subscribe != null" >
+        #{subscribe,jdbcType=VARCHAR},
+      </if>
+      <if test="openid != null" >
+        #{openid,jdbcType=VARCHAR},
+      </if>
+      <if test="nickname != null" >
+        #{nickname,jdbcType=VARCHAR},
+      </if>
+      <if test="sex != null" >
+        #{sex,jdbcType=VARCHAR},
+      </if>
+      <if test="province != null" >
+        #{province,jdbcType=VARCHAR},
+      </if>
+      <if test="city != null" >
+        #{city,jdbcType=VARCHAR},
+      </if>
+      <if test="country != null" >
+        #{country,jdbcType=VARCHAR},
+      </if>
+      <if test="language != null" >
+        #{language,jdbcType=VARCHAR},
+      </if>
+      <if test="headimgurl != null" >
+        #{headimgurl,jdbcType=VARCHAR},
+      </if>
+      <if test="unionid != null" >
+        #{unionid,jdbcType=VARCHAR},
+      </if>
+      <if test="createDate != null">
+      	#{createDate}
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="WechatUser" >
+    update wx_user
+    <set >
+      <if test="subscribe != null" >
+        subscribe = #{subscribe,jdbcType=VARCHAR},
+      </if>
+      <if test="openid != null" >
+        openid = #{openid,jdbcType=VARCHAR},
+      </if>
+      <if test="nickname != null" >
+        nickname = #{nickname,jdbcType=VARCHAR},
+      </if>
+      <if test="sex != null" >
+        sex = #{sex,jdbcType=VARCHAR},
+      </if>
+      <if test="province != null" >
+        province = #{province,jdbcType=VARCHAR},
+      </if>
+      <if test="city != null" >
+        city = #{city,jdbcType=VARCHAR},
+      </if>
+      <if test="country != null" >
+        country = #{country,jdbcType=VARCHAR},
+      </if>
+      <if test="language != null" >
+        language = #{language,jdbcType=VARCHAR},
+      </if>
+      <if test="headimgurl != null" >
+        head_img_url = #{headimgurl,jdbcType=VARCHAR},
+      </if>
+      <if test="unionid != null" >
+        unionid = #{unionid,jdbcType=VARCHAR},
+      </if>
+      <if test="updateDate != null" >
+        update_date = #{updateDate},
+      </if>
+    </set>
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  
+  <select id="getWechatUserList" parameterType="java.lang.String" resultMap="BaseResultMap">
+  	select id, openid, subscribe, unionid
+  	from wx_user
+  	where IFNULL(is_sync, 0) = 0
+  	limit 0,${_parameter}
+  </select>
+  
+  <update id="batchUpdateIsSync" parameterType="java.lang.String">
+  	update wx_user set is_sync = '1' where id in (${_parameter})
+  </update>
+  
+</mapper>

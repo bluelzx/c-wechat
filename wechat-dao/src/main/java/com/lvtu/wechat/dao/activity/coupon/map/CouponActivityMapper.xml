@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="COUPON_ACTIVITY" >
+	<update id="update">
+		UPDATE coupon_act
+		<set>
+			<if test="name != null and name != ''">
+				name = #{name},
+			</if>
+			<if test="inviteCode != null and inviteCode != ''">
+				invite_code = #{inviteCode},
+			</if>
+			<if test="giftType != null and giftType != ''">
+				gift_type = #{giftType},
+			</if>
+				share_template_id = #{shareTemplateId},
+			<if test="couponName != null and couponName != ''">
+				coupon_name = #{couponName},
+			</if>
+			<if test="startDate != null and startDate != ''">
+				start_date = #{startDate},
+			</if>
+			<if test="endDate != null and endDate != ''">
+				end_date = #{endDate},
+			</if>
+			<if test="totalNum != null and totalNum != '' ">
+				total_num = #{totalNum},
+			</if>
+			<if test="usableNum != null and usableNum != ''">
+				usable_num = #{usableNum},
+			</if>
+			<if test="subTitle != null and subTitle != ''">
+				sub_title = #{subTitle},
+			</if>
+			<if test="tips != null and tips != ''">
+				tips = #{tips},
+			</if>
+			<if test="succSubTitle != null and succSubTitle != ''">
+				succ_sub_title = #{succSubTitle},
+			</if>
+			<if test="instructions != null and instructions != ''">
+				instructions = #{instructions},
+			</if>
+			<if test="imgUrl != null and imgUrl != ''">
+				img_url = #{imgUrl}
+			</if>
+		</set>
+		WHERE id = #{id}
+	</update>
+
+	<insert id="insert">
+		INSERT INTO coupon_act(
+			id, 
+			name, 
+			invite_code, 
+			gift_type, 
+			share_template_id,
+			coupon_name, 
+			start_date, 
+			end_date,
+			total_num, 
+			usable_num, 
+			create_date,
+			sub_title, 
+			tips, 
+			succ_sub_title, 
+			instructions, 
+			img_url
+		) VALUES (
+			#{id}, 
+			#{name}, 
+			#{inviteCode}, 
+			#{giftType}, 
+			#{shareTemplateId},
+			#{couponName}, 
+			#{startDate}, 
+			#{endDate},
+			#{totalNum},
+			#{usableNum},
+			#{createDate},
+			#{subTitle}, 
+			#{tips}, 
+			#{succSubTitle}, 
+			#{instructions}, 
+			#{imgUrl}
+		)
+	</insert>
+	
+ 	<select id="queryCouponActivityList" resultType="CouponActivity">
+		SELECT 
+			a.id, a.name, a.invite_code, a.start_date, a.end_date, a.state, a.gift_type, a.share_template_id, 
+			a.coupon_name, a.url, a.total_num, a.usable_num, a.create_date, a.sub_title, a.tips, a.succ_sub_title,
+			a.instructions, a.img_url, a.page_views,
+			(select count(*) from coupon where coupon.coupon_act_id=a.id and coupon.state='1') used_Num,
+			(select count(*) from coupon_record where coupon_act_id=a.id and is_new='0') new_user,
+			(select count(*) from coupon_record where coupon_act_id=a.id and is_new='1') old_user
+		FROM coupon_act a
+		WHERE 1 = 1
+		<if test="name != null and name != ''">
+			<![CDATA[AND a.name like CONCAT('%', #{name}, '%')]]> 
+		</if>
+		<if test="inviteCode != null and inviteCode != ''">
+			AND a.invite_code = #{inviteCode}
+		</if>
+		<if test="beginDate != null and beginDate != ''">
+			<![CDATA[AND a.start_date >= #{beginDate}]]>
+		</if>
+		<if test="endDate != null and endDate != ''">
+			<![CDATA[AND a.end_date <= #{endDate}]]>
+		</if>
+		<if test="status != null and status != '' and status !=-1">
+			AND a.state = #{status}
+		</if>
+		ORDER BY a.create_date DESC 
+	</select>
+	
+	<select id="queryCouponActivity" resultType="CouponActivity">
+		SELECT 
+			a.id, a.name, a.invite_code, a.start_date, a.end_date, a.state, a.gift_type, a.share_template_id, 
+			a.coupon_name, a.url, a.total_num, a.usable_num, a.create_date, a.sub_title, a.tips, a.succ_sub_title,
+			a.instructions, a.img_url, a.page_views
+		FROM coupon_act a
+		WHERE a.id = #{couponActId}
+	</select>
+	
+	<!-- 更新状态是否开启 -->
+	<update id="updateState">
+		UPDATE coupon_act SET 
+			state = #{state}
+		WHERE id = #{id}
+	</update>
+	
+	<!-- 页面浏览量+1 -->
+	<update id="addPageView">
+		UPDATE coupon_act SET page_views = IFNULL(page_views, 0) + 1
+		WHERE id = #{couponActId}
+	</update>
+</mapper>

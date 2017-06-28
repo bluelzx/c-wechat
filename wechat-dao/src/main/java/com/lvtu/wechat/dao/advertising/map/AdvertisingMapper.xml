@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="ADVERTISING" >
+	<update id="update">
+		UPDATE advertising
+		<set>
+			<if test="primaryClassification != null and primaryClassification != ''">
+				primary_classification = #{primaryClassification},
+			</if>
+			<if test="secondaryClassification != null and secondaryClassification != ''">
+				secondary_classification = #{secondaryClassification},
+			</if>
+			<!-- <if test="actId != null and actId != ''"> -->
+				act_id = #{actId},
+			<!-- </if> -->
+			<if test="skipURL != null and skipURL != ''">
+				skip_url = #{skipURL},
+			</if>
+			<if test="imgURL != null and imgURL != ''">
+				img_url = #{imgURL},
+			</if>
+			<if test="sort != null and sort != ''">
+				sort = #{sort} 
+			</if>
+		</set>
+		WHERE id = #{id}
+	</update>
+
+
+	<insert id="insert">
+		INSERT INTO advertising(
+			id, 
+			primary_classification, 
+			secondary_classification, 
+			act_id,
+			skip_url, 
+			img_url,
+			sort
+		) VALUES (
+			#{id}, 
+			#{primaryClassification}, 
+			#{secondaryClassification}, 
+			#{actId}, 
+			#{skipURL}, 
+			#{imgURL},
+			#{sort}
+		)
+	</insert>
+
+
+
+	<select id="queryAdvertisingList" resultType="Advertising">
+		SELECT a.id, a.primary_classification, a.secondary_classification, a.act_id, a.skip_url, a.img_url, a.sort
+		FROM advertising a
+		WHERE 1 = 1
+		<if test="primaryClassification != null and primaryClassification != ''">
+			AND a.primary_classification =#{primaryClassification} 
+		</if>
+		<if test="secondaryClassification != null and secondaryClassification != ''">
+			AND a.secondary_classification = #{secondaryClassification}
+		</if>
+		<if test="actId != null and actId != ''">
+			AND a.act_id = #{actId}
+		</if>
+		ORDER BY a.sort 
+	</select>
+	
+	<select id="queryAdvertisingById" resultType="Advertising">
+		SELECT a.id, a.primary_classification, a.secondary_classification, a.act_id, a.skip_url, a.img_url, a.sort
+		FROM advertising a
+		WHERE a.id = #{id}
+	</select>
+	
+	
+	<delete id="deleteAdvertising" parameterType="java.lang.String">
+        delete from advertising where id=#{id}
+    </delete>
+</mapper>

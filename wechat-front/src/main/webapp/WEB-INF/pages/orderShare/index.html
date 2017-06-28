@@ -1,0 +1,190 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>送你驴妈妈专享红包~跟着驴妈妈出游，一秒变壕；</title>
+    <meta name="Keywords" content="驴妈妈无线,景区门票,旅游度假"/>
+    <meta name="Description" content="驴妈妈无线官网:支持手机快捷预订景区门票,自助游线路,全国酒店,豪华邮轮等各种旅游产品.(中国最领先的在线旅游预订服务商!)"/>
+    <meta content="initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width" name="viewport">
+    <meta id="share" share-linkurl="//m.lvmama.com/activity/?s=L1511/weixinhongbao" name="share" share-title="送你驴妈妈专享红包~跟着驴妈妈出游，一秒变壕；" share-content="天上是会掉馅饼滴，拼人品的机会到了！海量红包等你拿！" share-imageurl="//pics.lvjs.com.cn/mobile/zt/3.0.0/1511/weixinhongbao/share.jpg">
+    <meta http-equiv="pragma" content="no-cache">
+    <meta http-equiv="Cache-Control" content="max-age=7200" />
+    <meta http-equiv="expires" content="0">
+    <link rel="alternate" type="application/vnd.wap.xhtml+xml" media="handheld" href="target"/>
+    <link rel="apple-touch-icon" href="//pics.lvjs.com.cn/img/mobile/touch/img/lvmama_v1_png.png"/>
+    <link rel="apple-touch-icon" sizes="72x72" href="//pics.lvjs.com.cn/img/mobile/touch/img/lvmama_v1_png.png"/>
+    <link rel="apple-touch-icon" sizes="114x114" href="//pics.lvjs.com.cn/img/mobile/touch/img/lvmama_v1_png.png"/>
+    <link rel="apple-touch-icon" sizes="144x144" href="//pics.lvjs.com.cn/img/mobile/touch/img/lvmama_v1_png.png"/>
+    <link rel="stylesheet" href="//pics.lvjs.com.cn/mobile/zt/public/css/base/global.css">   
+    <link rel="stylesheet" href="//pics.lvjs.com.cn/mobile/zt/weixin/1604/weixinhongbao/css/style.css?v=20161228">
+    <link rel="stylesheet" href="${webroot}/assets/css/style.css">
+    <script type="text/javascript" src="//pics.lvjs.com.cn/js/new_v/jquery-1.7.2.min.js"></script>
+    <script type="text/javascript" src="//pics.lvjs.com.cn/mobile/zt/public/js/base/global.js"></script>
+    <script type="text/javascript" src="${webroot}/assets/js/jweixin-1.0.0.js"></script>
+    <script type="text/javascript" src="${webroot}/assets/js/WechatApi.js"></script>
+    <script type="text/javascript" src="${webroot}/assets/js/common.js"></script>
+</head>
+<body>
+    <div style="width:0; height:0; overflow: hidden; font-size: 0; position: fixed; left: 0;top: 0;">
+        <img src="//pics.lvjs.com.cn/mobile/zt/weixin/1604/weixinhongbao/share.jpg" alt=""/>
+    </div>
+    <div id="container" class="orderShare">
+        <script type="text/javascript" src="//pics.lvjs.com.cn/mobile/js/code/base/ztheader.js"></script>
+        <div class="content1">
+            <div class="logo"></div>
+            <div class="main">
+                <div class="msg">
+                    <ul class="ul-form">
+                        <li><input class="input1" type="text" id="cellphone" placeholder="请输入手机号码"></li>
+                        <li>
+                            <input class="input2" type="text" id="imgAuthCode" placeholder="请输入图形验证码">
+                            <div class="code"><img id="codeImg" src="/wechat/imgAuthCode" alt="" onclick="changeImgCode()"></div>
+                        </li>
+                        <li>
+                            <input class="input3" id="smsCode" type="text" placeholder="请输入短信验证码">
+                            <button id="sendCode" onclick="sendVerifyCode()">获取验证码</button>
+                        </li>
+                    </ul>
+                    <button class="lingqu">立即领取</button>                  
+                </div>
+                <p>*手机号码未注册将自动创建驴妈妈账号</p>
+            </div>
+        </div>
+        <div class="content2" style="display:none;">
+            
+        </div>
+    </div>
+    <script type="text/javascript">
+        if($(".header").length>0){
+            $("#container").css("padding-top","45px");
+        }else{
+            $("#container").css("padding-top","0px");
+        }
+
+        //rem自适应
+        (function (doc, win) {
+            var docEl = doc.documentElement,
+                resizeEvt = "orientationchange" in window ? "orientationchange" : "resize",
+                recalc = function () {
+                    var clientWidth = docEl.clientWidth;
+                    if(clientWidth>640)
+                        clientWidth = 640;
+                    if (!clientWidth) return;
+                    docEl.style.fontSize = 10 * (clientWidth / 320) + "px";
+                };
+            if (!doc.addEventListener) return;
+            win.addEventListener(resizeEvt, recalc, false);
+            doc.addEventListener("DOMContentLoaded", recalc, false);
+        })(document, window);
+        
+        $(document).ready(function(){
+        	$(".lingqu").click(function(){
+        		if(loading)
+        			return;
+        		
+        		loading = true;//防止重复点击
+        		
+        		var mobileNumber = $("#cellphone").val();
+                var smsCode = $("#smsCode").val();
+                if(isEmpty(mobileNumber)) {
+                	globe.lvToast(false, "请输入手机号码！");
+                	loading = false;
+    			} else if(!validateMobile(mobileNumber)) {
+    				globe.lvToast(false, "手机号码格式错误！");
+    				loading = false;
+    			} else if(isEmpty(smsCode)) {
+    				globe.lvToast(false, "请输入短信验证码！");
+    				loading = false;
+    			} else {
+    				lvLoading("请稍后...");
+    				$.getJSON("/orderShare/getCoupon", {mobile: mobileNumber, smsCode: smsCode}, function(data) {
+	   	                if (data.code=='1') {
+	   	                	skipRandom(window.location.href+"&phoneNum="+mobileNumber);
+	   	                } else {
+	   	                	if(data.msg != "")
+	   	                		globe.lvToast(false, data.msg);
+	   	                	else
+	   	                		globe.lvToast(false, "红包领取失败，请稍后再试！");
+	   	                }
+	   	             	loading = false;
+	   	             	rmLvLoading();
+	   	            });
+    			}
+        	});
+        });
+        
+        var loading = false;//防止重复点击
+     	// 发送验证码倒计时60秒
+		var codeWait = function(num){//倒计时方法 num是要倒计时的秒数
+		    var nowtime = new Date();
+		    var newtime = nowtime;
+		    var count;
+		    nowtime = parseInt(nowtime.getTime()/1000);
+		    var obj = $("#sendCode");
+		    obj.addClass('unused');
+		    obj.html(num+"秒后重发");
+		    var timer = setInterval(function(){
+		        newtime = new Date();
+		        count = num-(parseInt(newtime.getTime()/1000)-nowtime);
+		        obj.html(count+"秒后重发");
+		        if(count<=0){
+		            clearInterval(timer);
+		            obj.removeClass('unused');
+		            obj.html('获取验证码');
+		        }
+		    },1000);
+		}
+        //切换图片验证码
+        var changeImgCode = function() {
+        	$("#codeImg").attr("src", "/wechat/imgAuthCode?random=" + Math.random());
+        }
+        //发送短信验证码
+        var sendVerifyCode = function() {
+        	if(loading || $('#sendCode').hasClass('unused'))
+        		return;
+        	
+        	loading = true;//防止重复点击
+
+            var mobileNumber = $("#cellphone").val();
+            var imgAuthCode = $("#imgAuthCode").val();
+            if(isEmpty(mobileNumber)) {
+            	globe.lvToast(false, "请输入手机号码！");
+            	loading = false;
+			} else if(!validateMobile(mobileNumber)) {
+				globe.lvToast(false, "手机号码格式错误！");
+				loading = false;
+			} else if(isEmpty(imgAuthCode)) {
+				globe.lvToast(false, "请输入图形验证码！");
+				loading = false;
+			} else {
+				$.getJSON("/orderShare/sendSmsCode", {phone: mobileNumber, imgCode: imgAuthCode}, function(data) {
+	                if (data.code=='1') {
+	                    globe.lvToast(true, "验证码已发送");
+	                    codeWait(60);
+	                } else {
+	                	changeImgCode();
+	                	if(data.msg != "")
+	                		globe.lvToast(false, data.msg);
+	                	else
+	                		globe.lvToast(false, "短信验证码发送失败，请稍后再试！");
+	                }
+	                loading = false;
+	            });
+			}
+        }
+    </script>
+    <#if shareInfo??>
+    <script type="text/javascript">
+    $(document).ready(function(){
+        var wxData = {
+            "imgUrl": "${shareInfo.shareImgUrl!}",
+            "link": "${shareInfo.shareUrl!}",
+            "title": "${shareInfo.sharetitle!}",
+            "desc": "${shareInfo.shareContent!}"
+        };
+        WechatApi.share(wxData);
+    });
+    </script>
+    </#if>
+</body>
+</html>

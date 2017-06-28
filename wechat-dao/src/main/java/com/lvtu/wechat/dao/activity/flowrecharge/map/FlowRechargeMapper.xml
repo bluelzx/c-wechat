@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="FLOWRECHARGE">
+    <select id="selectList" resultType="FlowRecharge">
+		select a.id, a.name, a.recharge_flow, a.operator, a.create_date, a.update_date, a.remark 
+		from flow_recharge a
+		<trim prefix="WHERE" prefixOverrides="AND | OR">
+			<if test="id != null and id != ''">
+				<![CDATA[AND a.id = #{id}]]>
+			</if>
+			<if test="name != null and name != ''">
+				<![CDATA[AND a.name like CONCAT('%', #{name}, '%')]]>
+			</if>
+		</trim>
+		GROUP BY a.name
+		ORDER BY a.create_date DESC 
+	</select>
+	
+    
+     <insert id="addfloeRecharge" parameterType="FlowRecharge" >
+	    insert into flow_recharge(
+			          id,
+			          name,
+			          recharge_flow,
+			          operator,
+			          remark,
+			          create_date
+			) VALUES (
+			         #{id}, 
+			         #{name},
+			         #{rechargeFlow},
+			         #{operator},
+			         #{remark},
+			         #{createDate}
+			)
+     </insert>
+</mapper>

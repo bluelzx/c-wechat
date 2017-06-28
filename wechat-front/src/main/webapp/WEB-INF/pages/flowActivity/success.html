@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>${flowActivity.name}</title>
+    <meta name="Keywords" content="驴妈妈无线,景区门票,旅游度假"/>
+    <meta name="Description" content="驴妈妈无线官网:支持手机快捷预订景区门票,自助游线路,全国酒店,豪华邮轮等各种旅游产品.(中国最领先的在线旅游预订服务商!)"/>
+    <meta content="telephone=no,email=no" name="format-detection">
+    <meta content="initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width" name="viewport">
+    <meta id="share" share-linkurl="" name="share" share-title="" share-content="" share-imageurl="">
+    <meta http-equiv="pragma" content="no-cache">
+    <meta http-equiv="Cache-Control" content="max-age=7200" />
+    <meta http-equiv="expires" content="0">
+    <meta http-equiv="Cache-Control" content="no-transform " />
+    <meta http-equiv="Cache-Control" content="no-siteapp" />
+    <link rel="apple-touch-icon" href="//pics.lvjs.com.cn/img/mobile/touch/img/lvmama_v1_png.png"/>
+    <link rel="apple-touch-icon" sizes="72x72" href="//pics.lvjs.com.cn/img/mobile/touch/img/lvmama_v1_png.png"/>
+    <link rel="apple-touch-icon" sizes="114x114" href="//pics.lvjs.com.cn/img/mobile/touch/img/lvmama_v1_png.png"/>
+    <link rel="apple-touch-icon" sizes="144x144" href="//pics.lvjs.com.cn/img/mobile/touch/img/lvmama_v1_png.png"/>
+    <link rel="stylesheet" href="//pics.lvjs.com.cn/mobile/zt/public/css/base/newGlobal.css">
+    <link rel="stylesheet" href="//pics.lvjs.com.cn/mobile/wap/fission-sendFlow/css/style.css">
+    <script type="text/javascript" src="//pics.lvjs.com.cn/mobile/lib/js/jquery-1.7.2.min.js"></script>
+    <script type="text/javascript" src="//res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
+    <script type="text/javascript" src="${webroot}/assets/js/WechatApi.js"></script>
+</head>
+<body>  
+    <div class="success container">
+        <h3>恭喜您领取了</h3>
+        <div class="coupon">
+            <div class="left"><span>${flowGroups.totalFlow}M</span></div>
+            <div class="right"></div>
+        </div>
+        <div class="msg">
+            <p>您已经获得开团奖励<i>${flowGroups.totalFlow-flowGroups.surplusFlow}M</i>流量<br><i>${flowGroups.totalNum-1}</i>个小伙伴领取流量后<br>您还可以再获得一份哦！！</p>
+        </div>
+        <div class="share"><button>分享</button></div>
+        <div class="share_popup">
+            <img src="//pics.lvjs.com.cn/mobile/wap/fission-sendFlow/images/share_pic.png" alt="">
+        </div>
+    </div>
+    <script type="text/javascript" src="//pics.lvjs.com.cn/mobile/lib/js/zepto.min.js"></script>
+    <script type="text/javascript" src="//pics.lvjs.com.cn/mobile/wap/fission-sendFlow/js/index.js"></script>
+    	  <#if shareContent>
+     	<script type="text/javascript"> 
+    	var wxData;
+		wxData = {
+			  imgUrl: "${imageList.url}",
+			  link: "https://weixin.lvmama.com/flowActivity/index/${flowActivity.id}?groupId=${flowGroups.id}",
+			  desc: "${shareContent.shareDesc}",
+			  title: "${shareContent.title}"
+		}
+		if(wxData != undefined) {
+			var success = function(){
+				$.ajax({
+					type:"GET",
+					url:"${webroot}/flowActivity/addForwardNum/${flowActivity.id}",					
+				});
+				window.location.href = "${webroot}/flowActivity/record/${flowGroups.id}?param=my";				
+			}
+		    WechatApi.share(wxData,success);
+		}
+		</script>
+	<#else>
+		<script type="text/javascript"> 
+    	var wxData;
+		wxData = {
+			link: "https://weixin.lvmama.com/flowActivity/index/${flowActivity.id}?groupId=${flowGroups.id}"
+		}
+		if(wxData != undefined) {
+			var success = function(){
+				$.ajax({
+					type:"GET",
+					url:"${webroot}/flowActivity/addForwardNum/${flowActivity.id}",					
+				});	
+				window.location.href = "${webroot}/flowActivity/record/${flowGroups.id}?param=my";				
+			}
+		    WechatApi.share(wxData,success);
+		}
+		</script>
+	</#if>
+</body>
+</html>

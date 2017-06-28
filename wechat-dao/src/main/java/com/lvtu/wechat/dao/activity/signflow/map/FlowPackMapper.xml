@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="T_WX_FLOW_PACK">
+	<resultMap id="BaseResultMap" type="FlowPack">
+		<id column="id" property="id" jdbcType="VARCHAR" />
+		<result column="flow_code" property="flowCode" jdbcType="VARCHAR" />
+		<result column="flow" property="flow" jdbcType="INTEGER" />
+		<result column="operator" property="operator" jdbcType="VARCHAR" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		id, flow_code, flow, operator
+	</sql>
+	<select id="selectAll" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from t_wx_flow_pack
+		order by operator,flow
+	</select>
+	<select id="selectByOperator" resultMap="BaseResultMap" parameterType="java.lang.String">
+		select
+		<include refid="Base_Column_List" />
+		from t_wx_flow_pack
+		where operator = #{operator,jdbcType=VARCHAR}
+		order by flow
+	</select>
+	<select id="selectByOpAndCode" resultMap="BaseResultMap" parameterType="java.util.Map">
+		select
+		<include refid="Base_Column_List" />
+		from t_wx_flow_pack
+		where flow_code = #{flowCode,jdbcType=VARCHAR} 
+		and operator = #{operator,jdbcType=VARCHAR}
+	</select>
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+		delete from t_wx_flow_pack 
+		where id = #{id,jdbcType=VARCHAR}
+	</delete>
+	<insert id="insertSelective" parameterType="FlowPack">
+		insert into t_wx_flow_pack
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				id,
+			</if>
+			<if test="flowCode != null">
+				flow_code,
+			</if>
+			<if test="flow != null">
+				flow,
+			</if>
+			<if test="operator != null">
+				operator,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=VARCHAR},
+			</if>
+			<if test="flowCode != null">
+				#{flowCode,jdbcType=VARCHAR},
+			</if>
+			<if test="flow != null">
+				#{flow,jdbcType=INTEGER},
+			</if>
+			<if test="operator != null">
+				#{operator,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
+</mapper>

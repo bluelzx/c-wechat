@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta charset="utf-8" />
+<title>优惠券H5模板 - 微信后台管理系统</title>
+<meta name="description" content="overview &amp; stats" />
+<meta name="viewport"
+	content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+<!-- bootstrap & fontawesome -->
+<#include "commonHead.html">
+<!-- ace settings handler -->
+<script src="${webroot}/assets/js/ace-extra.min.js"></script>
+<script src="${webroot}/assets/js/jquery.2.1.1.min.js"></script>
+        <script src="${webroot}/assets/js/bootstrap.min.js"></script>
+<link rel="stylesheet"
+	href="${webroot}/assets/css/bootstrap-datetimepicker.min.css" />
+</head>
+
+<body class="no-skin" style="background-color: #FFF;">
+	<div class="page-content">
+		<div class="page-header">
+			<h1>
+				活动管理 <small> <i class="ace-icon fa fa-angle-double-right"></i>
+					优惠券H5模板
+				</small>
+			</h1>
+		</div>
+		<div class="tabbable">
+			<ul class="nav nav-tabs" id="myTab">
+				<li class="active"><a data-toggle="tab" href="#manage"
+					aria-expanded="false"> 活动管理 </a></li>
+			</ul>
+
+			<div class="tab-content">
+				<div id="manage" class="tab-pane fade active in">
+					<button type="button"
+						onclick="skip('${adminPath}/activity/h5coupon/new')"
+						class="btn btn-white btn-primary btn-round">添加活动</button>
+					<hr>
+					<div class="row">
+						<div class="col-xs-12">
+							<!-- PAGE CONTENT BEGINS -->
+							<div class="row">
+								<div class="col-xs-12">
+									<div class="widget-box"
+										style="margin-bottom: 0px; border-bottom: 0px;">
+										<div class="widget-body" style="background-color: #EFF3F8;">
+											<div class="widget-main">
+												<form class="form-inline" id="searchFormManage"
+													method="post" action="${adminPath}/activity/h5coupon">
+													<input type="hidden" name="tab" value="tabManage" />
+													<div class="form-group">
+														<label for="exampleInputName2">活动名称：</label> <input
+															type="text" class="form-control" name="name"
+															value="${conditionManage.name!}" placeholder="活动名称">
+													</div>
+													<div class="form-group">
+														<label for="exampleInputName2">开始时间：</label> <input
+															type="text" class="form-control beginDatetimepicker"
+															name="beginDate" value="${conditionManage.startDate!}"
+															placeholder="活动开始时间">
+													</div>
+													<div class="form-group">
+														<label for="exampleInputName2">结束时间:</label> <input
+															type="text" class="form-control endDatetimepicker"
+															name="endDate" value="${conditionManage.endDate!}"
+															placeholder="活动结束时间">
+													</div>
+													<div class="form-group">
+														<label for="exampleInputName2">状态：</label>
+													</div>
+													<div class="form-group">
+														<select
+															class="form-control" name="state" style="width: 100%">
+															<#list statusList as status>
+															<option value=${status.value} <#if conditionManage.state == status.value> selected</#if> >${status.showName}</option> </#list>
+														</select>
+													</div>
+													<div class="form-group">
+														<button id="tabManage" type="submit"
+															class="btn btn-primary btn-round btn-sm">
+															<span class="ace-icon fa fa-search bigger-110"></span>
+															Search
+														</button>
+													</div>
+												</form>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="row">
+								<div class="col-xs-12">
+									<table id="simple-table"
+										class="table table-striped table-bordered table-hover"
+										style="margin-bottom: 0px; border-bottom: 0px;">
+										<thead>
+											<tr>
+												<th>编号</th>
+												<th>活动名称</th>
+												<th>公众号平台类型</th>
+												<th>品牌商</th>
+												<th>优惠券批次号</th>
+												<th>分享ID</th>
+												<th>活动有效期</th>
+												<th>URL</th>
+												<th>当前状态</th>
+												<th>操作</th>
+											</tr>
+										</thead>
+
+
+										<tbody>
+											<#if H5CouponList?? && H5CouponList?size&gt;0>
+											<#list H5CouponList as h5coupon>
+											<tr class="">
+												<td>${h5coupon_index + 1}</td>
+												<td>${h5coupon.name!}</td>
+												<td><#if '${h5coupon.publicPlatformType!}' == 1>
+														订阅号
+													<#elseif '${h5coupon.publicPlatformType!}' == '2'>
+														服务号
+													<#else>
+														未配置使用公众号平台类型！
+													</#if></td>
+												<td>${h5coupon.brandBusiness!}</td>
+												<td>${h5coupon.couponCodes!}</td>
+												<td>${h5coupon.shareTemplateId!}</td>
+												<td>开始：${h5coupon.startDate?string('yyyy-MM-dd HH:mm:ss')} <br>结束：${h5coupon.endDate?string('yyyy-MM-dd
+													HH:mm:ss')}
+												</td>
+												<td><#if '${h5coupon.publicPlatformType!}' == 1>
+														https://weixin.lvmama.com/h5CouponActivitySubscribe/${h5coupon.id!}
+													<#elseif '${h5coupon.publicPlatformType!}' == '2'>
+														https://weixin.lvmama.com/h5CouponActivityService/${h5coupon.id!}
+													<#else>
+														请配置使用公众号平台类型！
+													</#if></td>
+												<!-- <td>http://weixin.lvmama.com/h5CouponActivitySubscribe/${h5coupon.id!}</td> -->
+												<td><#list statusList as status> <#if h5coupon.state ==
+													status.value>${status.showName}</#if> </#list></td>
+												<td><a class="btn btn-minier btn-primary"
+													href="${adminPath}/activity/h5coupon/edit/${h5coupon.id!}"
+													role="button">编辑</a> <#if h5coupon.state&gt;0> <a
+													class="btn btn-minier btn-primary"
+													href="${adminPath}/activity/h5coupon/changeState/${h5coupon.id!}/${h5coupon.state}"
+													role="button">关闭</a> <#else> <a
+													class="btn btn-minier btn-primary"
+													href="${adminPath}/activity/h5coupon/changeState/${h5coupon.id!}/${h5coupon.state}"
+													role="button">启用</a> </#if></td>
+											</tr>
+											</#list> <#else>
+											<tr>
+												<td colspan="12">
+													<div class="alert alert-danger" style="margin-bottom: 0px;"
+														role="alert">没有记录!</div>
+												</td>
+											</tr>
+											</#if>
+										</tbody>
+									</table>
+									<#include "paginatorManage.html">
+								</div>
+								<!-- /.span -->
+							</div>
+							<!-- /.row -->
+						</div>
+						<!-- /.col -->
+					</div>
+					<!-- /.row -->
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<#include "commonFootJs.html">
+	<!-- inline scripts related to this page -->
+	<script src="${webroot}/assets/js/moment.min.js"></script>
+	<script src="${webroot}/assets/js/bootstrap-datetimepicker.min.js"></script>
+	<script type="text/javascript">
+		jQuery(function($) {
+			var optionsBegin = {
+				/* format : 'YYYY-MM-DD  HH:mm:ss' */
+				format : 'YYYY-MM-DD  00:00:00'
+			}
+			var optionsEnd = {
+				/* format : 'YYYY-MM-DD  HH:mm:ss' */
+				format : 'YYYY-MM-DD  23:59:59'
+			}
+			$('.beginDatetimepicker').datetimepicker(optionsBegin).next().on(
+					ace.click_event, function() {
+						$(this).prev().focus();
+					});
+			$('.endDatetimepicker').datetimepicker(optionsEnd).next().on(
+					ace.click_event, function() {
+						$(this).prev().focus();
+					});
+			/* 			
+			var tab="${tab}";
+			if(tab=="tabStatistical"){
+				$('#myTab').children("li").eq(1).addClass("active");
+				$('#statistics').addClass("active in");
+			}else if(tab=="tabManage"){
+				$('#myTab').children("li").eq(0).addClass("active");
+				$('#manage').addClass("active in");
+			} */
+
+			/* var search=window.location.search;
+			var tab=search.indexOf("tabManage");
+			if(search.indexOf("tabManage")>0){
+				$('#myTab').children("li").eq(0).addClass("active");
+				$('#manage').addClass("active in");
+			}else if(search.indexOf("tabStatistical")>0){
+				$('#myTab').children("li").eq(1).addClass("active");
+				$('#statistics').addClass("active in");
+			}else{
+				$('#myTab').children("li").eq(0).addClass("active");
+				$('#manage').addClass("active in");
+			} */
+			/* var tab=search.substr(search.indexOf("=")+1,search.length); 
+			if(tab=="" || tab=="tabManage"){
+				$('#myTab').children("li").eq(0).addClass("active");
+				$('#manage').addClass("active in");
+			}else if(tab=="tabStatistical"){
+				$('#myTab').children("li").eq(1).addClass("active");
+				$('#statistics').addClass("active in");
+			}*/
+		})
+	</script>
+</body>
+</html>

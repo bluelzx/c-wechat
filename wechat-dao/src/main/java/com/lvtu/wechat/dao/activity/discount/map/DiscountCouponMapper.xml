@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="DISCOUNT_COUPON" >
+	<select id="queryDiscountCouponList" resultType="DiscountCoupon">
+	SELECT a.*, COUNT(b.id) total FROM discount_coupon  a 
+       LEFT JOIN discount_get b  ON  a.id = b.discount_coupon_id 
+	   where 1 = 1
+		   <if test="id != null and id != ''">
+				AND a.id = #{id}
+			</if>
+			<if test="name != null and name != ''">
+				<![CDATA[AND a.name like CONCAT('%', #{name}, '%')]]> 
+			</if>
+		   <if test="startDate != null and startDate != ''">
+				<![CDATA[AND b.create_date >= #{startDate}]]>
+		   </if>
+		   <if test="endDate != null and endDate != ''">
+				<![CDATA[AND b.create_date <= #{endDate}]]>
+		   </if>
+	    GROUP BY a.id 
+	</select> 
+
+	
+	<select id="isAquiredDiscount" resultType="String">
+		SELECT  a.coupon_codes FROM discount_coupon  a  LEFT JOIN discount_get b  ON  a.id = b.discount_coupon_id 
+			WHERE b.lvmama_user_no = #{lvmamaUserno}
+	</select>
+	
+
+	<select id="queryDiscountCoupon" resultType="DiscountCoupon">
+		SELECT 
+			a.*
+		FROM discount_coupon a
+		WHERE 1 = 1
+		<if test="id != null and id != ''">
+			AND a.id = #{id}
+		</if>
+		<if test="name != null and name != ''">
+			AND a.name = #{name}
+		</if>
+		<if test="couponCodes != null and couponCodes != ''">
+			AND a.coupon_codes = #{couponCodes}
+		</if>
+		<if test="paymentAmount != null and paymentAmount != ''">
+			AND a.payment_amount = #{paymentAmount}
+		</if>
+	</select>
+	
+	
+	
+	<insert id="insertDiscountGet"  parameterType="DiscountGet">
+				insert into discount_get
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				id,
+			</if>
+			<if test="openid != null">
+				openid,
+			</if>
+			<if test="lvmamaUserno != null">
+				lvmama_user_no,
+			</if>
+			<if test="discountActivityid != null">
+				discount_activity_id,
+			</if>
+			<if test="discountCouponid != null">
+				discount_coupon_id,
+			</if>
+			<if test="discountCouponcode != null">
+				discount_coupon_code,
+			</if>
+			<if test="createDate != null">
+				create_date
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=VARCHAR},
+			</if>
+			<if test="openid != null">
+				#{openid,jdbcType=VARCHAR},
+			</if>
+			<if test="lvmamaUserno != null">
+				#{lvmamaUserno,jdbcType=VARCHAR},
+			</if>
+			<if test="discountActivityid != null">
+				#{discountActivityid,jdbcType=VARCHAR},
+			</if>
+			<if test="discountCouponid != null">
+				#{discountCouponid,jdbcType=VARCHAR},
+			</if>
+			<if test="discountCouponcode != null">
+				#{discountCouponcode,jdbcType=VARCHAR},
+			</if>
+			<if test="createDate != null">
+				#{createDate,jdbcType=TIMESTAMP}
+			</if>
+		</trim>
+	</insert>
+	
+	
+	<select id="queryDiscountCouponCodes" resultType="String">
+		SELECT coupon_codes from discount_coupon
+	</select>
+	
+	<!-- 优惠券发放量+1 -->
+	<update id="updateDiscountPaymentAmount">
+		UPDATE discount_coupon SET payment_amount = IFNULL(payment_amount, 0) + 1
+		WHERE id = #{discountCouponid}
+	</update>
+</mapper>

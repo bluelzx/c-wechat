@@ -1,0 +1,307 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="GROUP_MEMBERS">
+	<select id="queryExportGroupMembersByGroupId" resultType="ExportGroupMembers">
+		SELECT
+		wx.nickname,gm.`name`,gm.telephone,gm.age,gm.constellation,
+		gm.province,gm.city,gm.is_leader,
+		gm.group_id,g.state,
+		g.participants_num,g.start_time,g.complete_time
+		FROM group_members gm 
+		LEFT JOIN groups g ON gm.group_id = g.id 
+		LEFT JOIN wx_user wx ON gm.wx_user_id = wx.id
+        WHERE 1 = 1
+		<if test="groupActId != null and groupActId != ''">
+			AND g.group_activity_id = #{groupActId}
+		</if>
+		<if test="nickname != null and nickname != ''">
+			<![CDATA[AND wx.nickname like CONCAT('%', #{nickname}, '%')]]> 
+		</if>
+		<if test="name != null and name != '' ">
+			AND gm.name = #{name}
+		</if>
+		<if test="telephone != null and telephone != '' ">
+			AND gm.telephone = #{telephone}
+		</if>
+		<if test="groupId != null and groupId != '' ">
+			AND gm.group_id = #{groupId}
+		</if>
+		<if test="groupState != null and groupState != '' and groupState !=-1 ">
+			AND g.state = #{groupState}
+		</if>
+		<if test="sort == 1">
+			ORDER BY g.complete_time DESC 
+		</if>
+		<if test="sort == '' or sort == null or sort==0 or sort ==-1">
+			ORDER BY g.start_time DESC
+		</if>
+	</select>
+
+
+	<select id="queryGroupMembersByGroupId" resultType="GroupMembers">
+		SELECT
+		gm.id, gm.name, gm.telephone, gm.is_leader, gm.group_id, g.group_activity_id, g.state, g.participants_num, g.start_time, g.complete_time, wx.nickname
+		FROM group_members gm 
+		LEFT JOIN groups g ON gm.group_id = g.id 
+		LEFT JOIN wx_user wx ON gm.wx_user_id = wx.id
+		WHERE 1 = 1
+		<if test="groupActId != null and groupActId != ''">
+			AND g.group_activity_id = #{groupActId}
+		</if>
+		<if test="nickname != null and nickname != ''">
+			<![CDATA[AND wx.nickname like CONCAT('%', #{nickname}, '%')]]> 
+		</if>
+		<if test="name != null and name != '' ">
+			AND gm.name = #{name}
+		</if>
+		<if test="telephone != null and telephone != '' ">
+			AND gm.telephone = #{telephone}
+		</if>
+		<if test="groupId != null and groupId != '' ">
+			AND gm.group_id = #{groupId}
+		</if>
+		<if test="groupState != null and groupState != '' and groupState !=-1 ">
+			AND g.state = #{groupState}
+		</if>
+		<if test="sort == 1">
+			ORDER BY g.complete_time DESC 
+		</if>
+		<if test="sort == '' or sort == null or sort==0 or sort ==-1">
+			ORDER BY g.start_time DESC
+		</if>
+	</select>
+
+
+
+	<select id="queryMemberInfoById" resultType="GroupMembers">
+		SELECT gm.id, gm.name, gm.telephone, gm.is_leader, gm.group_id, g.group_activity_id, g.state, g.participants_num, g.start_time, g.complete_time, wx.nickname
+		FROM group_members gm 
+		LEFT JOIN groups g ON gm.group_id = g.id 
+		LEFT JOIN wx_user wx ON gm.wx_user_id = wx.id
+		WHERE gm.id = #{groupMemberId}
+	</select>
+
+
+
+
+	<update id="updateGroupMembers">
+		UPDATE group_members
+		<set>
+			<if test="name != null and name != ''">
+				name = #{name},
+			</if>
+			<if test="telephone != null and telephone != ''">
+				telephone = #{telephone},
+			</if>
+			<if test="age != null and age != ''">
+				age = #{age},
+			</if>
+			<if test="constellation != null and constellation != ''">
+				constellation = #{constellation},
+			</if>
+			<if test="province != null and province != ''">
+				province = #{province},
+			</if>
+			<if test="city != null and city != ''">
+				city = #{city},
+			</if>
+			<if test="isSend != null and isSend  != ''">
+				is_send = #{isSend },
+			</if>
+			<if test="back != null and back  != ''">
+				back = #{back },
+			</if>
+		</set>
+		WHERE id = #{id}
+	</update>
+
+
+	<select id="queryGroupMemberList" resultType="GroupMembers"> 
+		select A.id, A.group_id, A.is_leader, A.create_date,A.wx_user_id, B.nickName, B.head_img_url, B.openid, IFNULL(A.is_send, 0) is_send 
+		from group_members A
+		LEFT JOIN groups AS C ON C.id = A.group_id
+		LEFT JOIN wx_user AS B ON B.id = A.wx_user_id
+		where C.group_activity_id = #{groupActivityId}
+		<if test="wxUserId != null and wxUserId != ''">
+				and A.group_id = (SELECT MAX(gm.group_id) FROM group_members gm, groups g
+				WHERE gm.wx_user_id = #{wxUserId} AND gm.group_id = g.id AND g.group_activity_id = #{groupActivityId})
+		</if>
+		<if test="groupId != null and groupId != ''">
+				and C.id = #{groupId}	
+		</if>
+		order by A.create_date
+	</select>
+
+
+	<insert id="insert" parameterType="GroupMembers">
+		insert into group_members
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				id,
+			</if>
+			<if test="groupId != null">
+				group_id,
+			</if>
+			<if test="wxUserId != null">
+				wx_user_id,
+			</if>
+			<if test="isLeader != null">
+				is_leader,
+			</if>
+			<if test="createDate != null">
+				create_date,
+			</if>
+			<if test="name != null">
+				name,
+			</if>
+			<if test="telephone != null">
+				telephone,
+			</if>
+			<if test="age != null">
+				age,
+			</if>
+			<if test="constellation != null">
+				constellation,
+			</if>
+			<if test="province != null">
+				province,
+			</if>
+			<if test="city != null">
+				city,
+			</if>
+			<if test="back != null">
+				back,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id},
+			</if>
+			<if test="groupId != null">
+				#{groupId},
+			</if>
+			<if test="wxUserId != null">
+				#{wxUserId},
+			</if>
+			<if test="isLeader != null">
+				#{isLeader},
+			</if>
+			<if test="createDate != null">
+				#{createDate},
+			</if>
+			<if test="name != null">
+				#{name},
+			</if>
+			<if test="telephone != null">
+				#{telephone},
+			</if>
+			<if test="age != null">
+				#{age},
+			</if>
+			<if test="constellation != null">
+				#{constellation},
+			</if>
+			<if test="province != null">
+				#{province},
+			</if>
+			<if test="city != null">
+				#{city},
+			</if>
+			<if test="back != null">
+				#{back},
+			</if>
+		</trim>
+	</insert>
+	
+	
+	<insert id="inserGroupMemberHis" parameterType="GroupMembers">
+		insert into group_members_history
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				id,
+			</if>
+			<if test="groupId != null">
+				group_id,
+			</if>
+			<if test="wxUserId != null">
+				wx_user_id,
+			</if>
+			<if test="isLeader != null">
+				is_leader,
+			</if>
+			<if test="createDate != null">
+				create_date,
+			</if>
+			<if test="name != null">
+				name,
+			</if>
+			<if test="telephone != null">
+				telephone,
+			</if>
+			<if test="age != null">
+				age,
+			</if>
+			<if test="constellation != null">
+				constellation,
+			</if>
+			<if test="province != null">
+				province,
+			</if>
+			<if test="city != null">
+				city,
+			</if>
+			<if test="deleteDate != null">
+				delete_date,
+			</if>
+			<if test="back != null">
+				back,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id},
+			</if>
+			<if test="groupId != null">
+				#{groupId},
+			</if>
+			<if test="wxUserId != null">
+				#{wxUserId},
+			</if>
+			<if test="isLeader != null">
+				#{isLeader},
+			</if>
+			<if test="createDate != null">
+				#{createDate},
+			</if>
+			<if test="name != null">
+				#{name},
+			</if>
+			<if test="telephone != null">
+				#{telephone},
+			</if>
+			<if test="age != null">
+				#{age},
+			</if>
+			<if test="constellation != null">
+				#{constellation},
+			</if>
+			<if test="province != null">
+				#{province},
+			</if>
+			<if test="city != null">
+				#{city},
+			</if>
+			<if test="deleteDate != null">
+				#{deleteDate},
+			</if>
+			<if test="back != null">
+				#{back},
+			</if>
+		</trim>
+	</insert>
+	
+    <delete id="deleteGroupMember">
+		 DELETE FROM group_members
+		 WHERE id = #{groupMemberId}
+	</delete>
+</mapper>

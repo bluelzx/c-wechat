@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+		<meta charset="utf-8" />
+		<title>菜单管理 - 菜单编辑</title>
+		<meta name="description" content="overview &amp; stats" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+		<#include "commonHead.html">
+	</head>
+
+	<body class="no-skin" style="background-color: #FFF;">
+		<div class="page-content">
+			<div class="page-header">
+				<h1>
+					菜单管理
+					<small>
+						<i class="ace-icon fa fa-angle-double-right"></i>
+						<#if menu?? && menu.id??>
+						编辑菜单
+						<#else>
+						新增菜单
+						</#if>
+					</small>
+				</h1>
+			</div>
+			<div class="row">
+				<div class="col-xs-12">
+					<form id="platformForm" class="form-horizontal" role="form" action="${adminPath}/menu/save" method="POST">						
+						<div class="form-group">
+							<label class="col-sm-3 control-label no-padding-right" for="form-field-1"> ID </label>
+							<div class="col-sm-9">
+								<input type="text" id="id" name="id" placeholder="id" value="${menu.id!}" class="col-xs-10 col-sm-5">
+							</div>
+						</div>
+						<div class="space-4"></div>
+						<div class="form-group">
+							<label class="col-sm-3 control-label no-padding-right" for="form-field-1"> 父菜单ID </label>
+							<div class="col-sm-9">
+								<input type="text" id="parentId" name="parentId" placeholder="父菜单ID" value="${menu.parentId!}" class="col-xs-10 col-sm-5">
+							</div>
+						</div>
+						<div class="space-4"></div>
+						<div class="form-group">
+							<label class="col-sm-3 control-label no-padding-right" for="form-field-1"> 名称 </label>
+							<div class="col-sm-9">
+								<input type="text" id="name" name="name" value="${menu.name}" placeholder="名称" class="col-xs-10 col-sm-5">
+							</div>
+						</div>
+						<div class="space-4"></div>
+						<div class="form-group">
+							<label class="col-sm-3 control-label no-padding-right" for="form-field-1"> 排序 </label>
+							<div class="col-sm-9">
+								<input type="text" id="sort" name="sort" value="${menu.sort}" placeholder="排序" class="col-xs-10 col-sm-5">
+							</div>
+						</div>
+						<div class="space-4"></div>
+						<div class="form-group">
+							<label class="col-sm-3 control-label no-padding-right" for="form-field-1"> 链接 </label>
+							<div class="col-sm-9">
+								<input type="text" id="href" name="href" placeholder="链接" value="${menu.href!}" class="col-xs-10 col-sm-5">
+							</div>
+						</div>
+						<div class="space-4"></div>
+						<div class="form-group">
+							<label class="col-sm-3 control-label no-padding-right" for="form-field-1">图标</label>
+							<div class="col-sm-9">
+								<input type="text" id="icon" name="icon" placeholder="图标" value="${menu.icon!}" class="col-xs-10 col-sm-5">
+							</div>
+						</div>
+						<div class="space-4"></div>
+						<div class="form-group">
+							<label class="col-sm-3 control-label no-padding-right" for="form-field-1">权限标识</label>
+							<div class="col-sm-9">
+								<input type="text" id="permission" name="permission" placeholder="权限标识" value="${menu.permission!}" class="col-xs-10 col-sm-5">
+							</div>
+						</div>
+						<div class="space-4"></div>
+						<div class="form-group">
+							<label class="col-sm-3 control-label no-padding-right" for="form-field-1">是否显示</label>
+							<div class="col-sm-9">
+								<input type="text" id="isShow" name="isShow" placeholder="是否显示" value="${menu.isShow!}" class="col-xs-10 col-sm-5">
+							</div>
+						</div>
+						
+						<div class="space-4"></div>
+						<div class="form-group">
+							<label class="col-sm-3 control-label no-padding-right" for="form-field-1"> 备注 </label>
+							<div class="col-sm-9">
+								<input type="text" id="remarks" name="remarks" value="${menu.remarks!}" class="col-xs-10 col-sm-5">
+							</div>
+						</div>
+						<div class="space-4"></div>
+						<div class="form-group">
+							<label class="col-sm-3 control-label no-padding-right" for="form-field-1"> 是否启用 </label>
+							<div class="col-sm-9">
+								<label style="margin-top:7px;">
+									<input id="delFlag" name="delFlag" class="ace ace-switch ace-switch-2" type="checkbox" <#if menu?? && menu.delFlag>checked="checked"</#if> >
+									<span class="lbl"></span>
+								</label>
+							</div>
+						</div>
+
+						<div class="clearfix form-actions">
+							<div class="col-md-offset-4 col-md-8">
+								<button id="submitBtn" class="btn btn-info" type="button">
+									<i class="ace-icon fa fa-check bigger-110"></i>
+									保存
+								</button>
+							</div>
+						</div>
+					</form>
+				</div><!-- /.col -->
+			</div><!-- /.row -->
+		</div>
+
+		<#include "commonFootJs.html">
+
+		<!-- inline scripts related to this page -->
+		<script type="text/javascript">
+			jQuery(function($) {
+				$('#submitBtn').on('click', function(){					
+						$("#platformForm").submit();
+					
+				});
+			})
+		</script>
+	</body>
+</html>

@@ -1,0 +1,385 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<#assign mjHostName = reauestHostName!/>
+<title>驴妈妈账号绑定微信</title>
+<#include "common/define_v5.html">
+<link rel="stylesheet" href="//pics.lvjs.com.cn/mobile/css/min/file/login.css?version=20150331">
+<script src="//static.geetest.com/static/tools/gt.js"></script>
+<script src="${webroot}/assets/js/Base64.js"></script>
+<script type="text/javascript" src="${webroot}/assets/js/common.js"></script>
+<script src="${webroot}/assets/js/login.js?_version=20141028"></script>
+<script>
+$(function(){
+	/*input 框变色*/
+	$("input.lv-input-01").focus(function(e) {
+		$(this).addClass("lv-input01-focus");
+	});
+	$("input.lv-input-01").blur(function(e) {
+		$(this).removeClass("lv-input01-focus");
+	});	
+	
+});
+</script>
+</head>
+
+<body>
+<!-- 页面开始 -->
+<script type="text/javascript" src="//pics.lvjs.com.cn/mobile/js/min/base/header.js"></script>
+<div style="padding: 0 10px 15px 10px;color: #000;">
+	<p style="font-size: 16px;line-height: 42px;text-align: center;">亲爱的粉丝</p>
+	<p style="line-height: 14px;">绑定驴妈妈账号，方便您查询订单和账户。绑定可领取380元旅游红包、手机流量等福利大礼哦~</p>
+</div>
+<div id="wrapper">
+	<div id="content" class="login">
+	   <nav id="show_or_hide">
+            <ul>
+                <li>会员绑定</li>
+                <li>手机验证绑定</li>
+            </ul>
+        </nav>
+        <div class="tabChange">
+			<form method="GET" action="/find_passworld.htm" id="findPassworldForm">
+				<input type="hidden" value="${service!}" name="service" id="redirect_url">
+				<input type="hidden" value="${activityChannel!}" name="activityChannel" id="activityChannel">
+				<input type="hidden" value="${callbackUrl!}" name="callbackUrl" id="callbackUrl">
+			</form>
+			<!--匿名下单成功后查看订单详情登陆显示-->
+			<div style="display:none;font-size: 14px; color: rgb(102, 102, 102); border: 1px solid rgb(231, 231, 231); background: none repeat scroll 0% 0% rgb(254, 248, 231); margin: 0px -11px; padding: 4px 0px 7px; text-align: center;" id="nimingOrderDetail">由于你未登录，请先登录后查看订单<br>（账号为<span style=" color:#EC3297">订单联系人的手机号码</span>）</div>
+			<div class="lv-box lv-proinfo-list">
+				<ul>
+					<li>
+						<label for="username" style="width:40px;">账&nbsp;&nbsp;号</label>
+						<input type="text" placeholder="请输入邮箱/手机/用户名" value="${username!}" name="username" id="username" class="lv-text-input">
+					</li>
+					<li>
+						<label for="password" style="width:40px;">密&nbsp;&nbsp;码</label>
+						<input type="password" placeholder="请输入密码" value="${password!}" name="password" id="password" class="lv-text-input">
+					</li>
+										  <li> 
+						<label for="authCode" style="width:50px;">校验码</label> 
+						<input type="text" maxlength="4" placeholder="请输入右侧校验码" value="" name="ptAuthCode" id="ptAuthCode" class="lv-text-input"> 
+						<div class="pic-code"><img src="${imageAuthCodeUrl!}" alt="" id="authCodeChange" onclick="changeImg();"></div> 
+					</li>
+				</ul>
+			</div>
+			<div class="btn_bar">
+				<input type="hidden" id = "openId" value="${openId!}">
+				<input type="hidden" id = "unionid" value="${unionid!}">
+				<input type="hidden" id = "channel" value="${channel!}">
+				<a class="btn_style_1 block" id="accountBind" href="javascript:weixinLogin();">绑定</a>
+				<a class="btn_style_1 block" id="accountBinding" href="javascript:void(0);" style="display: none;background-color: gray;">绑定中...</a>
+				<a href="http://m.lvmama.com/h5/login/forget" class="fr" >忘记密码</a>
+			</div>
+			<div class="mt10">
+				<a href=""></a>
+			</div>
+		</div>
+		
+		<!-- 验证码登录  -->
+		<div class="tabChange">
+            <div class="lv-box lv-proinfo-list">
+                <ul>
+                    <li>
+                        <label for="mobile" style="width:50px;">手机号</label>
+                        <input type="text" placeholder="请输入手机号" value="${mobile!}" name="mobile" id="mobile" class="lv-text-input" maxlength="11">
+                    </li>
+                    <li> 
+						<label for="authCode" style="width:50px;">校验码</label> 
+						<input type="text" maxlength="4" placeholder="请输入右侧校验码" value="" name="authCode" id="authCode" class="lv-text-input"> 
+						<div class="pic-code"><img src="${imageAuthCodeUrl!}" alt="" id="authCodeChange2" onclick="changeImg2();"></div> 
+					</li>
+                    
+                    <li>
+                        <label for="authenticationCode" style="width:50px;">验证码</label>
+                        <input type="text" maxlength="6" placeholder="请输入短信验证码" value="" name="authenticationCode" id="authenticationCode" class="lv-text-input">
+                        <div class="btn" id="login_autocode_id" onclick="login_send_authcode();">获取验证码</div>
+                         <div id="sendCode" class="btn countdown" style="display:none;">60秒后重发</div>
+                    </li>
+                </ul>
+            </div>
+            <div class="btn_bar">
+                <!-- <div class="tips">提示：仅支持免登录下单</div> -->
+                <a class="btn_style_1 block" id="mobileBind" href="javascript:weixinAuthCodelogin('${activityChannel!}');">绑定</a>
+                <a class="btn_style_1 block" id="mobileBinding" href="javascript:void(0);" style="display: none;background-color: gray;">绑定中...</a>
+
+				<a href="http://m.lvmama.com/h5/login/forget" class="fr" id="code_find_pwd">忘记密码</a>
+            </div>
+            
+            
+            
+            <div class="mt10">
+                <a href=""></a>
+            </div>
+        </div>
+		<div id="popup-captcha-login" style="position: absolute;top: 0px;width: 96%;padding: 0 2%;z-index: 1;"></div>
+		
+	</div><!-- /#content -->
+</div><!-- /#wrapper -->
+<script>
+var loading = false;
+var geetestType = "";
+function weixinLogin () {
+	if(loading)
+		return;	
+	loading = true;	
+	var u = $("#username").val();
+	if($.trim(u) == ""){
+		lvToast(false,"用户名不能为空！",LT_LOADING_CLOSE);
+		$("#username").focus();
+		loading = false;
+		return ;
+	}
+	var p = $("#password").val();
+	if($.trim(p) == ""){
+		lvToast(false,"密码不能为空！",LT_LOADING_CLOSE);
+		$("#password").focus();
+		loading = false;
+		return ;
+	}
+	if(u.indexOf(" ")>=0 || p.indexOf(" ")>=0){
+		lvToast(false,"用户名/密码错误！",LT_LOADING_CLOSE);
+		$("#username").focus();
+		loading = false;
+		return ;
+	}
+	var ptAuthCode = $("#ptAuthCode").val();
+	if($.trim(ptAuthCode) == ""){
+		lvToast(false,"请输入验证码",LT_LOADING_CLOSE);
+		$("#ptAuthCode").focus();
+		loading = false;
+		return false;
+	} else if($.trim(ptAuthCode).length != 4) {
+		lvToast(false,"请输入正确的验证码",LT_LOADING_CLOSE);
+		$("#ptAuthCode").focus();
+		loading = false;
+		return false;
+	}
+	u = base64encode(u);
+	p = base64encode(p);
+    u = encodeURIComponent(u);
+    p = encodeURIComponent(p);
+	var openId = $("#openId").val();
+	var unionid = $("#unionid").val();
+	var channel = $("#channel").val();
+	
+	$("#accountBind").hide();
+	$("#accountBinding").show();
+	$.post("/binding/t_weixin_login_v7",{ username : u, password : p, openId : openId, unionid : unionid, channel : channel, ptAuthCode:ptAuthCode},function(data){
+		if(data.success){			
+			var newUrl = $("#callbackUrl").val();
+			window.location.href=newUrl;
+		} else if(data.code=='3') {
+			//极验登录
+			// 使用initGeetest接口
+	        // 参数1：配置参数
+	        // 参数2：回调，回调的第一个参数验证码对象，之后可以使用它做appendTo之类的事件
+			geetestType="normalLogin";
+	        initGeetest({
+	            gt: data.geetestGt,
+	            challenge: data.geetestChallenge,
+	            product: "popup", // 产品形式，包括：float，embed，popup。注意只对PC版验证码有效
+	            width:"100%",
+	            offline: !data.geetestSuccess // 表示用户后台检测极验服务器是否宕机，一般不需要关注
+	        }, handlerPopup);
+		}else{
+			var msg = data.errorText;
+			if(null != msg && ""!=msg) {
+				lvToast(false,data.errorText,LT_LOADING_CLOSE);
+			} else {
+				lvToast(false,"绑定出错，请稍后再试！",LT_LOADING_CLOSE);
+			}
+			loading = false;
+			$("#accountBind").show();
+			$("#accountBinding").hide();
+		}
+	});
+}
+function weixinAuthCodelogin(){
+	if(loading)
+		return;
+	
+	loading = true;
+	
+	//手机号
+	var c = $("#mobile").val();
+	if(!v_mobile(c)) {
+		loading = false;
+		return false;
+	}
+	// 校验码
+	var acode = $("#authenticationCode").val();
+	if(!v_authenticationCode(acode)) {
+		loading = false;
+		return false;
+	}
+	var openId = $("#openId").val();
+	var unionid = $("#unionid").val();
+	var channel = $("#channel").val();
+	$("#mobileBind").hide();
+	$("#mobileBinding").show();
+	$.post("/binding/weixinLoginByMobileAndAuthCode",{ mobileOrEMail : c, authenticationCode : acode, openId : openId, unionid : unionid, channel : channel},function(data){
+		if(data.success) {
+			//重新跳转到原来的链接
+			var newUrl = $("#callbackUrl").val();
+			window.location.href=newUrl;
+		} else if(data.code=='3') {
+			//极验登录
+			// 使用initGeetest接口
+	        // 参数1：配置参数
+	        // 参数2：回调，回调的第一个参数验证码对象，之后可以使用它做appendTo之类的事件
+			geetestType="mobileLogin";
+	        initGeetest({
+	            gt: data.geetestGt,
+	            challenge: data.geetestChallenge,
+	            product: "popup", // 产品形式，包括：float，embed，popup。注意只对PC版验证码有效
+	            width:"100%",
+	            offline: !data.geetestSuccess // 表示用户后台检测极验服务器是否宕机，一般不需要关注
+	        }, handlerPopup);
+		}else{
+			var msg = data.errorText;
+			if(null != msg && ""!=msg) {
+				lvToast(false,data.errorText,LT_LOADING_CLOSE);
+			} else {
+				lvToast(false,"绑定出错，请稍后再试！",LT_LOADING_CLOSE);
+			}
+			loading = false;
+			$("#mobileBind").show();
+			$("#mobileBinding").hide();
+		}
+	});
+}
+/**
+ * 微信用户绑定驴妈妈账号
+ */
+function bindCount(data){
+	var bindUrl= data.bindUrl;
+	var openid = data.openid ;
+	var weixinUrl=decodeURIComponent(getCookie('loginUrl'));
+	var uid = data.uid;
+	$.getJSON(bindUrl+"?openid="+openid+"&uid="+uid+"&subscribe=1&flag=1&jsoncallback=?",function(msg) {
+		if(msg.data=="success"){
+			var url = $("#redirect_url").val();
+			   	if(data.isBand){
+					window.location.href="/weixinBindSuccess_other_v7.htm";
+				}else{
+				   	window.location.href="/weixinBindSuccess_v7.htm";
+				}
+		}else{
+			window.location.href="/error.htm";
+		}
+	});
+}
+
+//快速登录图片验证码
+function changeImg(){       
+	var lvsessionid =getcookie("lvsessionid");
+	var picSrc = "//api3g2.lvmama.com/api/router/rest.do?method=api.com.validateCode.createNewValidateCode&version=1.0.0&lvsessionid="+lvsessionid+"&_="+(new Date).getTime();
+	$("#authCodeChange").attr("src",picSrc);
+	$("#authCodeChange2").attr("src",picSrc);
+}
+function changeImg2(){       
+	var lvsessionid =getcookie("lvsessionid");
+	var picSrc = "//api3g2.lvmama.com/api/router/rest.do?method=api.com.validateCode.createNewValidateCode&version=1.0.0&lvsessionid="+lvsessionid+"&_="+(new Date).getTime();
+	$("#authCodeChange").attr("src",picSrc);
+	$("#authCodeChange2").attr("src",picSrc);
+}  
+
+var loginUrl= decodeURIComponent(window.location.href);
+
+var cityid=33;
+$(function() {
+	if(loginUrl.indexOf("activityChannel")!=-1){
+		setcookie('loginUrl', loginUrl, 72000000, '/', ".lvmama.com",false); //设置cookie 秒
+	}
+	//匿名下单成功后查看订单详情登陆显示
+	if(loginUrl.indexOf("orderDetailStatus=niming_order")>=0){
+		$("#username").val("");
+		$("#password").val("");
+		$("#nimingOrderDetail").show();
+	}
+	
+	
+	if(loginUrl.indexOf("cityid=")!=-1){
+		cityid=loginUrl.split("cityid=")[1];
+	}
+});
+$(function(){
+	//统计代码JS
+});
+	//显示tab页
+	$("nav").tabChange();
+
+var loginButtonFlag = false;
+var geetestType = "";
+var handlerPopup = function(captchaObj){
+	var Rmobile = "";
+	var username = "";
+	// 将验证码加到id为captcha的元素里
+	if(geetestType=="mobileLogin"){
+		captchaObj.appendTo("#popup-captcha-login");
+		Rmobile = $("#mobile").val();
+	}else if(geetestType=="normalLogin"){
+		captchaObj.appendTo("#popup-captcha-login");
+		Rmobile = $("#username").val();
+	}else{
+		captchaObj.appendTo("#popup-captcha-register");
+		Rmobile = $("#reg_phone").val();
+	}
+    captchaObj.onReady(function(){
+    	$("#popup-captcha-login").css("display","block");
+    	captchaObj.show();
+    	$("#popup-captcha-register svg").css({"width":"100%","height":"100%"});
+    });
+    captchaObj.onSuccess(function(){
+    	var validate = captchaObj.getValidate();
+        if (!validate) {
+            //alert('请先完成验证！');
+            return;
+        }
+        $.ajax({
+            url: "/binding/doGeeTest", // 进行二次验证
+            type: "post",
+            dataType: "json",
+            data: {
+        		//手机号码
+        		mobileOrEMail:Rmobile,
+                // 二次验证所需的三个值
+                geetest_challenge: validate.geetest_challenge,
+                geetest_validate: validate.geetest_validate,
+                geetest_seccode: validate.geetest_seccode
+            },
+            success: function (data) {
+                if (data.success) {
+                	$("#popup-captcha-login").css("display","none");
+                	$("#popup-captcha-login").html("");
+                	loginButtonFlag = false;
+                	if(geetestType=="mobileLogin"){
+                		loading = false;
+                		weixinAuthCodelogin('');
+                	}else if(geetestType=="normalLogin"){
+                		loading = false;
+                		weixinLogin('');
+                	}else{
+                		reg('');//极验验证通过再次注册
+                	}
+                } else {
+                	if(geetestType=="mobileLogin"){
+                		$("#mobile").val(Rmobile);
+                	}else if(geetestType=="normalLogin"){
+                		$("#username").val(username);
+                	}else{
+                		$("#reg_phone").val(Rmobile);
+                	}
+                	lvToast(false,data.errorText,3000);
+                	loginButtonFlag = false;
+                	
+                }
+            }
+        });
+    });
+};
+</script>
+<!-- 页面结束 -->
+</body>
+</html>

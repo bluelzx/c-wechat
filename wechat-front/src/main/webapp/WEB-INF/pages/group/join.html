@@ -1,0 +1,172 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>${groupActivity.name}</title>
+    <meta name="Keywords" content="驴妈妈无线,景区门票,旅游度假"/>
+    <meta name="Description" content="驴妈妈无线官网:支持手机快捷预订景区门票,自助游线路,全国酒店,豪华邮轮等各种旅游产品.(中国最领先的在线旅游预订服务商!)"/>
+    <meta content="initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width" name="viewport">
+    <meta id="share" share-linkurl="" name="share" share-title="" share-content="" share-imageurl="">
+    <meta http-equiv="pragma" content="no-cache">
+    <meta http-equiv="Cache-Control" content="max-age=7200" />
+    <meta http-equiv="expires" content="0">
+    <meta name="format-detection" content="telephone=no">
+    <meta http-equiv="Cache-Control" content="no-transform " />
+    <meta http-equiv="Cache-Control" content="no-siteapp" />
+    <link rel="apple-touch-icon" href="//pics.lvjs.com.cn/img/mobile/touch/img/lvmama_v1_png.png"/>
+    <link rel="apple-touch-icon" sizes="72x72" href="//pics.lvjs.com.cn/img/mobile/touch/img/lvmama_v1_png.png"/>
+    <link rel="apple-touch-icon" sizes="114x114" href="//pics.lvjs.com.cn/img/mobile/touch/img/lvmama_v1_png.png"/>
+    <link rel="apple-touch-icon" sizes="144x144" href="//pics.lvjs.com.cn/img/mobile/touch/img/lvmama_v1_png.png"/>
+    <link rel="stylesheet" href="//pics.lvjs.com.cn/mobile/zt/public/css/base/global.css">
+    <link rel="stylesheet" href="//pics.lvjs.com.cn/mobile/zt/4.0.0/1606/graduation-trip/css/style.css?v=20161222">
+    <link rel="stylesheet" href="//pics.lvjs.com.cn/mobile/zt/public/css/base/ui/idangerous.swiper.css">
+    <script type="text/javascript" src="//pics.lvjs.com.cn/mobile/lib/js/jquery-1.7.2.min.js"></script>
+    <script type="text/javascript" src="//pics.lvjs.com.cn/mobile/zt/public/js/base/idangerous.swiper.min.js"></script>
+    <script type="text/javascript" src="//pics.lvjs.com.cn/mobile/zt/4.0.0/1606/graduation-trip/js/index.js"></script>
+    <script type="text/javascript" src="${webroot}/assets/js/WechatApi.js"></script>
+    <script type="text/javascript" src="${webroot}/assets/js/jweixin-1.0.0.js"></script>
+</head>
+<body>
+    <div style="width:0; height:0; overflow: hidden; font-size: 0; position: fixed; left: 0;top: 0;">
+        <img src="" alt=""/>
+    </div>
+    <div class="container fill-info">
+        <script type="text/javascript" src="//pics.lvjs.com.cn/mobile/zt/public/js/base/ztheader.js"></script>
+        <div class="banner">
+             <#if logostate == 1>
+            <div class="logo"></div>
+            </#if>
+            <div class="swiper-main" >
+                <div class="swiper-container" id="mySwipe">
+                    <div class="swiper-wrapper">
+                    	<#list banners as banner>
+                        <div class="swiper-slide">
+                            <a>
+                                <div class="img-wrap"><img src=${banner.url} alt=""></div>
+                            </a>
+                        </div>
+                        </#list> 
+                    </div>
+                </div>
+                <div class="pagination"></div>
+            </div>
+        </div>
+        <div class="fill">
+        	<form name="submitUserInfo" id="submitUserInfo" action="/groupActivity/join" method="post">
+        		<input name="groupActivityId" id="groupActivityId" type="hidden" value="${groupActivity.id}">
+	       		<input name="groupId" id="groupId" type="hidden" value="${groupId}">
+	            <input name="name" id="name" type="text" placeholder="请输入你的姓名">
+	            <input name="telephone" id="telephone" type="text" placeholder="请输入你的手机号码">
+	            <div class="xingzuo">
+	                <i>请输入你的星座</i>
+	                <select name="constellation" id="constellations">   
+	               		<option></option> 
+	                	<#list constellationsList as constellations>
+						<option value=${constellations.value}>${constellations.showName}</option> 
+						</#list>                 
+	                </select>
+	            </div>
+	            <button type="button" id="submitButton" onclick="submitInfo()">立即提交</button>
+            </form>
+        </div>
+        <div class="tips">
+            <h3>温馨提示</h3>
+            <p>*${groupActivity.writeTips}</p>
+        </div>
+        <!-- 请输入正确的手机号码弹窗 -->
+        <div class="wrong-popup">
+            <div class="main">
+                <img src="//pics.lvjs.com.cn/mobile/zt/4.0.0/1606/graduation-trip/images/lv-cry.png" alt="">
+                <p></p>
+                <button>我知道了</button>
+            </div>
+        </div>
+    </div>
+    <!-- // <script type="text/javascript" src="//pics.lvjs.com.cn/mobile/plugins/nativeJs/downloadBar/1.0/build.min.js"></script> -->
+    <script type="text/javascript" src="${webroot}/assets/js/common.js"></script>
+    <script type="text/javascript" src="${webroot}/assets/js/WechatApi.js"></script>
+    <script type="text/javascript" src="//res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
+    
+    <script type="text/javascript">
+    	var flag = false;
+   		function submitInfo() {
+   			if (flag) {
+   				return;
+   			}
+   			falg = true;
+    		var userInfo = {};
+    		var telephone = $("#telephone").val();
+    		var name = $("#name").val();
+    		var constellations = $("#constellations").val();
+			if (isEmpty(name)) {
+				showWrong('请输入用户名！', 3);
+				flag = false;
+				return;
+			}
+			if(isEmpty(telephone)) {
+				showWrong('请输入手机号码！', 3);
+				flag = false;
+				return;
+			} 
+			if(!validateMobile(telephone)) {
+				showWrong('手机号码格式错误！', 3);
+				flag = false;
+				return;
+			}
+			if (isEmpty(constellations)) {
+				showWrong('请选择星座！', 3);
+				flag = false;
+				return;
+			}
+			if (name.length > 8) {
+				showWrong('请输入正确的姓名！', 3);
+				flag = false;
+				return;
+			}
+			
+			$("#submitButton").attr("disabled", "disabled");
+			$("#submitUserInfo").submit();
+    	} 
+   		
+   		/**
+   		 * 显示提示框
+   		 */
+   		/**
+   		 * 提示框
+   		 * @param  {[type]} content [description]
+   		 * @param  {[type]} second  [description]
+   		 * @return {[type]}         [description]
+   		 */
+   		var showWrong = function(content, second) {
+   			$(".wrong-popup p").html(content);
+   			$('.wrong-popup').css("display", "block");
+   			setTimeout(function(){$('.wrong-popup').css("display", "none");}, second*1000);
+   		}
+
+    </script>
+    <#if shareContent>
+     	<script type="text/javascript"> 
+    	var wxData;
+		wxData = {
+			  imgUrl: "${imageList.url}",
+			  link: "//weixin.lvmama.com/groupActivity/${groupActId}?groupId=${groupId}",
+			  desc: "${shareContent.shareDesc}",
+			  title: "${shareContent.title}"
+		}
+		if(wxData != undefined) {
+		    WechatApi.share(wxData);
+		}
+		</script>
+	·<#else>
+		<script type="text/javascript"> 
+    	var wxData;
+		wxData = {
+			link: "//weixin.lvmama.com/groupActivity/${groupActId}?groupId=${groupId}"
+		}
+		if(wxData != undefined) {
+		    WechatApi.share(wxData);
+		}
+		</script>
+	</#if>
+</body>
+</html>

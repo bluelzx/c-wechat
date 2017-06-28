@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta charset="utf-8" />
+<title>同步微信与驴妈妈用户</title>
+<meta name="description" content="overview &amp; stats" />
+<meta name="viewport"
+	content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+<#include "commonHead.html">
+</head>
+
+<body class="no-skin" style="background-color: #FFF;">
+	<div style="margin-top:10%">
+		<button class="btn btn-primary btn-block btn-start" onclick="start()">同步数据</button>
+	</div>				
+
+	<#include "commonFootJs.html">
+</body>
+
+<script type="text/javascript">
+function start() {
+	$('.btn-start').attr("disabled","disabled"); 
+	$.ajax({
+		type:'POST',
+		url:'${adminPath}/userSync/start'
+	});
+}
+
+function tagStart() {
+	$('.btn-tag').attr("disabled","disabled");
+	$.ajax({
+		type:'POST',
+		url:'${adminPath}/userSync/tagStart'
+	});
+}
+
+function userTagStart() {
+	$('.btn-userTag').attr("disabled","disabled");
+	$.ajax({
+		type:'POST',
+		url:'${adminPath}/userSync/userTagSync'
+	});
+}
+</script>
+
+</html>

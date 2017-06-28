@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="T_WX_PUSH_TEMPLATE">
+	<resultMap id="BaseResultMap" type="PushTemplate" >
+    <id column="id" property="id" jdbcType="VARCHAR" />
+  	</resultMap>
+	<select id="getPushTemplate" resultMap="BaseResultMap">
+		SELECT
+			id,title,type,source,content,url,send_time,create_time,back,useable
+		FROM t_wx_push_template
+		WHERE 1=1
+		<if test="type != null and type != ''">
+			AND type = ${type}
+		</if>
+		<if test="startTime != null and startTime != ''">
+			AND date(create_time) &gt;= date(#{startTime})
+		</if>
+		<if test="endTime != null and endTime != ''">
+			AND date(create_time) &lt;= date(#{endTime})
+		</if>
+			order by create_time desc
+	</select>
+	
+	<select id="getByPrimary" resultType="PushTemplate">
+		SELECT
+			id,title,type,source,content,url,back,useable,areas_id
+		FROM t_wx_push_template
+		WHERE id = #{id}
+	</select>
+	
+	<insert id="insertPushTemplate" parameterType="PushTemplate">
+		INSERT INTO t_wx_push_template(
+			id,
+			title,
+			type,
+			source,
+			content,
+			url,
+			send_time,
+			create_time,
+			back,
+			useable,
+			areas_id
+		) VALUES (
+			#{id},
+			#{title},
+			#{type},
+			#{source},
+			#{content},
+			#{url},
+			#{sendTime},
+			#{createTime},
+			#{back},
+			#{useable},
+			#{areasId}
+		)
+	</insert>
+	
+	<update id="updatePushTemplate">
+		UPDATE t_wx_push_template
+		<set>
+			<if test="title != null">
+			title = #{title,jdbcType=VARCHAR},
+			</if>
+			<if test="type != null">
+			type = #{type,jdbcType=INTEGER},
+			</if>
+			<if test="source != null">
+			source = #{source,jdbcType=VARCHAR},
+			</if>
+			<if test="content != null">
+			content = #{content,jdbcType=VARCHAR},
+			</if>
+			<if test="url != null">
+			url = #{url,jdbcType=VARCHAR},
+			</if>
+			<if test="back != null">
+			back = #{back,jdbcType=VARCHAR},
+			</if>
+			<if test="useable != null">
+			useable = #{useable,jdbcType=VARCHAR},
+			</if>
+			<if test="areasId != null">
+			areas_id = #{areasId,jdbcType=VARCHAR},
+			</if>
+		</set>
+		WHERE id = #{id}
+	</update>
+	
+
+</mapper>

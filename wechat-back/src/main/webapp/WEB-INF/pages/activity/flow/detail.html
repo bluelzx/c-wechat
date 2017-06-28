@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta charset="utf-8" />
+<title>优惠券H5模板 - 微信后台管理系统</title>
+<meta name="description" content="overview &amp; stats" />
+<meta name="viewport"
+	content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+<!-- bootstrap & fontawesome -->
+<#include "commonHead.html">
+<!-- ace settings handler -->
+<script src="${webroot}/assets/js/ace-extra.min.js"></script>
+<script src="${webroot}/assets/js/jquery.2.1.1.min.js"></script>
+        <script src="${webroot}/assets/js/bootstrap.min.js"></script>
+<link rel="stylesheet"
+	href="${webroot}/assets/css/bootstrap-datetimepicker.min.css" />
+</head>
+
+<body class="no-skin" style="background-color: #FFF;">
+	<div class="page-content">
+		<div class="page-header">
+			<h1>
+				活动管理 <small> <i class="ace-icon fa fa-angle-double-right"></i>
+					详情信息
+				</small>
+			</h1>
+		</div>
+		<div class="tabbable">
+			<ul class="nav nav-tabs" id="myTab">
+				<li class="active"><a data-toggle="tab" href="#manage"
+					aria-expanded="false"> 活动管理 </a></li>
+			</ul>
+
+			<div class="tab-content">
+				<div id="manage" class="tab-pane fade active in">
+					<hr>
+					<div class="row">
+						<div class="col-xs-12">
+							<!-- PAGE CONTENT BEGINS -->
+							<div class="row">
+								<div class="col-xs-12">
+									<div class="widget-box"
+										style="margin-bottom: 0px; border-bottom: 0px;">
+										<div class="widget-body" style="background-color: #EFF3F8;">
+											<div class="widget-main">
+												<form class="form-inline" id="searchFormManage"
+													method="post" action="${adminPath}/activity/flow/detail/${id}">
+													<input type="hidden" name="tab" value="tabManage" />
+													<div class="form-group">
+														<label for="exampleInputName2">微信名称：</label> <input
+															type="text" class="form-control" name="name"
+															value="${conditionManage.name!}" placeholder="微信名称">
+													</div>													
+													<div class="form-group">
+														<label for="exampleInputName2">openid：</label> <input
+															type="text" class="form-control" name="openid"
+															value="${conditionManage.openid!}" placeholder="openid">
+													</div>
+													<div class="form-group">
+														<button id="tabManage" type="submit"
+															class="btn btn-primary btn-round btn-sm">
+															<span class="ace-icon fa fa-search bigger-110"></span>
+															Search
+														</button>
+													</div>
+												</form>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="row">
+								<div class="col-xs-12">
+									<table id="simple-table"
+										class="table table-striped table-bordered table-hover"
+										style="margin-bottom: 0px; border-bottom: 0px;">
+										<thead>
+											<tr>
+												<th>编号</th>
+												<th>微信名称</th>
+												<th>openid</th>
+												<th>领取的流量</th>
+												<th>是否关注微信</th>
+												<th>团ID</th>
+												<th>身份</th>
+												<th>流量是否领完</th>
+												<th>参与时间</th>
+												<th>领完时间</th>
+											</tr>
+										</thead>
+
+
+										<tbody>
+											<#if flowMembers?? && flowMembers?size&gt;0>
+											<#list flowMembers as flowMember>
+											<tr class="">
+												<td>${flowMember_index + 1}</td>
+												<td>${flowMember.nickname!}</td>
+												<td>${flowMember.openid!}</td>
+												<td>${flowMember.flowNum!}</td>
+												<td><#if flowMember.subscribe == '1'>是<#else>否</#if></td>
+												<td>${flowMember.groupId!}</td>
+												<td><#if flowMember.isLeader == 1>发起者<#else>参与者</#if></td>
+												<td><#if flowMember.isComplete == 1>是<#else>否</#if></td>
+												<td>${flowMember.startTime?string('yyyy-MM-dd HH:mm:ss')!}</td>
+												<td><#if flowMember.completeTime??>${flowMember.completeTime?string('yyyy-MM-dd HH:mm:ss')!}<#else>-----</#if></td>
+											</tr>
+											</#list> <#else>
+											<tr>
+												<td colspan="12">
+													<div class="alert alert-danger" style="margin-bottom: 0px;"
+														role="alert">没有记录!</div>
+												</td>
+											</tr>
+											</#if>
+										</tbody>
+									</table>
+									<#include "paginatorManage.html">
+								</div>
+								<!-- /.span -->
+							</div>
+							<!-- /.row -->
+						</div>
+						<!-- /.col -->
+					</div>
+					<!-- /.row -->
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<#include "commonFootJs.html">
+	<!-- inline scripts related to this page -->
+	<script src="${webroot}/assets/js/moment.min.js"></script>
+	<script src="${webroot}/assets/js/bootstrap-datetimepicker.min.js"></script>
+	<script type="text/javascript">
+		jQuery(function($) {
+			var optionsBegin = {
+				/* format : 'YYYY-MM-DD  HH:mm:ss' */
+				format : 'YYYY-MM-DD  00:00:00'
+			}
+			var optionsEnd = {
+				/* format : 'YYYY-MM-DD  HH:mm:ss' */
+				format : 'YYYY-MM-DD  23:59:59'
+			}
+			$('.beginDatetimepicker').datetimepicker(optionsBegin).next().on(
+					ace.click_event, function() {
+						$(this).prev().focus();
+					});
+			$('.endDatetimepicker').datetimepicker(optionsEnd).next().on(
+					ace.click_event, function() {
+						$(this).prev().focus();
+					});
+
+		})
+	</script>
+</body>
+</html>

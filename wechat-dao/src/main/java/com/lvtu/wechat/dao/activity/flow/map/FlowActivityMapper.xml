@@ -1,0 +1,259 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="FLOW_ACTIVITY">
+	<insert id="insertActivity">
+		INSERT INTO flow_activity(
+		id,
+		name,
+		start_date,
+		end_date,
+		state,
+		share_template_id,
+		total_flow,
+		team_num,
+		rule_copy,
+		qr_code_copy,
+		create_time,
+		pic_url,
+		banner_url,
+		index_url,
+		dole_one,
+		dole_two,
+		dole_three,
+		dole_four,
+		dole_five
+		) VALUES (
+		#{id},
+		#{name},
+		#{startDate},
+		#{endDate},
+		#{state},
+		#{shareTemplateId},
+		#{totalFlow},
+		#{teamNum},
+		#{ruleCopy},
+		#{qrCodeCopy},
+		#{createTime},
+		#{picUrl},
+		#{bannerUrl},
+		#{indexUrl},
+		#{doleOne},
+		#{doleTwo},
+		#{doleThree},
+		#{doleFour},
+		#{doleFive}
+		)
+	</insert>
+
+	<update id="updateActivity">
+		UPDATE flow_activity
+		<set>
+			<if test="name != null and name != ''">
+				name = #{name},
+			</if>
+			<if test="state != null and state != ''">
+				state = #{state},
+			</if>
+			<if test="shareTemplateId != null and shareTemplateId != ''">
+				share_template_id = #{shareTemplateId},
+			</if>
+			<if test="shareTemplateId == null or shareTemplateId == ''">
+				share_template_id = null,
+			</if>
+			<if test="totalFlow != null and totalFlow != ''">
+				total_flow = #{totalFlow},
+			</if>
+			<if test="teamNum != null and teamNum != ''">
+				team_num = #{teamNum},
+			</if>
+			<if test="indexTips != null and indexTips != ''">
+				index_tips = #{indexTips},
+			</if>
+			<if test="ruleCopy != null and ruleCopy != ''">
+				rule_copy = #{ruleCopy},
+			</if>
+			<if test="writeTips != null and writeTips != ''">
+				write_tips = #{writeTips},
+			</if>
+			<if test="qrCodeCopy != null and qrCodeCopy != ''">
+				qr_code_copy = #{qrCodeCopy},
+			</if>
+			<if test="picUrl != null and picUrl != ''">
+				pic_url = #{picUrl},
+			</if>
+			<if test="bannerUrl != null and bannerUrl != ''">
+				banner_url = #{bannerUrl},
+			</if>
+			<if test="indexUrl != null and indexUrl != ''">
+				index_url = #{indexUrl},
+			</if>
+			<if test="doleOne != null and doleOne != ''">
+				dole_one = #{doleOne},
+			</if>
+			<if test="doleTwo != null and doleTwo != ''">
+				dole_two = #{doleTwo},
+			</if>
+			<if test="doleThree != null and doleThree != ''">
+				dole_three = #{doleThree},
+			</if>
+			<if test="doleFour != null and doleFour != ''">
+				dole_four = #{doleFour},
+			</if>
+			<if test="doleFive != null and doleFive != ''">
+				dole_five = #{doleFive},
+			</if>
+			<if test="startDate != null and startDate != ''">
+				start_date = #{startDate},
+			</if>
+			<if test="endDate != null and endDate != ''">
+				end_date = #{endDate},
+			</if>
+		</set>
+		WHERE id = #{id}
+	</update>
+
+	<select id="queryActivity" resultType="FlowActivity">
+		SELECT
+		f.id,
+		f.name,
+		f.start_date,
+		f.end_date,
+		f.state,
+		f.share_template_id,
+		f.total_flow,
+		f.team_num,
+		f.index_tips,
+		f.rule_copy,
+		f.write_tips,
+		f.qr_code_copy,
+		f.create_time,
+		q.url qr_code_url
+		FROM flow_activity f LEFT JOIN wx_qr_code_use w ON f.id =
+		w.act_id
+		LEFT JOIN wx_qr_code q ON w.wx_qr_code_id = q.id
+		WHERE 1 = 1
+		<if test="name != null and name != ''">
+			AND f.name = #{name}
+		</if>
+		<if test="state != null and state != ''">
+			AND f.state = #{state}
+		</if>
+		<if test="startDate != null and startDate != ''">
+			AND date(f.start_date) &gt;= date(#{startDate})
+		</if>
+		<if test="endDate != null and endDate != ''">
+			AND date(f.end_date) &lt;= date(#{endDate})
+		</if>
+	</select>
+
+	<select id="queryById" resultType="FlowActivity">
+		SELECT
+		id,
+		name,
+		start_date,
+		end_date,
+		state,
+		share_template_id,
+		total_flow,
+		team_num,
+		index_tips,
+		rule_copy,
+		write_tips,
+		qr_code_copy,
+		create_time,
+		pic_url,
+		banner_url,
+		index_url,
+		dole_one,
+		dole_two,
+		dole_three,
+		dole_four,
+		dole_five
+		FROM flow_activity
+		WHERE 1 = 1
+		AND id = #{id}
+	</select>
+
+	<delete id="deleteActivity" parameterType="java.lang.String">
+		DELETE FROM flow_activity WHERE id=#{id}
+	</delete>
+
+	<select id="queryGroupById" resultType="FlowActivityGroups">
+		SELECT
+		a.id,
+		a. name,
+		a.start_date,
+		a.end_date,
+		f.number forward_num,
+		SUM(g.now_num) total_people,
+		count(g.id) total_groups,
+		SUM( CASE g.state WHEN '1' THEN 1 ELSE 0 END ) complete_groups
+		FROM
+		flow_activity a
+		LEFT JOIN flow_groups g ON g.flow_activity_id = a.id
+		LEFT JOIN flow_forward_number f ON a.id = f.flow_activity_id
+		WHERE
+		1 = 1
+		<if test="name != null and name != ''">
+			AND a.name = #{name}
+		</if>
+		<if test="startDate != null and startDate != ''">
+			AND date(a.start_date) &gt;= date(#{startDate})
+		</if>
+		<if test="endDate != null and endDate != ''">
+			AND date(a.end_date) &lt;= date(#{endDate})
+		</if>
+		GROUP BY
+		g.flow_activity_id
+
+	</select>
+
+	<select id="queryDetailMembers" resultType="FlowActivityMembers">
+		SELECT
+		u.nickname,
+		u.openid,
+		m.flow_num,
+		m.is_leader,
+		m.group_id,
+		u.subscribe,
+		g.state is_complete,
+		m.create_time start_time,
+		g.complete_time
+		FROM
+		flow_members m
+		LEFT JOIN flow_groups g ON m.group_id = g.id
+		LEFT JOIN wx_user u ON
+		m.openid = u.openid
+		WHERE 1=1
+		<if test="name != null and name != '' ">
+			AND u.nickname = #{name}
+		</if>
+		<if test="openid != null and openid != '' ">
+			AND u.openid = #{openid}
+		</if>
+		<if test="id != null and id != '' ">
+			AND g.flow_activity_id = #{id}
+		</if>
+		order by m.create_time desc
+	</select>
+	
+	<select id="selectActivityQrCode" resultType="FlowActivity">
+		SELECT
+		f.id,
+		f.name,
+		f.qr_code_copy,
+		f.pic_url,
+		q.url qr_code_url
+		FROM flow_activity f LEFT JOIN wx_qr_code_use w ON f.id =
+		w.act_id
+		LEFT JOIN wx_qr_code q ON w.wx_qr_code_id = q.id
+		WHERE 1 = 1
+		<if test="_parameter != null and _parameter != ''">
+			AND f.id = #{_parameter}
+		</if>
+	</select>
+	
+	<select id="queryActivityIds" resultType="java.lang.String">
+		SELECT id FROM flow_activity
+	</select>
+</mapper>

@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="Maven: com.lvmama.comm:lvmama_comm:1.0.0-SNAPSHOT">
+    <CLASSES>
+      <root url="jar://$MAVEN_REPOSITORY$/com/lvmama/comm/lvmama_comm/1.0.0-SNAPSHOT/lvmama_comm-1.0.0-20170627.082739-214.jar!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$MAVEN_REPOSITORY$/com/lvmama/comm/lvmama_comm/1.0.0-SNAPSHOT/lvmama_comm-1.0.0-20170627.082739-214-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$MAVEN_REPOSITORY$/com/lvmama/comm/lvmama_comm/1.0.0-SNAPSHOT/lvmama_comm-1.0.0-20170627.082739-214-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="SHARE_CONTENT">
+	<select id="queryShareContent" resultType="ShareContent">
+		select a.id, a.share_id, a.channel, a.title, a.share_desc, a.tips, a.url, a.remark
+		from share_content a
+		<trim prefix="WHERE" prefixOverrides="AND | OR">
+			<if test="shareId != null and shareId != ''">
+				<![CDATA[AND a.share_id = #{shareId}]]>
+			</if>
+			<if test="channel != null and channel != ''">
+				<![CDATA[AND a.channel = #{channel}]]>
+			</if>
+			<if test="id != null and id != ''">
+				<![CDATA[AND a.id = #{id}]]>
+			</if>
+		</trim>
+	</select>
+	
+	<update id="updateShareContent" parameterType="ShareContent">
+		update share_content 
+		<set>
+			<if test="title != null and title != ''">
+				title = #{title},
+			</if>
+			<if test="url != null and url != ''">
+				url = #{url},
+			</if>
+			<if test="shareDesc != null and shareDesc != ''">
+				share_desc = #{shareDesc},
+			</if>
+		</set>
+		WHERE id = #{id}
+	</update>
+	
+	<insert id="insertShareContent">
+		insert into share_content(
+			id,
+			share_id,
+			<if test="title != null and title != ''">
+			title,
+			</if>
+			<if test="shareDesc != null and shareDesc != ''">
+			share_desc,
+			</if>
+			<if test="url != null and url != ''">
+			url,
+			</if>
+			<if test="tips != null and tips != ''">
+			tips,
+			</if>
+			channel
+		)
+		values (
+			#{id},
+			#{shareId},
+			<if test="title != null and title != ''">
+			#{title},
+			</if>
+			<if test="shareDesc != null and shareDesc != ''">
+			#{shareDesc},
+			</if>
+			<if test="url != null and url != ''">
+			#{url},
+			</if>
+			<if test="tips != null and tips != ''">
+			#{tips},
+			</if>
+			#{channel}
+		)
+	</insert>
+	
+	<delete id="delete">
+		delete from share_content where share_id = #{shareId}
+	</delete>
+</mapper>

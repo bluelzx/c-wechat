@@ -1,0 +1,58 @@
+<div class="ui-jqgrid">
+	<div id="grid-pager"
+		class="ui-state-default ui-jqgrid-pager ui-corner-bottom" dir="ltr">
+		<div id="pg_grid-pager" class="ui-pager-control" role="group">
+			<table cellspacing="0" cellpadding="0" border="0" class="ui-pg-table"
+				style="width: 100%; table-layout: fixed; height: 100%;" role="row">
+				<tbody>
+					<tr>
+						<td id="grid-pager_left" align="left"></td>
+						<td id="grid-pager_center" align="center"
+							style="white-space: pre; width: 343px;"><table
+								cellspacing="0" cellpadding="0" border="0"
+								style="table-layout: auto;" class="ui-pg-table">
+								<tbody>
+									<tr>
+										<td id="first_grid-pager" onclick="showPageManage(${pageManage.firstPage!})"
+											class="ui-pg-button ui-corner-all <#if pageManage.isFirstPage>ui-state-disabled</#if>"
+											style="cursor: pointer;"><span
+											class="ui-icon ace-icon fa fa-angle-double-left bigger-140"></span></td>
+										<td id="prev_grid-pager" onclick="showPageManage(${pageManage.prePage!})"
+											class="ui-pg-button ui-corner-all <#if pageManage.isFirstPage>ui-state-disabled</#if>"
+											style="cursor: pointer;"><span
+											class="ui-icon ace-icon fa fa-angle-left bigger-140"></span></td>
+										<td dir="ltr">Page <input class="ui-pg-input" type="text"
+											size="2" maxlength="7" value="${pageManage.pageNum!}" role="textbox"> of <span
+											id="sp_1_grid-pager">${pageManage.pages!}</span></td>
+										<td id="next_grid-pager" onclick="showPageManage(${pageManage.nextPage!})" class="ui-pg-button ui-corner-all <#if pageManage.isLastPage>ui-state-disabled</#if>"
+											style="cursor: pointer;"><span
+											class="ui-icon ace-icon fa fa-angle-right bigger-140"></span></td>
+										<td id="last_grid-pager" onclick="showPageManage(${pageManage.lastPage!})" class="ui-pg-button ui-corner-all <#if pageManage.isLastPage>ui-state-disabled</#if>"
+											style="cursor: pointer;"><span
+											class="ui-icon ace-icon fa fa-angle-double-right bigger-140"></span></td>
+									</tr>
+								</tbody>
+							</table></td>
+						<td id="grid-pager_right" align="right"><div dir="ltr"
+								style="text-align: right" class="ui-paging-info">View ${pageManage.startRow!} -
+								${pageManage.endRow!} of ${pageManage.total!}</div></td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	</div>
+</div>
+<script type="text/javascript">
+/**
+ * 翻页到指定页数
+ */
+var showPageManage = function(page) {
+	if(page!=0){
+		var action = $("#searchFormManage").attr("action");
+		action = action + "?page=" + page;
+		$("#searchFormManage").attr("action", action);
+		$("#searchFormManage").submit();
+	}
+	
+}
+</script>

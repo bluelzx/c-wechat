@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta charset="utf-8" />
+<title>广告位 - 微信后台管理系统</title>
+<meta name="description" content="overview &amp; stats" />
+<meta name="viewport"
+	content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+<!-- bootstrap & fontawesome -->
+<#include "commonHead.html">
+<!-- ace settings handler -->
+<script src="${webroot}/assets/js/ace-extra.min.js"></script>
+<link rel="stylesheet" href="${webroot}/assets/css/bootstrap-datetimepicker.min.css" />
+</head>
+
+<body class="no-skin" style="background-color: #FFF;">
+	<div class="page-content">
+		<div class="page-header">
+			<h1>
+				通用管理 <small> <i class="ace-icon fa fa-angle-double-right"></i>
+					广告位
+				</small>
+			</h1>
+		</div>
+		<div class="tabbable">
+			<ul class="nav nav-tabs" id="myTab">
+				<li class=""><a data-toggle="tab" href="#manage"
+					aria-expanded="false"> 广告位管理 </a></li>
+				<li class=""><a data-toggle="tab" href="#click"
+					aria-expanded="true"> 点击量统计 </a></li>
+			</ul>
+
+			<div class="tab-content">
+				<div id="manage" class="tab-pane fade">
+					<button type="button" onclick="skip('${adminPath}/advertising/new')" class="btn btn-white btn-primary btn-round">添加广告位</button>
+					<button type="button" onclick="skip('${adminPath}/advertising/clearCache')" class="btn btn-white btn-primary btn-round">清除广告位缓存</button>
+					<hr>
+					<div class="row">
+						<div class="col-xs-12">
+							<!-- PAGE CONTENT BEGINS -->
+							<div class="row">
+								<div class="col-xs-12">
+									<div class="widget-box"
+										style="margin-bottom: 0px; border-bottom: 0px;">
+										<div class="widget-body" style="background-color: #EFF3F8;">
+											<div class="widget-main row">
+												<form class="form-inline" id="searchForm" method="post"
+													action="${adminPath}/advertising/manager">
+													<div class="form-group col-xs-2">
+														<label for="exampleInputName2">一级分类：</label> <select id="primary"
+															class="form-control" name="primaryClassification" style="width:66%">
+																<#list primaryClassificationList as primaryStatus>
+																<option value=${primaryStatus.classification} <#if conditionManage.primaryClassification == primaryStatus.classification>selected</#if>>${primaryStatus.showName}</option>
+																</#list>
+														</select>
+													</div>
+													<div class="form-group col-xs-2">
+														<label for="exampleInputName2">二级分类：</label> <select id="secondary"
+															class="form-control" name="secondaryClassification" style="width:66%">
+																<#list secondaryClassificationList as secondaryStatus>
+																<option value=${secondaryStatus.classification} <#if conditionManage.secondaryClassification == secondaryStatus.classification>selected</#if>>${secondaryStatus.showName}</option>
+																</#list>
+														</select>
+													</div>
+													<div class="form-group col-xs-2">
+														<label for="exampleInputName2">活动ID：</label> <input
+															type="text" class="form-control" name="actId"
+															value="${conditionManage.actId!}" placeholder="活动ID">
+													</div>
+													
+													<div class="form-group col-xs-2">
+														<button id="tabManage" type="submit" class="btn btn-primary btn-round btn-sm">
+															<span class="ace-icon fa fa-search bigger-110"></span>
+															Search
+														</button>
+													</div>
+												</form>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="row">
+								<div class="col-xs-12">
+									<table id="simple-table"
+										class="table table-striped table-bordered table-hover"
+										style="margin-bottom: 0px; border-bottom: 0px;">
+										<thead>
+											<tr>
+												<th>编号</th>
+												<th>一级分类</th>
+												<th>二级分类</th>
+												<th>活动ID</th>
+												<th>图片链接</th>
+												<th>跳转链接</th>
+												<th>排序</th>
+												<th>操作</th>
+											</tr>
+										</thead>
+
+
+										<tbody>
+											<#if advertisingListManage?? && advertisingListManage?size&gt;0> <#list advertisingListManage
+											as advertising>
+											<tr class="">
+												<td>${advertising.id!}</td>
+												<td>${advertising.primaryClassification!}</td>
+												<td>${advertising.secondaryClassification!}</td>
+												<td>${advertising.actId!}</td>
+												<td>${advertising.imgURL!}</td>
+												<td>${advertising.skipURL!}</td>
+												<td>${advertising.sort!}</td>
+												<td>
+													<a class="btn btn-minier btn-primary" href="${adminPath}/advertising/edit?id=${advertising.id!}" role="button">编辑</a>
+													<a class="btn btn-minier btn-primary" href="${adminPath}/advertising/delete?id=${advertising.id!}" role="button">删除</a>
+												</td>
+											</tr>
+											</#list> <#else>
+											<tr>
+												<td colspan="12">
+													<div class="alert alert-danger" style="margin-bottom: 0px;"
+														role="alert">没有记录!</div>
+												</td>
+											</tr>
+											</#if>
+										</tbody>
+									</table>
+									<#include "paginator.html">
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div id="click" class="tab-pane fade">
+					<hr>
+					<div class="row">
+						<div class="col-xs-12">
+							<!-- PAGE CONTENT BEGINS -->
+							<div class="row">
+								<div class="col-xs-12">
+									<div class="widget-box"
+										style="margin-bottom: 0px; border-bottom: 0px;">
+										<div class="widget-body" style="background-color: #EFF3F8;">
+											<div class="widget-main row">
+												<form class="form-inline" id="searchFormClick" method="post"
+													action="${adminPath}/advertising/manager">
+													<div class="form-group col-xs-2">
+														<label for="exampleInputName2">广告位编号：<input
+															type="text" class="form-control" name="advertisingId"
+															value="${clicksConditionManage.advertisingId!}" placeholder="--请输入--"></label> 
+													</div>						
+													<div class="form-group col-xs-2">
+														<label for="exampleInputName2">开始日期：</label> <input
+															type="text" class="form-control startDatetimepicker"
+															name="startTime" value="${(clicksConditionManage.startTime?string("yyyy-MM-dd"))!}"
+															placeholder="--请选择--">														
+													</div>
+													<div class="form-group col-xs-2">
+														<label for="exampleInputName2">结束日期：</label> <input
+															type="text" class="form-control endDatetimepicker"
+															name="endTime" value="${(clicksConditionManage.endTime?string("yyyy-MM-dd"))!}"
+															placeholder="--请选择--">														
+													</div>
+													<div class="form-group col-xs-2">
+														<button id="tabManage" type="submit" class="btn btn-primary btn-round btn-sm">
+															<span class="ace-icon fa fa-search bigger-110"></span>
+															Search
+														</button>
+													</div>
+												</form>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="row">
+								<div class="col-xs-12">
+									<table id="simple-table"
+										class="table table-striped table-bordered table-hover"
+										style="margin-bottom: 0px; border-bottom: 0px;">
+										<thead>
+											<tr>
+												<th>序号</th>
+												<th>广告位编号</th>
+												<th>页面点击量</th>
+												<th>用户访问量</th>										
+											</tr>
+										</thead>
+
+
+										<tbody>
+											<#if advertisingClicksListManage?? && advertisingClicksListManage?size&gt;0> 
+											<#assign sum1=0>
+											<#assign sum2=0>
+											<#list advertisingClicksListManage as advertisingClicks>
+											<tr class="">
+												<td>${advertisingClicks_index + 1}</td>
+												<td>${advertisingClicks.advertisingId!}</td>
+												<td>${advertisingClicks.pageViews!}</td>
+													<#assign sum1=sum1 +advertisingClicks.pageViews>
+												<td>${advertisingClicks.uniqueVisitors!}</td>
+													<#assign sum2=sum2 +advertisingClicks.uniqueVisitors>
+													
+											</tr>
+											</#list>
+												<tr>
+													<td colspan="2">总计</td>
+													<td>${sum1}</td>
+													<td>${sum2}</td>
+													
+												</tr>
+											 <#else>
+											<tr>
+												<td colspan="12">
+													<div class="alert alert-danger" style="margin-bottom: 0px;"
+														role="alert">没有记录!</div>
+												</td>
+											</tr>
+											</#if>
+										</tbody>
+									</table>
+									<#include "paginatorClicks.html">
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<#include "commonFootJs.html">
+	<!-- inline scripts related to this page -->
+	<script src="${webroot}/assets/js/moment.min.js"></script>
+	<script src="${webroot}/assets/js/bootstrap-datetimepicker.min.js"></script>
+	<script type="text/javascript">
+		$(function(){
+			$("#primary").change(function(){
+				var classificationText=$("#primary").val();
+				$.ajax({
+					type:"post",
+					data:{classification:classificationText,isNew:false},
+					url:"${adminPath}/advertising/getClassification",
+					dataType:"json",
+					success:function(data){
+						var classification=data.classificationList;
+						var txt="";
+						for(var key in classification){ 
+							var strs= new Array(); //定义一数组 
+							strs=classification[key].split(","); //字符分割 
+							txt+='<option value="'+strs[0]+'">'+strs[1]+'</option>';
+						} 
+						$("#secondary").html(txt);
+					}
+				});
+			});
+		});
+	</script>
+		<script type="text/javascript">
+		jQuery(function($) {
+				var startoptions = {
+					format : 'YYYY-MM-DD'
+				}
+				var endoptions = {
+						format : 'YYYY-MM-DD'
+					}
+				$('.startDatetimepicker').datetimepicker(startoptions).next().on(
+						ace.click_event, function() {
+							$(this).prev().focus();
+						});
+				$('.endDatetimepicker').datetimepicker(endoptions).next().on(
+						ace.click_event, function() {
+							$(this).prev().focus();
+						});
+				
+			var tab = "${tab!}";
+			if (tab == "manages") {
+				$('#myTab').children("li").eq(0).addClass("active");
+				$('#manage').addClass("active in");
+			} else if (tab == "clicks") {
+				$('#myTab').children("li").eq(1).addClass("active");
+				$('#click').addClass("active in");
+			}
+		});
+	</script>
+</body>
+</html>

@@ -1,0 +1,41 @@
+        <div class="top">
+            <div class="banner">
+                <#if activity.brandsBanner?? && activity.brandsBanner?starts_with('https://')>
+		            <img src="${activity.brandsBanner!}" alt="">
+		        <#else>
+		            <img src="//pics.lvjs.com.cn/pics/${activity.brandsBanner!}" alt="">
+		        </#if>
+            </div>
+            <div class="coupon">
+                <div class="hongbao"></div>
+                <h3>恭喜您获得优惠券红包</h3>
+                <p>红包已放至账户<span>${mobile!}</span><br>登陆“驴妈妈”即可使用</p>            
+            </div>
+            <a href="${activity.lvmamaUrl!}"><button class="downloadLMM">${activity.lvmamaName!}</button></a>
+            <a href="${activity.outUrl!}"><button class="brand-link">${activity.outName!}</button></a>
+        </div>
+        <div class="main">
+            <div class="coupon-list">
+            <#list couponList as couponVO>
+            	<#if couponVO.coupon.argumentXYuan==0>
+                <div class="coupon-module all">
+                    <div class="tongyong">${couponVO.coupon.targetZh!}</div>
+                    <p>有效期：${couponVO.couponCode.beginTime?string("yyyy-MM-dd")}至${couponVO.couponCode.endTime?string("yyyy-MM-dd")}</p>
+                    <span>${couponVO.coupon.targetZh!}券</span>
+                    <div class="price"><span>&yen;</span>${couponVO.coupon.argumentYYuan!}</div>
+                </div>
+                <#else>
+                <div class="coupon-module">
+                    <div class="tongyong">${couponVO.coupon.targetZh!}</div>
+                    <p>有效期：${couponVO.couponCode.beginTime?string("yyyy-MM-dd")}至${couponVO.couponCode.endTime?string("yyyy-MM-dd")}</p>
+                    <span>满${couponVO.coupon.argumentXYuan!}元立减</span>
+                    <div class="price"><span>&yen;</span>${couponVO.coupon.argumentYYuan!}</div>
+                </div>
+                </#if>
+            </#list>
+            </div>
+            <p class="notice">下载驴妈妈APP，使用优惠券，若优惠券未到账，将自动在24小时内补发，每位用户只能领一次。</p>
+            <div class="hongbao-footer">
+                <img src="//pics.lvjs.com.cn/mobile/zt/4.0.0/1601/coupon-hongbao/images/footer-img.png" alt="">
+            </div>
+        </div>

@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="DISCOUNT_ACTIVITY" >
+	<insert id="insertdiscountActivity">
+			INSERT INTO discount_activity(
+				id, 
+				name, 
+				banner,
+				update_time
+			) VALUES (
+				#{id}, 
+				#{name}, 
+				#{banner},
+				#{updateTime}
+			)
+	</insert>
+
+	<update id="updatediscountActivity">
+		UPDATE discount_activity
+		<set>
+			<if test="name != null and name != ''">
+				name = #{name},
+			</if>
+			<if test="banner != null and banner  != ''">
+				banner  = #{banner},
+			</if>
+			<if test="updateTime != null and updateTime != ''">
+				update_time = #{updateTime},
+			</if>
+		</set>
+		WHERE id = #{id}
+	</update>
+	
+	
+	<select id="selectDiscountActivity" resultType="DiscountActivity">
+		SELECT 
+			a.*
+		FROM discount_activity a
+		WHERE 1 = 1
+	</select>
+	
+	<select id="queryDiscountActivity" resultType="DiscountActivity">
+		SELECT 
+			a.*
+		FROM discount_activity a
+		WHERE 1 = 1
+		<if test="id != null and id != ''">
+			AND a.id = #{id}
+		</if>
+		<if test="name != null and name != ''">
+			AND a.name = #{name}
+		</if>
+		<if test="banner != null and banner != ''">
+			AND a.banner = #{banner}
+		</if>
+		<if test="updateTime != null and updateTime != ''">
+			AND a.update_time = #{updateTime}
+		</if>
+	</select>
+</mapper>

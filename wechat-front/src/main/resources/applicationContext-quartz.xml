@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <bean id="quartzScheduler" class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
+        <property name="configLocation" value="classpath:quartz.properties" />
+
+        <property name="schedulerName" value="WechatQuartzScheduler" />
+
+        <!--必须的，QuartzScheduler 延时启动，应用启动完后 QuartzScheduler 再启动 -->
+        <property name="startupDelay" value="5" />
+
+        <property name="applicationContextSchedulerContextKey" value="applicationContextKey" />
+
+        <!--可选，QuartzScheduler 启动时更新己存在的Job，这样就不用每次修改targetObject后删除qrtz_job_details表对应记录了 -->
+        <property name="overwriteExistingJobs" value="true" />
+
+        <!-- 设置自动启动 -->
+        <property name="autoStartup" value="true" />
+
+        <!-- 注册触发器 -->
+        <property name="triggers">
+            <list>
+                <ref bean="groupActivityTaskTrigger" />
+                <ref bean="flowActivityTaskTrigger" />
+                <ref bean="templatePushTaskTrigger" />
+            </list>
+        </property>
+
+         <!--注册jobDetail-->
+        <property name="jobDetails">
+            <list>
+                <ref bean="groupActivityTask"/>
+                <ref bean="flowActivityTask"/>
+                <ref bean="templatePushTask"/>
+            </list>
+        </property>
+    </bean>
+	
+	<bean id="groupActivityTask" class="org.springframework.scheduling.quartz.JobDetailFactoryBean">
+        <property name="jobClass" value="com.lvtu.wechat.front.quartz.GroupActivityTask" />
+        <property name="durability" value="true" />
+    </bean>
+	
+    <bean id="groupActivityTaskTrigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+        <property name="jobDetail" ref="groupActivityTask" />
+        <property name="cronExpression" value="0 0/30 * * * ?" />
+    </bean>
+    
+    <bean id="flowActivityTask" class="org.springframework.scheduling.quartz.JobDetailFactoryBean">
+        <property name="jobClass" value="com.lvtu.wechat.front.quartz.FlowActivityTask" />
+        <property name="durability" value="true" />
+    </bean>
+	
+    <bean id="flowActivityTaskTrigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+        <property name="jobDetail" ref="flowActivityTask" />
+        <property name="cronExpression" value="0 0/30 * * * ?" />
+    </bean>
+    
+    <bean id="templatePushTask" class="org.springframework.scheduling.quartz.JobDetailFactoryBean">
+        <property name="jobClass" value="com.lvtu.wechat.front.quartz.TemplatePushTask" />
+        <property name="durability" value="true" />
+    </bean>
+	
+    <bean id="templatePushTaskTrigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+        <property name="jobDetail" ref="templatePushTask" />
+        <property name="cronExpression" value="0 0/10 * * * ?" />
+    </bean>
+	
+</beans> 

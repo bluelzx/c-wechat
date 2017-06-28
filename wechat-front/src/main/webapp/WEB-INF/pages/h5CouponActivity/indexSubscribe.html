@@ -1,0 +1,324 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>${activity.name}</title>
+    <meta name="Keywords" content="驴妈妈无线,景区门票,旅游度假"/>
+    <meta name="Description" content="驴妈妈无线官网:支持手机快捷预订景区门票,自助游线路,全国酒店,豪华邮轮等各种旅游产品.(中国最领先的在线旅游预订服务商!)"/>
+    <meta content="initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width" name="viewport">
+    <meta id="share" share-linkurl="" name="share" share-title="" share-content="" share-imageurl="">
+    <meta http-equiv="pragma" content="no-cache">
+    <meta http-equiv="Cache-Control" content="max-age=7200" />
+    <meta http-equiv="expires" content="0">
+    <meta http-equiv="Cache-Control" content="no-transform " />
+    <meta http-equiv="Cache-Control" content="no-siteapp" />
+    <link rel="apple-touch-icon" href="//pics.lvjs.com.cn/img/mobile/touch/img/lvmama_v1_png.png"/>
+    <link rel="apple-touch-icon" sizes="72x72" href="//pics.lvjs.com.cn/img/mobile/touch/img/lvmama_v1_png.png"/>
+    <link rel="apple-touch-icon" sizes="114x114" href="//pics.lvjs.com.cn/img/mobile/touch/img/lvmama_v1_png.png"/>
+    <link rel="apple-touch-icon" sizes="144x144" href="//pics.lvjs.com.cn/img/mobile/touch/img/lvmama_v1_png.png"/>
+    <link rel="stylesheet" href="//pics.lvjs.com.cn/mobile/css/globalV1.min.css">  
+    <link rel="stylesheet" href="//pics.lvjs.com.cn/mobile/zt/4.0.0/1605/send-coupons/css/style.css">
+    <link rel="stylesheet" href="${webroot}/assets/css/style.css">
+    <script type="text/javascript" src="//pics.lvjs.com.cn/js/new_v/jquery-1.7.2.min.js"></script>
+    <script type="text/javascript" src="${webroot}/assets/js/common.js"></script>
+    <script type="text/javascript" src="${webroot}/assets/js/WechatApi.js"></script>
+    <script type="text/javascript" src="//res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
+</head>
+<body>
+<div style="width:0; height:0; overflow: hidden; font-size: 0; position: fixed; left: 0;top: 0;"><img id="img_share" src="${activity.bannerUrl}" alt=""/></div>
+    <div style="width:0; height:0; overflow: hidden; font-size: 0; position: fixed; left: 0;top: 0;">
+        <img src="" alt=""/>
+    </div>
+    
+    <#if isNew>
+    	<div id="container2" style="display: none;"></div>
+    
+	    <div id="container1">
+	        <script type="text/javascript" src="//pics.lvjs.com.cn/mobile/js/code/base/ztheader.js"></script>
+	        <input type="hidden" id="rule" value="${activity.ruleExplain}"/>
+	        <input type="hidden" id="activityId" value="${activity.id}"/>
+	        <!-- <input type="hidden" id="" name="" value=""/> -->
+	        <div class="banner">
+	            <img src="${activity.bannerUrl}" alt="">
+	        </div>
+	        <div class="main">
+	            <ul class="ul-form">
+	                <li><input class="input1" type="text" placeholder="请输入手机号码"></li>
+	                <li>
+	                    <input class="input2" type="text" placeholder="请输入右侧验证码">
+	                    <div class="code"><img id="codeImg" src="/wechat/imgAuthCode" alt="" onclick="changeImgCode()"></div>
+	                </li>
+	                <li>
+	                    <input class="input3" type="text" placeholder="请输入短信验证码">
+	                    <button id="getAuthCode">获取验证码</button>
+	                </li>
+	            </ul>
+	            <button class="lingqu">立即领取</button>
+	            <div class="rule">
+	                <input type="checkbox" id="checkbox1" name="checkbox1" value="checkbox" checked/>
+	                <p>我已同意${activity.brandBusiness}的[活动规则]</p>            
+	            </div>
+	        </div>
+	        <!-- 活动已结束 -->
+	        <div class="finish">
+	            <p>活动已经结束了<br>更多精彩活动<br>请关注驴妈妈旅游网<br>公众号(joyu_lvmama)</p>
+	        </div>
+	        <!-- 操作频繁 -->
+	        <div class="frequent-operation">
+	            <p>您的操作太频繁了<br>休息一会，再来领取</p>
+	        </div>           
+	        <div class="hongbao-footer">
+	            <img src="//pics.lvjs.com.cn/mobile/zt/4.0.0/1605/send-coupons/images/footer-pic.png" alt="">
+	        </div>
+	        <div class="rule-popup popup">
+	            <div class="content">
+	                <div class="title">活动规则</div>
+	                <div id="ruleTxt"></div>
+	                <div class="know"><button>我知道了</button></div>
+	                <span class="close"></span>
+	            </div>
+	        </div>
+	    </div>
+    <#else>
+    	<div id="container2">
+    		<script type="text/javascript" src="//pics.lvjs.com.cn/mobile/js/code/base/ztheader.js"></script>
+        <div class="banner">
+            <img src="${activity.bannerUrl}" alt="">
+        </div>
+        <div class="msg">
+            <img src="//pics.lvjs.com.cn/mobile/zt/4.0.0/1605/send-coupons/images/bg.png" alt="">
+            <div class="info">
+            	<!-- 恭喜您获得优惠券 -->
+                <h3>${title}</h3>
+                <p>已放至账户<a href="">${mobile}</a></p>
+                <p>登录驴妈妈即可使用</p>
+            </div>
+            <div class="click">
+                <a href="//m.lvmama.com/?losc=058571"><button class="brand-link">去官网看看</button></a>                                    
+                <a href="//d.lvmama.com/#1"><button class="downloadLMM">下载驴妈妈客户端</button></a>
+            </div>
+        </div>
+        <div class="coupon-list">
+	        <#if couponList?? && couponList?size&gt;0>
+	        	<#list couponList as couponVO>
+	        		<div class="coupon-module">
+	                <p class="number"><strong>优惠券号：</strong>${couponVO.couponCode.couponCode}</p>
+	                <p class="name">${couponVO.coupon.couponName}</p>
+	                <p class="des">详情：${couponVO.coupon.description}</p>
+	                <p class="term">有效期：<a href="">${couponVO.couponCode.beginTime?string("yyyy-MM-dd")}</a>至<a href="">${couponVO.couponCode.endTime?string("yyyy-MM-dd")}</a></p>
+	            </div>
+	        	</#list><#else>
+			</#if>
+        </div>
+        <div class="prd">
+        	<#if productAdvertisingList?? && productAdvertisingList?size&gt;0>
+	        	<#list productAdvertisingList as prd>
+	    		  		<a href=${prd.productWapURL!}>
+	    	  				<div class="prd-list">
+	    	  					<div class="prd-pic"><img src=${prd.productImgURL!} alt=""></div>
+	          					<div class="describe">
+	          						<p class="detail">${prd.productName!}</h3>
+	              					<div class="price">
+	                  					<span>&yen;${prd.productPrice!}</span>
+	              					</div>
+	          					</div>
+	      					</div>
+	  					</a>
+	  			</#list><#else>
+			</#if>
+        </div>
+        <div class="hongbao-footer">
+            <img src="//pics.lvjs.com.cn/mobile/zt/4.0.0/1605/send-coupons/images/footer-pic.png" alt="">
+        </div>
+    	</div>
+    </#if>
+    
+    
+    <script type="text/javascript">
+    	$(function() {
+    		var state="${state}";
+    		var notOpen="${notOpen}";
+        	if(state=="close"){
+        		$(".main").hide();
+        		$(".rule-popup").hide();
+        		$(".finish").show();
+        	}
+        	if(notOpen){
+        		showMsg('活动尚未开启！');
+        	}
+    	});
+    
+    	var rule=$("#rule").attr("value");
+		$("#ruleTxt").html(rule);
+        //rem自适应
+        (function (doc, win) {
+            var docEl = doc.documentElement,
+                resizeEvt = "orientationchange" in window ? "orientationchange" : "resize",
+                recalc = function () {
+                    var clientWidth = docEl.clientWidth;
+                    if(clientWidth>640)
+                        clientWidth = 640;
+                    if (!clientWidth) return;
+                    docEl.style.fontSize = 10 * (clientWidth / 320) + "px";
+                };
+            if (!doc.addEventListener) return;
+            win.addEventListener(resizeEvt, recalc, false);
+            doc.addEventListener("DOMContentLoaded", recalc, false);
+        })(document, window);
+
+      //切换图片验证码
+        var changeImgCode = function() {
+        	$("#codeImg").attr("src", "/wechat/imgAuthCode?random=" + Math.random());
+        }
+      
+      //获取验证码
+		$(function() {
+			var loading = false;
+			$("#getAuthCode").click(function() {
+				if(loading || $('#getAuthCode').hasClass('unused'))
+					return;
+				loading = true;//防止重复点击
+				var mobile = $(".input1").val();
+        		var imgAuthCode=$(".input2").val();
+				if(isEmpty(mobile)) {
+					showMsg('请输入手机号码！');
+					loading = false;
+				} else if(!validateMobile(mobile)) {
+					showMsg('手机号码格式错误！');
+					loading = false;
+				}else if(isEmpty(imgAuthCode)) {
+					showMsg('请输入图形验证码！');
+					loading = false;
+				}  else {
+					$.ajax({
+						url : '/h5CouponActivitySubscribe/sendAuthSms',
+						type : "POST",
+						data : {
+							mobile : mobile,
+							imgCode: imgAuthCode
+						},
+						success:function(data) {
+							if(data.code == 1) {
+								codeWait(60);
+							}
+							else {
+								showMsg(data.msg);
+								if(data.error){
+									changeImgCode();
+								}
+							}
+							loading = false;
+						},
+						error:function(data) {
+							loading = false;
+							showMsg('哎呀,网络不给力,请稍后再试试吧！');
+						}
+					});
+				}
+			}); 
+		}); 
+      
+		// 发送验证码倒计时60秒
+		var codeWait = function(num){//倒计时方法 num是要倒计时的秒数
+		    var nowtime = new Date();
+		    var newtime = nowtime;
+		    var count;
+		    nowtime = parseInt(nowtime.getTime()/1000);
+		    var obj = $("#getAuthCode");
+		    obj.addClass('unused');
+		    obj.html(num+"秒后重发");
+		    var timer = setInterval(function(){
+		        newtime = new Date();
+		        count = num-(parseInt(newtime.getTime()/1000)-nowtime);
+		        obj.html(count+"秒后重发");
+		        if(count<=0){
+		            clearInterval(timer);
+		            obj.removeClass('unused');
+		            obj.html('获取验证码');
+		        }
+		    },1000);
+		}
+      
+      //领取优惠券
+		$(function() {
+			var loading = false;
+			$(".lingqu").click(function(){
+        		if(loading)
+        			return;
+        		
+        		if($("#checkbox1").attr("checked")!="checked"){
+        			showMsg('未同意活动规则！');
+        			return;
+        		}
+        		
+        		loading = true;//防止重复点击
+        		
+        		var mobileNumber = $(".input1").val();
+        		var imgCode=$(".input2").val();
+                var smsCode = $(".input3").val();
+                var activityId=$("#activityId").val();
+                
+                if(isEmpty(mobileNumber)) {
+                	showMsg('请输入手机号码！');
+                	loading = false;
+    			} else if(!validateMobile(mobileNumber)) {
+    				showMsg('手机号码格式错误！');
+    				loading = false;
+    			} else if(isEmpty(smsCode)) {
+    				showMsg('请输入短信验证码！');
+    				loading = false;
+    			} else {
+    				lvLoading("请稍后...");
+    				$.ajax({
+    					url :"/h5CouponActivitySubscribe/getCoupons", 
+    					data :{mobile: mobileNumber, smsCode: smsCode, imgCode: imgCode, activityId: activityId}, 
+    					type : "GET",	
+    					success:function(data) {
+		   					if (data.code=='-1') {
+		   						if(data.msg != "")
+		   	                		showMsg(data.msg);
+		   	                	else
+		   	                		showMsg("优惠券领取失败，请稍后再试！");
+		   	                } else {
+		   	                	$("#container2").append(data);
+		   	                	$("#container2").css("display", "block");
+		   	                	$("#container1").css("display", "none"); 
+		   	                }
+		   	             	loading = false;
+		   	             	rmLvLoading();
+    					}
+	   	            });
+    			}
+        	});
+		});
+      
+      
+      var showMsg=function(msg){
+    	  var html='<div class="wrong-popup popup"><div class="content"><p>'+msg+'</p></div></div>';
+    	  $("#container1").append(html);
+			setTimeout(function(){
+				$('.wrong-popup').empty().remove();
+			},2000);
+      }
+      
+        
+        $(".rule p").click(function(){
+            $(".rule-popup").css("display","block");
+        });
+        $(".close,.know").click(function(){
+            $(".rule-popup").css("display","none");
+        });
+
+    </script>
+    
+    <script type="text/javascript">
+		$(document).ready(function(){
+			var shareTemplate ="${activity.shareTemplateId}";//分享模板
+			var channel = "1";//微信分享
+			if(!isEmpty(shareTemplate)){
+				loadShareMode(shareTemplate,channel); 
+			}
+		});
+	</script>
+</body>
+</html>

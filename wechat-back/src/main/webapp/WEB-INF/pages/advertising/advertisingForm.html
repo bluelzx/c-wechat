@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+		<meta charset="utf-8" />
+		<title>广告位 - 添加活动</title>
+		<meta name="description" content="overview &amp; stats" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+		<link rel="stylesheet" href="${webroot}/assets/css/bootstrap-datetimepicker.min.css" />
+		<script charset="utf-8" src="${webroot}/assets/third/kindeditor/kindeditor-all-min.js"></script>
+		<script charset="utf-8" src="${webroot}/assets/third/kindeditor/lang/zh-CN.js"></script>
+		<link rel="stylesheet" href="${webroot}/assets/third/kindeditor/themes/default/default.css" />
+		<link rel="stylesheet" href="${webroot}/assets/third/kindeditor/themes/simple/simple.css" />
+		<link rel="stylesheet" href="${webroot}/assets/css/upload.css" />
+		<#include "commonHead.html">
+		<style>
+			hr{
+				height:1px;
+				border:none;
+				border-top:2px solid #555555;
+			}
+			.imageFileCss{ 
+				padding: 0px 0px; 
+ 			} 
+ 			.fileupload .inputCss { 
+				padding: 6px 0px; 
+   			}
+   			#productInfoImg img{
+   				max-height: 100px;
+    			max-width: 160px;
+   			}
+		</style>
+	</head>
+
+	<body class="no-skin" style="background-color: #FFF;">
+		<div class="page-content">
+			<div class="page-header">
+				<h1>
+				广告位管理 <small> <i class="ace-icon fa fa-angle-double-right"></i>
+					<#if advertisingform?? && advertisingform.id??>
+						编辑广告位
+						<#else>
+						新增广告位
+						</#if>
+				</small>
+			</h1>
+			</div>
+			<div class="row">
+				<div class="col-xs-12">
+					<form id="advertisingForm" class="form-horizontal" role="form" action="${adminPath}/advertising/save" method="POST" >
+						<#if advertisingform?? && advertisingform.id??>
+						<input type="hidden" id="id" name="id" value="${advertisingform.id}">
+						</#if>
+						<input type="hidden" id="imgURL" name="imgURL" value="">
+						<div class="space-4"></div>
+						<div class="form-group">
+							<label class="col-sm-3 control-label no-padding-right" for="form-field-1">
+							<strong class="text-danger">*</strong>
+							 一级分类：</label> <select id="primary"
+								class="form-control" name="primaryClassification" style="width:66%">
+								<#list primaryClassificationList as primaryStatus>
+									<option value=${primaryStatus.classification} <#if advertisingform.primaryClassification == primaryStatus.classification>selected</#if>>${primaryStatus.showName}</option>
+								</#list>
+							</select>
+						</div>
+						<div class="space-4"></div>
+						<div class="form-group">
+							<label class="col-sm-3 control-label no-padding-right" for="form-field-1">
+							<strong class="text-danger">*</strong>
+							二级分类：</label> <select id="secondary"
+								class="form-control" name="secondaryClassification" style="width:66%">
+								<#list secondaryClassificationList as secondaryStatus>
+									<option value=${secondaryStatus.classification} <#if advertisingform.secondaryClassification == secondaryStatus.classification>selected</#if>>${secondaryStatus.showName}</option>
+								</#list>
+							</select>
+						</div>
+						<div class="space-4"></div>
+						<div class="form-group">
+							<label class="col-sm-3 control-label no-padding-right" for="form-field-1"> 活动ID： </label>
+							<div class="col-sm-9">
+								<input type="text" id="actId" name="actId" placeholder="请输入活动ID" value="${advertisingform.actId}" class="col-xs-10 col-sm-5">
+							</div>
+						</div>
+						<div class="space-4"></div>
+						<div class="form-group">
+							<label class="col-sm-3 control-label no-padding-right" for="form-field-1"> 
+							<strong class="text-danger">*</strong>
+							跳转链接： </label>
+							<div class="col-sm-9">
+								<input type="text" id="skipURL" name="skipURL" placeholder="请输入跳转链接(需要加前缀,如https://)" value="${advertisingform.skipURL}" class="col-xs-10 col-sm-5">
+							</div>
+						</div>
+						<div class="space-4"></div>
+						<div class="form-group">
+							<label class="col-sm-3 control-label no-padding-right" for="form-field-1"> 
+							<strong class="text-danger">*</strong>
+							排序： </label>
+							<div class="col-sm-9">
+								<input type="text" id="sort" name="sort" placeholder="请输入排序大小(升序),如1,2,3" value="${advertisingform.sort}" class="col-xs-10 col-sm-5">
+							</div>
+						</div>
+						<div class="space-4"></div>
+						<div class="form-group">
+							<label class="col-sm-3 control-label no-padding-right" for="form-field-1"> 
+							<strong class="text-danger">*</strong>
+							选择图片： </label>
+							<div class="col-sm-9">
+								<span class="selectFile-span"><input type="text" name="viewfileImg" id="viewfileImg" class="viewfile" /></span>
+								<label for="upload" class="bottom">选择图片</label><font style="font-size: small;color: #F00">只存取上传一张图片,建议大小450*200</font>
+								<input type="file" size="15" id="productUpload"  name="productUpload" onchange="document.getElementById('viewfileImg').value=this.value;" class="file" />
+								<button id="imgUpload" type="button">图片上传</button>
+							</div> 
+						</div>
+						<div class="space-4"></div>
+						<div class="form-group">
+							<label class="col-sm-3 control-label no-padding-right" for="form-field-1"></label>
+							<div class="col-sm-9" id="productInfoImg" >
+								<img alt="" src="${advertisingform.imgURL}">
+							</div>
+						</div>
+
+						<div class="clearfix form-actions">
+							<div class="col-md-offset-4 col-md-8">
+								<button id="submitBtn" class="btn btn-info" type="button">
+									<i class="ace-icon fa fa-check bigger-110"></i>
+									保存配置
+								</button>
+							</div>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+		
+		<#include "commonFootJs.html">
+
+		<!-- inline scripts related to this page -->
+		<script src="${webroot}/assets/js/moment.min.js"></script>
+		<script src="${webroot}/assets/js/bootstrap-datetimepicker.min.js"></script>
+		<script src="${webroot}/assets/js/ajaxfileupload.js"></script>
+		<script type="text/javascript">
+			jQuery(function($) {
+				var imgURL;
+				var imgMsgInfo;
+				$('#imgUpload').on('click', function(){
+					 $.ajaxFileUpload({
+						 	url: '${adminPath}/advertising/imageUpload', 
+				            type: 'POST',
+				            //secureuri: false, //一般设置为false
+				             dataType: 'json', //返回值类型，一般设置为json、application/json
+				            fileElementId: 'productUpload', // 上传文件的id、name属性名
+				           // elementIds: elementIds, //传递参数到服务器
+				            success: function(data, status){ 
+				                $("#productInfoImg img").attr("src",data.url);
+				                imgMsgInfo=data.msgInfo;
+				                imgURL=data.url;
+				                if(!isEmpty(imgMsgInfo)){
+				                	$("#viewfileImg").focus();
+				                	$("#productInfoImg img").attr("src","${advertisingform.imgURL}");
+									showMsg(imgMsgInfo);
+				                }
+				            },
+				            error: function(data, status, e){ 
+				            } 
+					 });
+				});
+				
+				
+				$('#submitBtn').on('click', function(){
+					var advertisingform_id="${advertisingform.id}";
+					var primaryClassification=$("#primary").val();
+					var secondaryClassification=$("#secondary").val();
+					var actId=$("#actId").val();
+					var skipURL=$("#skipURL").val();
+					var viewfileImg = $("#viewfileImg").val();
+					var sort=$("#sort").val();
+					
+					
+					//数据合法性校验
+					if(isEmpty(primaryClassification)) {
+						$("#primaryClassification").focus();
+						showMsg("一级分类不能为空！");
+					} else if(isEmpty(secondaryClassification)) {
+						$("#secondaryClassification").focus();
+						showMsg("二级分类不能为空！");
+					} else if(isEmpty(skipURL)) {
+						$("#skipURL").focus();
+						showMsg("跳转链接不能为空！");
+					}else if(isEmpty(sort)) {
+						$("#sort").focus();
+						showMsg("排序不能为空！");
+					}else if(isEmpty(viewfileImg) && advertisingform_id=="") {
+						$("#viewfileImg").focus();
+						showMsg("选择图片不能为空！");
+					}else if(isEmpty(imgURL) && advertisingform_id==""){
+						$("#viewfileImg").focus();
+						showMsg("请选择图片上传！");
+					}else {
+						$("#imgURL").attr("value",imgURL);
+						$("#advertisingForm").submit();
+					} 
+				});
+				
+				
+				
+				$("#primary").change(function(){
+					var classificationText=$("#primary").val();
+					$.ajax({
+						type:"post",
+						data:{classification:classificationText,isNew:true},
+						url:"${adminPath}/advertising/getClassification",
+						dataType:"json",
+						success:function(data){
+							var classification=data.classificationList;
+							var txt="";
+							for(var key in classification){ 
+								var strs= new Array(); //定义一数组 
+								strs=classification[key].split(","); //字符分割 
+								txt+='<option value="'+strs[0]+'">'+strs[1]+'</option>';
+							} 
+							$("#secondary").html(txt);
+						}
+					});
+				});
+				
+			})
+			
+		</script>
+		
+	</body>
+</html>

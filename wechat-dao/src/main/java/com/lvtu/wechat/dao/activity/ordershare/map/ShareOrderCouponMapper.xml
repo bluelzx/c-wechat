@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="SHARE_ORDER_COUPON" >
+  <resultMap id="BaseResultMap" type="com.lvtu.wechat.common.model.activity.ordershare.ShareOrderCoupon" >
+    <id column="id" property="id" jdbcType="VARCHAR" />
+    <result column="code" property="code" jdbcType="VARCHAR" />
+    <result column="amount" property="amount" jdbcType="INTEGER" />
+    <result column="detail" property="detail" jdbcType="VARCHAR" />
+    <result column="probability" property="probability" jdbcType="INTEGER" />
+    <result column="remarks" property="remarks" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, code, amount, detail, probability, remarks, del_flag
+  </sql>
+  <select id="selectByConditions" resultMap="BaseResultMap" parameterType="java.lang.String">
+	select
+	<include refid="Base_Column_List" />
+	from t_wx_share_order_coupon
+	<where>
+		<if test="id != null">
+			id = #{id,jdbcType=VARCHAR}
+		</if>
+		<if test="code != null">
+			and code = #{code,jdbcType=VARCHAR}
+		</if>
+		<if test="amount != null">
+			and amount = #{amount,jdbcType=INTEGER}
+		</if>
+		<if test="detail != null">
+			and detail = #{detail,jdbcType=VARCHAR}
+		</if>
+		<if test="probability != null">
+			and probability = #{probability,jdbcType=INTEGER}
+		</if>
+		<if test="remark != null">
+			and remarks = #{remarks,jdbcType=VARCHAR}
+		</if>
+		<if test="delFlag != null">
+			and del_flag = #{delFlag,jdbcType=CHAR}
+		</if>
+	</where>
+  </select>
+  <insert id="insert" parameterType="ShareOrderCoupon" >
+    insert into t_wx_share_order_coupon (id, code, amount, 
+      detail, probability, remarks, del_flag)
+    values (#{id,jdbcType=VARCHAR}, #{code,jdbcType=VARCHAR}, #{amount,jdbcType=INTEGER}, 
+      #{detail,jdbcType=VARCHAR}, #{probability,jdbcType=INTEGER}, #{remarks,jdbcType=VARCHAR}, #{delFlag,jdbcType=CHAR})
+  </insert>
+  <update id="delete">
+		UPDATE t_wx_share_order_coupon SET 
+			del_flag = 1
+		WHERE id = #{id,jdbcType=VARCHAR}
+  </update>
+</mapper>

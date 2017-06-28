@@ -1,0 +1,147 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>领取流量包</title>
+    <meta name="Keywords" content="驴妈妈无线,景区门票,旅游度假"/>
+    <meta name="Description" content="驴妈妈无线官网:支持手机快捷预订景区门票,自助游线路,全国酒店,豪华邮轮等各种旅游产品.(中国最领先的在线旅游预订服务商!)"/>
+    <meta content="initial-scale=1.0,user-scalable=no,maximum-scale=1,width=device-width" name="viewport">
+    <link rel="alternate" type="application/vnd.wap.xhtml+xml" media="handheld" href="target"/>
+    <link rel="apple-touch-icon" href="//pics.lvjs.com.cn/img/mobile/touch/img/lvmama_v1_png.png"/>
+    <link rel="apple-touch-icon" sizes="72x72" href="//pics.lvjs.com.cn/img/mobile/touch/img/lvmama_v1_png.png"/>
+    <link rel="apple-touch-icon" sizes="114x114" href="//pics.lvjs.com.cn/img/mobile/touch/img/lvmama_v1_png.png"/>
+    <link rel="apple-touch-icon" sizes="144x144" href="//pics.lvjs.com.cn/img/mobile/touch/img/lvmama_v1_png.png"/>
+    <meta http-equiv="pragma" content="no-cache">
+    <meta http-equiv="Cache-Control" content="max-age=7200" />
+    <meta http-equiv="expires" content="0">
+    <script type="text/javascript" src="//pics.lvjs.com.cn/js/new_v/jquery-1.7.2.min.js"></script>
+    <script type="text/javascript" src="${webroot}/assets/js/common.js"></script>
+    <link rel="stylesheet" type="text/css" href="//pics.lvjs.com.cn/mobile/zt/weixin/1510/freeFlow/css/freeFlow.css?v=20160908" />
+</head>
+<body>
+<div style="width:0; height:0; overflow: hidden; font-size: 0; position: fixed; left: 0;top: 0;"><img src="//pics.lvjs.com.cn/mobile/zt/weixin/1510/freeFlow/img/share.png" alt=""/></div>
+<div class="container">
+	<input type="hidden" value="${flow.surplusFlow!}" id="hasFlow">
+	<input type="hidden" value="${phone!}" id="phoneNum">
+	<div class="m-customer">
+		<#if wxUser.headimgurl?? && wxUser.headimgurl!="">
+		<span class="header-img" style="background-image: url('${wxUser.headimgurl}');"></span>
+		<#else>
+		<span class="header-img"></span>
+		</#if>
+		<h3>${wxUser.nickname}</h3>
+		<#if flow??>
+		<p>您的驴妈妈账户里已经有<i>${flow.surplusFlow!}M</i>流量</p>
+		<#else>
+		<p>您已获得流量：<i>0M</i></p>
+		</#if>
+	</div>
+	<p class="title">选择流量包</p>
+	<div class="m-choose">
+	<#if flowPacks?? && flowPacks?size&gt;0>
+		<#list flowPacks as flowPack>
+		<span onclick="exchange('${flowPack.flowCode!}', ${flowPack.flow!})" <#if (flow.surplusFlow>=flowPack.flow)>class="selected"</#if>>${flowPack.flow!}M</span>
+		</#list>
+	<#else>
+		不支持的手机号码！
+	</#if>
+	</div>
+	<p class="title">如何领取流量</p>
+	<div class="m-illu">
+		<ul>
+			<li>您已经微信绑定了驴妈妈账户，   20M流量已经在您的驴妈妈账户里。</li>
+			<li>如何赚流量：除了绑定送的20M流量外，您还可以通过每日签到赚流量。方法： 在「驴妈妈旅游网」微信公众号点击菜单「驴粉福利」——「签到赚流量」进入签到页面。签到1天获得1M。</li>
+			<li>除了签到赚流量以外，在驴妈妈平台上写游记、写点评、参与活动等，也能赚流量，敬请期待！</li>
+		</ul>
+	</div>
+	<p class="title">活动说明：</p>
+	<div class="m-illu">
+		<ul>
+			<li>不能超额领取，只有25M流量不能领取【30M】流量包。</li>
+			<li>流量可积累，每个月限领取一次。</li>
+			<li>每月送出共130G至200G流量包，本月如果没领到，下月可领。</li>
+			<li>本活动最终解释权归上海景域文化传播股份有限公司所有。</li>
+		</ul>
+	</div>
+	<div class="tip-ok">
+		<div class="content">
+			<h3>恭喜！</h3>
+			<p class="c-base">您领取<i id="gotFlowValue"></i>的请求已经提交给运营商。若充值成功后会短信通知您，若充值失败已扣除流量会自动返还。</p>
+			<p>把好消息告诉朋友们，让他们也来领流量吧!</p>
+			<a id="shareBtn" href="${webroot}/flow/share.html?totalFlow=${flow.surplusFlow!}&">分享</a>
+		</div>
+	</div>
+	<div class="tip-fail">
+		当前流量不足，无法领取，<br>坚持签到可以获得更多流量哦！
+	</div>
+	
+	<div class="bot-banner">
+		<ul>
+		<#if advertisingInfo?? && advertisingInfo?size&gt;0> 
+			<#list advertisingInfo as advertising>
+			<li><a href="#" onclick="clicks('${advertising.id}','${advertising.skipURL}')">
+			<img src=${advertising.imgURL}></a></li>
+			</#list> <#else>
+				
+		</#if>
+		</ul>
+	</div>
+	
+</div>
+</body>
+<script type="text/javascript"> 
+		var loading = false;
+		var exchange = function(flowCode, flow) {
+			if(loading)
+				return;
+
+			loading = true;//防止重复点击
+
+			var hasFlow = $("#hasFlow").val();
+			var phoneNum = $("#phoneNum").val();
+			if(hasFlow < flow) {
+				$('.tip-fail').show();
+				setTimeout(function(){$('.tip-fail').hide();}, 2000);
+				loading = false;
+				return;
+			}
+
+			$.ajax({
+				url : '${webroot}${flowExchangeUrl}',
+				type : "POST",
+				data : {
+					flowCode: flowCode,
+					exchangeFlow: flow,
+					phone: phoneNum
+				},
+				success:function(data) {
+					if(data.code == 1) {
+						$('#gotFlowValue').text(flow+'M');
+						$('#shareBtn').attr('href','/flow/share?totalFlow=${flow.surplusFlow!}&openid=${wxUser.openid!}&exchangedFlow=' + flow);
+						$('.tip-ok').show();
+						loading = false;
+					} else {
+						loading = false;
+						tipsModal(data.msg, 2);
+					}
+				},
+				error:function(data) {
+					loading = false;
+					tipsModal('哎呀,网络不给力,请稍后再试试吧！', 2);
+				}
+			});
+		}
+		var clicks = function(id,url){
+			$.ajax({
+				url :"${webroot}/advertising/click",
+				type :"POST",
+				data:{
+					advertisingId:id
+				},
+				success:function(data){
+					window.location.href = url;
+				}
+			});
+		}
+	</script>
+</html>

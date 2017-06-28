@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans 
+    xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:cache= "http://www.springframework.org/schema/cache"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+           http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+           http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.0.xsd
+           http://www.springframework.org/schema/cache http://www.springframework.org/schema/cache/spring-cache.xsd" 
+           default-autowire="byName">
+	<bean id="propertyConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<property name="locations">
+			<list>
+				<value>classpath:const.properties</value>
+   				<value>classpath:dubbo.properties</value> 
+			</list>
+		</property>
+	</bean>
+	<!-- 使用Annotation自动注册Bean，解决事物失效问题：在主容器中不扫描@Controller注解  -->
+	<context:component-scan base-package="com.lvtu.wechat"><!-- base-package 如果多个，用“,”分隔 -->
+		<context:exclude-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
+	</context:component-scan>
+	
+	<!-- 缓存配置 -->
+	<bean id="cacheManager" class="org.springframework.cache.ehcache.EhCacheManagerFactoryBean">
+		<property name="configLocation" value="classpath:ehcache-local.xml" />
+	</bean>
+	<!-- 缓存注解支持 -->
+	<cache:annotation-driven cache-manager="ehcacheCacheManager"/>
+	<bean id="ehcacheCacheManager" class="org.springframework.cache.ehcache.EhCacheCacheManager">
+		<property name="cacheManager" ref="cacheManager"/>
+	</bean>
+	
+	<!-- 配置 JSR303 Bean Validator 定义 -->
+	<bean id="validator" class="org.springframework.validation.beanvalidation.LocalValidatorFactoryBean" />
+	
+	<import resource="applicationContext-wechat-remote-service-beans.xml"/>
+	<import resource="applicationContext-wechat-shiro.xml"/>
+	<import resource="application-wechat-service-dubbo-consumer.xml"/>
+	<import resource="applicationContext-clutter-remote.xml"/>
+	<!-- <import resource="applicationContext-lvmama-comm-remote-public-dubbo.xml"/> -->
+<!-- 	<import resource="applicationContext-quartz.xml"/> -->
+</beans>

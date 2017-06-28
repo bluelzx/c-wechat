@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="GROUP">
+	<update id="addParticipantsNum">
+		update groups 
+		set  participants_num = participants_num + 1,	
+		state = case when participants_num = total_num then 1 else state end,
+		complete_time = case when participants_num = total_num then NOW() else null end
+		where participants_num &lt; total_num 
+		and id = #{id}
+	</update>
+	
+	<insert id="insert" parameterType="Group">
+		insert into groups
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				id,
+			</if>
+			<if test="groupActivityId != null">
+				group_activity_id,
+			</if>
+				participants_num,
+			<if test="totalNum != null">
+				total_num,
+			</if>
+			<if test="startTime != null">
+				start_time,
+			</if>
+				state,
+			<if test="completeTime != null">
+				complete_time,
+			</if>
+			<if test="back != null">
+				back,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id},
+			</if>
+			<if test="groupActivityId != null">
+				#{groupActivityId},
+			</if>
+				1,
+			<if test="totalNum != null">
+				#{totalNum},
+			</if>
+			<if test="startTime != null">
+				#{startTime},
+			</if>
+				0,
+			<if test="completeTime != null">
+				#{completeTime},
+			</if>
+			<if test="back != null">
+				#{back},
+			</if>
+		</trim>
+	</insert>
+	
+	<insert id="insertGroupsHis" parameterType="Group">
+		insert into groups_history
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				id,
+			</if>
+			<if test="groupActivityId != null">
+				group_activity_id,
+			</if>
+				participants_num,
+			<if test="totalNum != null">
+				total_num,
+			</if>
+			<if test="startTime != null">
+				start_time,
+			</if>
+				state,
+			<if test="completeTime != null">
+				complete_time,
+			</if>
+			<if test="deleteDate != null">
+				delete_date,
+			</if>
+			<if test="back != null">
+				back,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id},
+			</if>
+			<if test="groupActivityId != null">
+				#{groupActivityId},
+			</if>
+				1,
+			<if test="totalNum != null">
+				#{totalNum},
+			</if>
+			<if test="startTime != null">
+				#{startTime},
+			</if>
+				0,
+			<if test="completeTime != null">
+				#{completeTime},
+			</if>
+			<if test="deleteDate != null">
+				#{deleteDate},
+			</if>
+			<if test="back != null">
+				#{back},
+			</if>
+		</trim>
+	</insert>
+	
+	<select id="needSendMessageGroup" resultType="Group">
+		SELECT g.id, g.group_activity_id, g.participants_num, g.total_num, g.start_time, g.state, g.complete_time, g.is_send
+		FROM groups g WHERE g.participants_num = g.total_num AND IFNULL(g.is_send, 0) IN(0, 3)
+	</select>
+	
+	<update id="updateIsSend"  parameterType="java.util.List">  
+	        update groups 
+        set
+            is_send=#{item.isSend}
+        where id IN
+	    <foreach collection="list" index="index" item="item" open="(" separator="," close=")">   
+	       #{item.id} 
+	    </foreach>     
+	</update>
+	
+	<update id="updateGroups">
+		update groups 
+		set participants_num = participants_num - 1,
+		complete_time = null,
+		state = case when state = 1 then 0 else state end
+		where id = #{groupId} and participants_num &gt; 1
+	</update>
+	
+	<select id="queryGroupsByGroupId" resultType="Group">
+		SELECT g.id, g.group_activity_id, g.participants_num, g.total_num, g.start_time, g.state, g.complete_time, g.is_send
+		FROM groups g
+		WHERE g.id = #{groupId}
+	</select>
+	
+	<delete id="deleteGroups">
+	 DELETE FROM groups
+	 WHERE id = #{groupId}
+	</delete>
+	
+</mapper>

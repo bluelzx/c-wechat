@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="CITY">
+
+	<select id="selectByName" resultType="City">
+		select id as
+		code,province_id from t_wx_city where 1=1 and name = #{name}
+	</select>
+
+	<select id="selectByParentId" resultType="City">
+		select id as
+		code,province_id,name from t_wx_city
+		where 1=1 and province_id =
+		${_parameter}
+	</select>
+
+	<select id="selectByLikeName" resultType="City">
+		select id as
+		code,province_id,name from t_wx_city
+		where 1=1 and province_id =
+		${provinceId} and name like #{name}
+	</select>
+
+	<select id="selectByIds"></select>
+
+
+</mapper>
